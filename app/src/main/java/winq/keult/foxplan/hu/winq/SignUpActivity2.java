@@ -3,6 +3,7 @@ package winq.keult.foxplan.hu.winq;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -10,8 +11,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.keult.networking.NetworkManager;
+import com.example.keult.networking.callback.RegistrationCallback;
+import com.example.keult.networking.error.NetworkError;
+import com.example.keult.networking.model.RegistrationResponse;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class SignUpActivity2 extends AppCompatActivity implements View.OnClickListener {
 
@@ -64,6 +71,8 @@ public class SignUpActivity2 extends AppCompatActivity implements View.OnClickLi
                 userParams.put("description", signUpDescription.getText().toString());
                 userParams.put("activities", signUpAllActivities.getText().toString());
 
+                sendSignUpData();
+
                 startActivity(finishSignUp);
                 break;
             case R.id.sign_up_add:
@@ -89,5 +98,40 @@ public class SignUpActivity2 extends AppCompatActivity implements View.OnClickLi
                 }
                 break;
         }
+    }
+
+    private void sendSignUpData() {
+
+        Map<String, Object> map;
+        map = new HashMap<>();
+        // TODO: Csak a kötelező mezőket tettem ide, de Dani kéri, hogy minden mezőt tegyünk be
+        // TODO: ha nincs adat, adjunk üres String-et
+
+        map.put("apikey", "a");
+        map.put("username", "varga@bela.com");
+        map.put("password", "test");
+        map.put("facebookid", "no");
+        map.put("email", "varga@gmail.com");
+        map.put("fullname", "Teljes név");
+        map.put("fiulany", "1");
+        map.put("user_born", "1999.11.11");
+        map.put("user_country_short", "GER");
+        map.put("user_interest", "Mindenki érdekel");
+
+        NetworkManager.getInstance().signup(map, new RegistrationCallback() {
+            @Override
+            public void forwardResponse(RegistrationResponse registrationResponse) {
+                if ( registrationResponse.getSuccess() == 1 )
+                    Log.v("Registration:", "User successfully signed up");
+            }
+
+            @Override
+            public void forwardError(NetworkError networkError) {
+
+            }
+        });
+
+
+
     }
 }

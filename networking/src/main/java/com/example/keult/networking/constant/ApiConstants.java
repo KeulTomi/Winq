@@ -14,4 +14,7 @@ public class ApiConstants {
     // api profile
     public static final String LOG_IN = "profile/login";
 
+    // api registration
+    public static final String REGISTER = "profile/signup";
+
 }

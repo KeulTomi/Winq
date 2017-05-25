@@ -3,6 +3,7 @@ package com.example.keult.networking;
 import java.util.Map;
 
 import com.example.keult.networking.callback.LoginCallback;
+import com.example.keult.networking.callback.RegistrationCallback;
 import com.example.keult.networking.di.component.DaggerNetworkComponent;
 import com.example.keult.networking.error.factory.ErrorFactory;
 import com.example.keult.networking.service.ApiService;
@@ -37,6 +38,17 @@ public class NetworkManager {
                         loginCallback::forwardResponse,
                         throwable -> {
                             loginCallback.forwardError(ErrorFactory.createNetworkError(throwable));
+                        }
+                );
+    }
+
+    public void signup(Map<String, Object> body, RegistrationCallback registrationCallback) {
+        apiService.register(body)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        registrationCallback::forwardResponse,
+                        throwable -> {
+                            registrationCallback.forwardError(ErrorFactory.createNetworkError(throwable));
                         }
                 );
     }
