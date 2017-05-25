@@ -3,11 +3,20 @@ package winq.keult.foxplan.hu.winq;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.example.keult.networking.NetworkManager;
+import com.example.keult.networking.callback.LoginCallback;
+import com.example.keult.networking.error.NetworkError;
+import com.example.keult.networking.model.LoginResponse;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -46,6 +55,24 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 overridePendingTransition(R.anim.activity_slide_up, R.anim.activity_stay);
                 break;
             case R.id.GO_button:
+                Map<String, Object> map;
+                map = new HashMap<>();
+                map.put("apikey", "a");
+                map.put("username", "ios@test.com");
+                map.put("password", "test");
+                map.put("facebookid", "no");
+
+                NetworkManager.getInstance().login(map, new LoginCallback() {
+                    @Override
+                    public void forwardResponse(LoginResponse loginResponse) {
+                        Log.v("Login:", loginResponse.getData().getProfileData().getFullname());
+                    }
+
+                    @Override
+                    public void forwardError(NetworkError networkError) {
+
+                    }
+                });
                 break;
         }
     }
