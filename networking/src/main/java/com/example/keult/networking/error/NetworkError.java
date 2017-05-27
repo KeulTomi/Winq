@@ -1,7 +1,7 @@
 package com.example.keult.networking.error;
 
 /**
- * Created by demdani on 2016. 10. 18..
+ *  Hálózati hiba  adatmodell
  */
 
 public class NetworkError {

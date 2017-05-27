@@ -11,9 +11,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.keult.networking.NetworkManager;
+import com.example.keult.networking.callback.ConditionsCallback;
+import com.example.keult.networking.callback.DateAddCallback;
 import com.example.keult.networking.callback.LoginCallback;
+import com.example.keult.networking.callback.SignUpCallback;
 import com.example.keult.networking.error.NetworkError;
+import com.example.keult.networking.model.ConditionsResponse;
+import com.example.keult.networking.model.DateAddResponse;
 import com.example.keult.networking.model.LoginResponse;
+import com.example.keult.networking.model.SignUpResponse;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -55,24 +61,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 overridePendingTransition(R.anim.activity_slide_up, R.anim.activity_stay);
                 break;
             case R.id.GO_button:
-                Map<String, Object> map;
-                map = new HashMap<>();
-                map.put("apikey", "a");
-                map.put("username", "ios@test.com");
-                map.put("password", "test");
-                map.put("facebookid", "no");
 
-                NetworkManager.getInstance().login(map, new LoginCallback() {
-                    @Override
-                    public void forwardResponse(LoginResponse loginResponse) {
-                        Log.v("Login:", loginResponse.getData().getProfileData().getFullname());
-                    }
+                // Login használata: Beteszel egy map-et, vagy null-t írsz, ekkor demo adatokkal küldi
+                ApiTester.login(null);
 
-                    @Override
-                    public void forwardError(NetworkError networkError) {
+                // SignUp használata: Beteszel egy map-et, vagy null-t írsz, ekkor demo adatokkal küldi
+                //ApiTester.signup(null);
 
-                    }
-                });
+                // getASZF használata: Beteszel egy map-et, vagy null-t írsz, ekkor demo adatokkal küldi
+                //ApiTester.getASZF(null);
+
+                // addDate használata: Beteszel egy map-et, vagy null-t írsz, ekkor demo adatokkal küldi
+                //ApiTester.addDate(null);
+
                 break;
         }
     }

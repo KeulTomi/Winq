@@ -12,9 +12,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.keult.networking.NetworkManager;
-import com.example.keult.networking.callback.RegistrationCallback;
+import com.example.keult.networking.callback.SignUpCallback;
 import com.example.keult.networking.error.NetworkError;
-import com.example.keult.networking.model.RegistrationResponse;
+import com.example.keult.networking.model.SignUpResponse;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -118,10 +118,10 @@ public class SignUpActivity2 extends AppCompatActivity implements View.OnClickLi
         map.put("user_country_short", "GER");
         map.put("user_interest", "Mindenki érdekel");
 
-        NetworkManager.getInstance().signup(map, new RegistrationCallback() {
+        NetworkManager.getInstance().signup(map, new SignUpCallback() {
             @Override
-            public void forwardResponse(RegistrationResponse registrationResponse) {
-                if ( registrationResponse.getSuccess() == 1 )
+            public void forwardResponse(SignUpResponse signUpResponse) {
+                if ( signUpResponse.getSuccess() == 1 )
                     Log.v("Registration:", "User successfully signed up");
             }
 

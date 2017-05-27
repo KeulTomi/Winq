@@ -4,11 +4,11 @@ package com.example.keult.networking.model;
  * Regisztráció válasz modell
  */
 
-public class RegistrationResponse extends BaseResponse {
+public class SignUpResponse extends BaseResponse {
 
-    private String data;
+    private String[] data;
 
-    public String getData() {
+    public String[] getData() {
         return data;
     }
 }

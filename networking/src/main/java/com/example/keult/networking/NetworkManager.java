@@ -2,10 +2,13 @@ package com.example.keult.networking;
 
 import java.util.Map;
 
+import com.example.keult.networking.callback.ConditionsCallback;
+import com.example.keult.networking.callback.DateAddCallback;
 import com.example.keult.networking.callback.LoginCallback;
-import com.example.keult.networking.callback.RegistrationCallback;
+import com.example.keult.networking.callback.SignUpCallback;
 import com.example.keult.networking.di.component.DaggerNetworkComponent;
 import com.example.keult.networking.error.factory.ErrorFactory;
+import com.example.keult.networking.model.DateAddResponse;
 import com.example.keult.networking.service.ApiService;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -42,13 +45,35 @@ public class NetworkManager {
                 );
     }
 
-    public void signup(Map<String, Object> body, RegistrationCallback registrationCallback) {
-        apiService.register(body)
+    public void signup(Map<String, Object> body, SignUpCallback signUpCallback) {
+        apiService.signup(body)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        registrationCallback::forwardResponse,
+                        signUpCallback::forwardResponse,
                         throwable -> {
-                            registrationCallback.forwardError(ErrorFactory.createNetworkError(throwable));
+                            signUpCallback.forwardError(ErrorFactory.createNetworkError(throwable));
+                        }
+                );
+    }
+
+    public void getASZF(Map<String, Object> body, ConditionsCallback conditionsCallback) {
+        apiService.getASZF(body)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        conditionsCallback::forwardResponse,
+                        throwable -> {
+                            conditionsCallback.forwardError(ErrorFactory.createNetworkError(throwable));
+                        }
+                );
+    }
+
+    public void addDate(Map<String, Object> body, DateAddCallback dateAddCallback) {
+        apiService.addDate(body)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        dateAddCallback::forwardResponse,
+                        throwable -> {
+                            dateAddCallback.forwardError(ErrorFactory.createNetworkError(throwable));
                         }
                 );
     }
