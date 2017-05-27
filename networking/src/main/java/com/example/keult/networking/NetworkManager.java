@@ -4,6 +4,8 @@ import java.util.Map;
 
 import com.example.keult.networking.callback.ConditionsCallback;
 import com.example.keult.networking.callback.DateAddCallback;
+import com.example.keult.networking.callback.DateDoNotLikeCallback;
+import com.example.keult.networking.callback.DateListCallback;
 import com.example.keult.networking.callback.LoginCallback;
 import com.example.keult.networking.callback.SignUpCallback;
 import com.example.keult.networking.di.component.DaggerNetworkComponent;
@@ -74,6 +76,28 @@ public class NetworkManager {
                         dateAddCallback::forwardResponse,
                         throwable -> {
                             dateAddCallback.forwardError(ErrorFactory.createNetworkError(throwable));
+                        }
+                );
+    }
+
+    public void dontLikeDate(Map<String, Object> body, DateDoNotLikeCallback dateDoNotLikeCallback) {
+        apiService.dontLikeDate(body)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        dateDoNotLikeCallback::forwardResponse,
+                        throwable -> {
+                            dateDoNotLikeCallback.forwardError(ErrorFactory.createNetworkError(throwable));
+                        }
+                );
+    }
+
+    public void getDates(Map<String, Object> body, DateListCallback dateListCallback) {
+        apiService.getDates(body)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        dateListCallback::forwardResponse,
+                        throwable -> {
+                            dateListCallback.forwardError(ErrorFactory.createNetworkError(throwable));
                         }
                 );
     }

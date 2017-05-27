@@ -5,11 +5,15 @@ import android.util.Log;
 import com.example.keult.networking.NetworkManager;
 import com.example.keult.networking.callback.ConditionsCallback;
 import com.example.keult.networking.callback.DateAddCallback;
+import com.example.keult.networking.callback.DateDoNotLikeCallback;
+import com.example.keult.networking.callback.DateListCallback;
 import com.example.keult.networking.callback.LoginCallback;
 import com.example.keult.networking.callback.SignUpCallback;
 import com.example.keult.networking.error.NetworkError;
 import com.example.keult.networking.model.ConditionsResponse;
 import com.example.keult.networking.model.DateAddResponse;
+import com.example.keult.networking.model.DateDoNotLikeResponse;
+import com.example.keult.networking.model.DateListResponse;
 import com.example.keult.networking.model.LoginResponse;
 import com.example.keult.networking.model.SignUpResponse;
 
@@ -36,12 +40,12 @@ class ApiTester {
         NetworkManager.getInstance().login(map, new LoginCallback() {
             @Override
             public void forwardResponse(LoginResponse loginResponse) {
-                Log.v("Login:", loginResponse.getData().getProfileData().getFullname());
+                Log.v("Login_OK:", loginResponse.getData().getProfileData().getFullName());
             }
 
             @Override
             public void forwardError(NetworkError networkError) {
-
+                Log.e("Login_Error:", networkError.getThrowable().getLocalizedMessage());
             }
         });
     }
@@ -117,12 +121,59 @@ class ApiTester {
         NetworkManager.getInstance().addDate(map, new DateAddCallback() {
             @Override
             public void forwardResponse(DateAddResponse dateAddResponse) {
-                Log.v("addDate_OK:", dateAddResponse.getData().toString());
+                Log.v("addDate_OK:", dateAddResponse.getData()[0]);
             }
 
             @Override
             public void forwardError(NetworkError networkError) {
                 Log.e("addDate_Error:", networkError.getThrowable().getLocalizedMessage());
+            }
+        });
+    }
+
+    static void dontLikeDate(Map<String, Object> map) {
+
+        if ( map == null ) {
+            map = new HashMap<>();
+            map.put("apikey", "a");
+            map.put("username", "keul-4@keul.com");
+            map.put("password", "asd123");
+            map.put("facebookid", "no");
+            map.put("to_user", "1");
+        }
+
+        NetworkManager.getInstance().dontLikeDate(map, new DateDoNotLikeCallback() {
+            @Override
+            public void forwardResponse(DateDoNotLikeResponse dateDoNotLikeResponse) {
+                Log.v("dontLikeDate_OK:", dateDoNotLikeResponse.getData()[0]);
+            }
+
+            @Override
+            public void forwardError(NetworkError networkError) {
+                Log.e("dontLikeDate_Error:", networkError.getThrowable().getLocalizedMessage());
+            }
+        });
+    }
+
+    static void getDates(Map<String, Object> map) {
+
+        if ( map == null ) {
+            map = new HashMap<>();
+            map.put("apikey", "a");
+            map.put("username", "ios@test.com");
+            map.put("password", "test");
+            map.put("facebookid", "no");
+        }
+
+        NetworkManager.getInstance().getDates(map, new DateListCallback() {
+            @Override
+            public void forwardResponse(DateListResponse dateListResponse) {
+                Log.v("getDates_OK:", dateListResponse.getData().getDateList().get(0).getFullName());
+            }
+
+            @Override
+            public void forwardError(NetworkError networkError) {
+                Log.e("getDates_Error:", networkError.getThrowable().getLocalizedMessage());
             }
         });
     }

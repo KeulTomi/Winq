@@ -26,7 +26,7 @@ public class ProfileData {
     private String user_interest;
     private String user_description;
 
-    public String getUserId() {
+    public String getId() {
         return id;
     }
 
@@ -46,11 +46,11 @@ public class ProfileData {
         return email;
     }
 
-    public String getFullname() {
+    public String getFullName() {
         return fullname;
     }
 
-    public String getFiuLany() {
+    public String getSex() {
         return fiulany;
     }
 

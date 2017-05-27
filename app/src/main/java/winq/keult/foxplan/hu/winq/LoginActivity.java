@@ -63,7 +63,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case R.id.GO_button:
 
                 // Login használata: Beteszel egy map-et, vagy null-t írsz, ekkor demo adatokkal küldi
-                ApiTester.login(null);
+                //ApiTester.login(null);
 
                 // SignUp használata: Beteszel egy map-et, vagy null-t írsz, ekkor demo adatokkal küldi
                 //ApiTester.signup(null);
@@ -73,6 +73,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                 // addDate használata: Beteszel egy map-et, vagy null-t írsz, ekkor demo adatokkal küldi
                 //ApiTester.addDate(null);
+
+                // dontLikeDate használata: Beteszel egy map-et, vagy null-t írsz, ekkor demo adatokkal küldi
+                //ApiTester.dontLikeDate(null);
+
+                // getDates használata: Beteszel egy map-et, vagy null-t írsz, ekkor demo adatokkal küldi
+                ApiTester.getDates(null);
 
                 break;
         }
