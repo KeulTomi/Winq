@@ -1,7 +1,5 @@
 package com.example.keult.networking.service;
 
-import java.util.Map;
-
 import com.example.keult.networking.model.ConditionsResponse;
 import com.example.keult.networking.model.DateAddResponse;
 import com.example.keult.networking.model.DateDoNotLikeResponse;
@@ -10,6 +8,8 @@ import com.example.keult.networking.model.EventListResponse;
 import com.example.keult.networking.model.GeneralSearchResponse;
 import com.example.keult.networking.model.LoginResponse;
 import com.example.keult.networking.model.SignUpResponse;
+
+import java.util.Map;
 
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
@@ -46,7 +46,7 @@ public interface ApiService {
 
     @FormUrlEncoded
     @POST(DATE_ADD)
-    Observable<DateAddResponse> addDate(@FieldMap Map<String, Object> body);
+    Observable<DateAddResponse> requestForDate(@FieldMap Map<String, Object> body);
 
     @FormUrlEncoded
     @POST(DATE_DONT_LIKE)
@@ -54,11 +54,11 @@ public interface ApiService {
 
     @FormUrlEncoded
     @POST(DATE_LIST)
-    Observable<DateListResponse> getDates(@FieldMap Map<String, Object> body);
+    Observable<DateListResponse> listDates(@FieldMap Map<String, Object> body);
 
     @FormUrlEncoded
     @POST(EVENT_LIST)
-    Observable<EventListResponse> getEvents(@FieldMap Map<String, Object> body);
+    Observable<EventListResponse> listEvents(@FieldMap Map<String, Object> body);
 
     @FormUrlEncoded
     @POST(EVENT_SEARCH)

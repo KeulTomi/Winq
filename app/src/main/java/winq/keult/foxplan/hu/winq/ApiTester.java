@@ -112,7 +112,7 @@ class ApiTester {
         });
     }
 
-    static void addDate(Map<String, Object> map) {
+    static void requestForDate(Map<String, Object> map) {
 
         if ( map == null ) {
             map = new HashMap<>();
@@ -123,7 +123,7 @@ class ApiTester {
             map.put("to_user", "1");
         }
 
-        NetworkManager.getInstance().addDate(map, new DateAddCallback() {
+        NetworkManager.getInstance().requestForDate(map, new DateAddCallback() {
             @Override
             public void forwardResponse(DateAddResponse dateAddResponse) {
                 Log.v("addDate_OK:", dateAddResponse.getData()[0]);
@@ -160,7 +160,7 @@ class ApiTester {
         });
     }
 
-    static void getDates(Map<String, Object> map) {
+    static void listDates(Map<String, Object> map) {
 
         if ( map == null ) {
             map = new HashMap<>();
@@ -170,7 +170,7 @@ class ApiTester {
             map.put("facebookid", "no");
         }
 
-        NetworkManager.getInstance().getDates(map, new DateListCallback() {
+        NetworkManager.getInstance().listDates(map, new DateListCallback() {
             @Override
             public void forwardResponse(DateListResponse dateListResponse) {
                 Log.v("getDates_OK:", dateListResponse.getData().getDateList().get(0).getFullName());
@@ -183,7 +183,7 @@ class ApiTester {
         });
     }
 
-    static void getEvents(Map<String, Object> map) {
+    static void listEvents(Map<String, Object> map) {
 
         if ( map == null ) {
             map = new HashMap<>();
@@ -195,7 +195,7 @@ class ApiTester {
             map.put("homepage", "0");
         }
 
-        NetworkManager.getInstance().getEvents(map, new EventListCallback() {
+        NetworkManager.getInstance().listEvents(map, new EventListCallback() {
             @Override
             public void forwardResponse(EventListResponse eventListResponse) {
                 Log.v("getEvents_OK:", "events_all= " + Integer.toString(eventListResponse.getData().getEventsCount()));

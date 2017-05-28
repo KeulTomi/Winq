@@ -1,7 +1,5 @@
 package com.example.keult.networking;
 
-import java.util.Map;
-
 import com.example.keult.networking.callback.ConditionsCallback;
 import com.example.keult.networking.callback.DateAddCallback;
 import com.example.keult.networking.callback.DateDoNotLikeCallback;
@@ -13,13 +11,14 @@ import com.example.keult.networking.callback.LoginCallback;
 import com.example.keult.networking.callback.SignUpCallback;
 import com.example.keult.networking.di.component.DaggerNetworkComponent;
 import com.example.keult.networking.error.factory.ErrorFactory;
-import com.example.keult.networking.model.DateAddResponse;
-import com.example.keult.networking.model.GeneralSearchResponse;
 import com.example.keult.networking.service.ApiService;
+
+import java.util.Map;
+
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
- * Created by demdani on 2016. 10. 18..
+ *  Api hívásokat kezelő osztály, ahol a metódusok elérhetők
  */
 
 public class NetworkManager {
@@ -45,9 +44,7 @@ public class NetworkManager {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         loginCallback::forwardResponse,
-                        throwable -> {
-                            loginCallback.forwardError(ErrorFactory.createNetworkError(throwable));
-                        }
+                        throwable -> loginCallback.forwardError(ErrorFactory.createNetworkError(throwable))
                 );
     }
 
@@ -56,9 +53,7 @@ public class NetworkManager {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         signUpCallback::forwardResponse,
-                        throwable -> {
-                            signUpCallback.forwardError(ErrorFactory.createNetworkError(throwable));
-                        }
+                        throwable -> signUpCallback.forwardError(ErrorFactory.createNetworkError(throwable))
                 );
     }
 
@@ -67,20 +62,16 @@ public class NetworkManager {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         conditionsCallback::forwardResponse,
-                        throwable -> {
-                            conditionsCallback.forwardError(ErrorFactory.createNetworkError(throwable));
-                        }
+                        throwable -> conditionsCallback.forwardError(ErrorFactory.createNetworkError(throwable))
                 );
     }
 
-    public void addDate(Map<String, Object> body, DateAddCallback dateAddCallback) {
-        apiService.addDate(body)
+    public void requestForDate(Map<String, Object> body, DateAddCallback dateAddCallback) {
+        apiService.requestForDate(body)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         dateAddCallback::forwardResponse,
-                        throwable -> {
-                            dateAddCallback.forwardError(ErrorFactory.createNetworkError(throwable));
-                        }
+                        throwable -> dateAddCallback.forwardError(ErrorFactory.createNetworkError(throwable))
                 );
     }
 
@@ -89,31 +80,25 @@ public class NetworkManager {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         dateDoNotLikeCallback::forwardResponse,
-                        throwable -> {
-                            dateDoNotLikeCallback.forwardError(ErrorFactory.createNetworkError(throwable));
-                        }
+                        throwable -> dateDoNotLikeCallback.forwardError(ErrorFactory.createNetworkError(throwable))
                 );
     }
 
-    public void getDates(Map<String, Object> body, DateListCallback dateListCallback) {
-        apiService.getDates(body)
+    public void listDates(Map<String, Object> body, DateListCallback dateListCallback) {
+        apiService.listDates(body)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         dateListCallback::forwardResponse,
-                        throwable -> {
-                            dateListCallback.forwardError(ErrorFactory.createNetworkError(throwable));
-                        }
+                        throwable -> dateListCallback.forwardError(ErrorFactory.createNetworkError(throwable))
                 );
     }
 
-    public void getEvents(Map<String, Object> body, EventListCallback eventListCallback) {
-        apiService.getEvents(body)
+    public void listEvents(Map<String, Object> body, EventListCallback eventListCallback) {
+        apiService.listEvents(body)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         eventListCallback::forwardResponse,
-                        throwable -> {
-                            eventListCallback.forwardError(ErrorFactory.createNetworkError(throwable));
-                        }
+                        throwable -> eventListCallback.forwardError(ErrorFactory.createNetworkError(throwable))
                 );
     }
 
@@ -122,9 +107,7 @@ public class NetworkManager {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         eventsSearchCallback::forwardResponse,
-                        throwable -> {
-                            eventsSearchCallback.forwardError(ErrorFactory.createNetworkError(throwable));
-                        }
+                        throwable -> eventsSearchCallback.forwardError(ErrorFactory.createNetworkError(throwable))
                 );
     }
 
@@ -133,9 +116,7 @@ public class NetworkManager {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         generalSearchCallback::forwardResponse,
-                        throwable -> {
-                            generalSearchCallback.forwardError(ErrorFactory.createNetworkError(throwable));
-                        }
+                        throwable -> generalSearchCallback.forwardError(ErrorFactory.createNetworkError(throwable))
                 );
     }
 }

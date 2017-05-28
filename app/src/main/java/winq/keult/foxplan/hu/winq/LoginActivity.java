@@ -3,26 +3,11 @@ package winq.keult.foxplan.hu.winq;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
-
-import com.example.keult.networking.NetworkManager;
-import com.example.keult.networking.callback.ConditionsCallback;
-import com.example.keult.networking.callback.DateAddCallback;
-import com.example.keult.networking.callback.LoginCallback;
-import com.example.keult.networking.callback.SignUpCallback;
-import com.example.keult.networking.error.NetworkError;
-import com.example.keult.networking.model.ConditionsResponse;
-import com.example.keult.networking.model.DateAddResponse;
-import com.example.keult.networking.model.LoginResponse;
-import com.example.keult.networking.model.SignUpResponse;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -71,17 +56,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 // getASZF használata: Beteszel egy map-et, vagy null-t írsz, ekkor demo adatokkal küldi
                 //ApiTester.getASZF(null);
 
-                // addDate használata: Beteszel egy map-et, vagy null-t írsz, ekkor demo adatokkal küldi
-                //ApiTester.addDate(null);
+                // requestForDate használata: Beteszel egy map-et, vagy null-t írsz, ekkor demo adatokkal küldi
+                //ApiTester.requestForDate(null);
 
                 // dontLikeDate használata: Beteszel egy map-et, vagy null-t írsz, ekkor demo adatokkal küldi
                 //ApiTester.dontLikeDate(null);
 
-                // getDates használata: Beteszel egy map-et, vagy null-t írsz, ekkor demo adatokkal küldi
-                //ApiTester.getDates(null);
+                // listDates használata: Beteszel egy map-et, vagy null-t írsz, ekkor demo adatokkal küldi
+                //ApiTester.listDates(null);
 
-                // getEvents használata: Beteszel egy map-et, vagy null-t írsz, ekkor demo adatokkal küldi
-                //ApiTester.getEvents(null);
+                // listEvents használata: Beteszel egy map-et, vagy null-t írsz, ekkor demo adatokkal küldi
+                //ApiTester.listEvents(null);
 
                 // searchEvents használata: Beteszel egy map-et, vagy null-t írsz, ekkor demo adatokkal küldi
                 //ApiTester.searchEvents(null);
