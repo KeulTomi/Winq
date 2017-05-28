@@ -6,6 +6,7 @@ import com.example.keult.networking.callback.DateDoNotLikeCallback;
 import com.example.keult.networking.callback.DateListCallback;
 import com.example.keult.networking.callback.EventListCallback;
 import com.example.keult.networking.callback.EventsSearchCallback;
+import com.example.keult.networking.callback.ExploreCallback;
 import com.example.keult.networking.callback.GeneralSearchCallback;
 import com.example.keult.networking.callback.LoginCallback;
 import com.example.keult.networking.callback.SignUpCallback;
@@ -117,6 +118,15 @@ public class NetworkManager {
                 .subscribe(
                         generalSearchCallback::forwardResponse,
                         throwable -> generalSearchCallback.forwardError(ErrorFactory.createNetworkError(throwable))
+                );
+    }
+
+    public void exploreUsers(Map<String, Object> body, ExploreCallback exploreCallback) {
+        apiService.exploreUsers(body)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        exploreCallback::forwardResponse,
+                        throwable -> exploreCallback.forwardError(ErrorFactory.createNetworkError(throwable))
                 );
     }
 }

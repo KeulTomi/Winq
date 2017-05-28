@@ -72,8 +72,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 //ApiTester.searchEvents(null);
 
                 // searchEvents használata: Beteszel egy map-et, vagy null-t írsz, ekkor demo adatokkal küldi
-                ApiTester.searchGeneral(null);
+                //ApiTester.searchGeneral(null);
 
+                // searchEvents használata: Beteszel egy map-et, vagy null-t írsz, ekkor demo adatokkal küldi
+                ApiTester.exploreUsers(null);
                 break;
         }
     }

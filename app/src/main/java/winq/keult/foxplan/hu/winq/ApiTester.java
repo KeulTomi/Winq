@@ -9,6 +9,7 @@ import com.example.keult.networking.callback.DateDoNotLikeCallback;
 import com.example.keult.networking.callback.DateListCallback;
 import com.example.keult.networking.callback.EventListCallback;
 import com.example.keult.networking.callback.EventsSearchCallback;
+import com.example.keult.networking.callback.ExploreCallback;
 import com.example.keult.networking.callback.GeneralSearchCallback;
 import com.example.keult.networking.callback.LoginCallback;
 import com.example.keult.networking.callback.SignUpCallback;
@@ -18,6 +19,7 @@ import com.example.keult.networking.model.DateAddResponse;
 import com.example.keult.networking.model.DateDoNotLikeResponse;
 import com.example.keult.networking.model.DateListResponse;
 import com.example.keult.networking.model.EventListResponse;
+import com.example.keult.networking.model.ExploreResponse;
 import com.example.keult.networking.model.GeneralSearchResponse;
 import com.example.keult.networking.model.LoginResponse;
 import com.example.keult.networking.model.SignUpResponse;
@@ -261,6 +263,31 @@ class ApiTester {
             @Override
             public void forwardError(NetworkError networkError) {
                 Log.e("searchGeneral_Error:", networkError.getThrowable().getLocalizedMessage());
+            }
+        });
+    }
+
+    static void exploreUsers(Map<String, Object> map) {
+
+        if (map == null) {
+            map = new HashMap<>();
+            map.put("apikey", "a");
+            map.put("username", "ios@test.com");
+            map.put("password", "test");
+            map.put("facebookid", "no");
+        }
+
+        NetworkManager.getInstance().exploreUsers(map, new ExploreCallback() {
+            @Override
+            public void forwardResponse(ExploreResponse exploreResponse) {
+                Log.v("exploreUsers_OK:",
+                        "FullName(first_result)= "
+                                + exploreResponse.getData().getUsersList().get(0).getFullName());
+            }
+
+            @Override
+            public void forwardError(NetworkError networkError) {
+                Log.e("exploreUsers_Error:", networkError.getThrowable().getLocalizedMessage());
             }
         });
     }
