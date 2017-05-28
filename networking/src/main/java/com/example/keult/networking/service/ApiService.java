@@ -4,6 +4,8 @@ import com.example.keult.networking.model.ConditionsResponse;
 import com.example.keult.networking.model.DateAddResponse;
 import com.example.keult.networking.model.DateDoNotLikeResponse;
 import com.example.keult.networking.model.DateListResponse;
+import com.example.keult.networking.model.EventJoinResponse;
+import com.example.keult.networking.model.EventJoinedByIdResponse;
 import com.example.keult.networking.model.EventListResponse;
 import com.example.keult.networking.model.ExploreResponse;
 import com.example.keult.networking.model.GeneralSearchResponse;
@@ -21,7 +23,9 @@ import static com.example.keult.networking.constant.ApiConstants.CONDITIONS;
 import static com.example.keult.networking.constant.ApiConstants.DATE_ADD;
 import static com.example.keult.networking.constant.ApiConstants.DATE_DONT_LIKE;
 import static com.example.keult.networking.constant.ApiConstants.DATE_LIST;
+import static com.example.keult.networking.constant.ApiConstants.EVENT_JOIN;
 import static com.example.keult.networking.constant.ApiConstants.EVENT_LIST;
+import static com.example.keult.networking.constant.ApiConstants.EVENT_LIST_BY_ID;
 import static com.example.keult.networking.constant.ApiConstants.EVENT_SEARCH;
 import static com.example.keult.networking.constant.ApiConstants.EXPLORE;
 import static com.example.keult.networking.constant.ApiConstants.GENERAL_SEARCH;
@@ -63,6 +67,10 @@ public interface ApiService {
     Observable<EventListResponse> listEvents(@FieldMap Map<String, Object> body);
 
     @FormUrlEncoded
+    @POST(EVENT_LIST_BY_ID)
+    Observable<EventJoinedByIdResponse> listEventsById(@FieldMap Map<String, Object> body);
+
+    @FormUrlEncoded
     @POST(EVENT_SEARCH)
     Observable<EventListResponse> searchEvents(@FieldMap Map<String, Object> body);
 
@@ -73,5 +81,9 @@ public interface ApiService {
     @FormUrlEncoded
     @POST(EXPLORE)
     Observable<ExploreResponse> exploreUsers(@FieldMap Map<String, Object> body);
+
+    @FormUrlEncoded
+    @POST(EVENT_JOIN)
+    Observable<EventJoinResponse> joinToEvent(@FieldMap Map<String, Object> body);
 
 }

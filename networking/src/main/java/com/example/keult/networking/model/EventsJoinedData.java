@@ -1,10 +1,10 @@
 package com.example.keult.networking.model;
 
 /**
- * Created by KeulT on 2017.05.25..
+ *  User által csatlakozott események adatmodellje
  */
 
-class EventsJoined {
+public class EventsJoinedData {
 
     private String id;
     private String title;

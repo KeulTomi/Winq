@@ -8,6 +8,6 @@ import com.example.keult.networking.model.GeneralSearchResponse;
 
 public interface GeneralSearchCallback extends BaseCallback {
 
-    void forwardResponse(GeneralSearchResponse eventListResponse);
+    void forwardResponse(GeneralSearchResponse generalSearchResponse);
 
 }

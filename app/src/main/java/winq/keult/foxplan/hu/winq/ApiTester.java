@@ -7,6 +7,8 @@ import com.example.keult.networking.callback.ConditionsCallback;
 import com.example.keult.networking.callback.DateAddCallback;
 import com.example.keult.networking.callback.DateDoNotLikeCallback;
 import com.example.keult.networking.callback.DateListCallback;
+import com.example.keult.networking.callback.EventJoinCallback;
+import com.example.keult.networking.callback.EventJoinedByIdCallback;
 import com.example.keult.networking.callback.EventListCallback;
 import com.example.keult.networking.callback.EventsSearchCallback;
 import com.example.keult.networking.callback.ExploreCallback;
@@ -18,6 +20,8 @@ import com.example.keult.networking.model.ConditionsResponse;
 import com.example.keult.networking.model.DateAddResponse;
 import com.example.keult.networking.model.DateDoNotLikeResponse;
 import com.example.keult.networking.model.DateListResponse;
+import com.example.keult.networking.model.EventJoinResponse;
+import com.example.keult.networking.model.EventJoinedByIdResponse;
 import com.example.keult.networking.model.EventListResponse;
 import com.example.keult.networking.model.ExploreResponse;
 import com.example.keult.networking.model.GeneralSearchResponse;
@@ -47,7 +51,16 @@ class ApiTester {
         NetworkManager.getInstance().login(map, new LoginCallback() {
             @Override
             public void forwardResponse(LoginResponse loginResponse) {
-                Log.v("Login_OK:", loginResponse.getData().getProfileData().getFullName());
+                if (loginResponse.getSuccess() == 1) {
+                    // Válasz rendben
+                    Log.v("Login_OK:",
+                            "FullName= " + loginResponse.getData().getProfileData().getFullName());
+                } else {
+                    // Válasz visszautasítva
+                    Log.w("Login_Refused:",
+                            "FirstErrorText= " + loginResponse.getError().get(0));
+
+                }
             }
 
             @Override
@@ -83,8 +96,16 @@ class ApiTester {
         NetworkManager.getInstance().signup(map, new SignUpCallback() {
             @Override
             public void forwardResponse(SignUpResponse signUpResponse) {
-                if ( signUpResponse.getSuccess() == 1 )
+
+                if (signUpResponse.getSuccess() == 1) {
+                    // Válasz rendben
                     Log.v("SignUp_OK:", "User successfully signed up");
+                } else {
+                    // Válasz visszautasítva
+                    Log.w("Login_Refused:",
+                            "FirstErrorText= " + signUpResponse.getError().get(0));
+
+                }
             }
 
             @Override
@@ -104,7 +125,16 @@ class ApiTester {
         NetworkManager.getInstance().getASZF(map, new ConditionsCallback() {
             @Override
             public void forwardResponse(ConditionsResponse conditionsResponse) {
-                Log.v("getASZF_OK:", conditionsResponse.getData().getPages());
+
+                if (conditionsResponse.getSuccess() == 1) {
+                    // Válasz rendben
+                    Log.v("getASZF_OK:", conditionsResponse.getData().getPages());
+                } else {
+                    // Válasz visszautasítva
+                    Log.w("getASZF_Refused:",
+                            "FirstErrorText= " + conditionsResponse.getError().get(0));
+
+                }
             }
 
             @Override
@@ -128,7 +158,16 @@ class ApiTester {
         NetworkManager.getInstance().requestForDate(map, new DateAddCallback() {
             @Override
             public void forwardResponse(DateAddResponse dateAddResponse) {
-                Log.v("addDate_OK:", dateAddResponse.getData()[0]);
+
+                if (dateAddResponse.getSuccess() == 1) {
+                    // Válasz rendben
+                    Log.v("addDate_OK:", dateAddResponse.getData()[0]);
+                } else {
+                    // Válasz visszautasítva
+                    Log.w("addDate_Refused:",
+                            "FirstErrorText= " + dateAddResponse.getError().get(0));
+
+                }
             }
 
             @Override
@@ -152,7 +191,16 @@ class ApiTester {
         NetworkManager.getInstance().dontLikeDate(map, new DateDoNotLikeCallback() {
             @Override
             public void forwardResponse(DateDoNotLikeResponse dateDoNotLikeResponse) {
-                Log.v("dontLikeDate_OK:", dateDoNotLikeResponse.getData()[0]);
+
+                if (dateDoNotLikeResponse.getSuccess() == 1) {
+                    // Válasz rendben
+                    Log.v("dontLikeDate_OK:", dateDoNotLikeResponse.getData()[0]);
+                } else {
+                    // Válasz visszautasítva
+                    Log.w("dontLikeDate_Refused:",
+                            "FirstErrorText= " + dateDoNotLikeResponse.getError().get(0));
+
+                }
             }
 
             @Override
@@ -175,12 +223,22 @@ class ApiTester {
         NetworkManager.getInstance().listDates(map, new DateListCallback() {
             @Override
             public void forwardResponse(DateListResponse dateListResponse) {
-                Log.v("getDates_OK:", dateListResponse.getData().getDateList().get(0).getFullName());
+
+                if (dateListResponse.getSuccess() == 1) {
+                    // Válasz rendben
+                    Log.v("listDates_OK:",
+                            "FullName= " + dateListResponse.getData().getDateList().get(0).getFullName());
+                } else {
+                    // Válasz visszautasítva
+                    Log.w("listDates_Refused:",
+                            "FirstErrorText= " + dateListResponse.getError().get(0));
+
+                }
             }
 
             @Override
             public void forwardError(NetworkError networkError) {
-                Log.e("getDates_Error:", networkError.getThrowable().getLocalizedMessage());
+                Log.e("listDates_Error:", networkError.getThrowable().getLocalizedMessage());
             }
         });
     }
@@ -200,12 +258,56 @@ class ApiTester {
         NetworkManager.getInstance().listEvents(map, new EventListCallback() {
             @Override
             public void forwardResponse(EventListResponse eventListResponse) {
-                Log.v("getEvents_OK:", "events_all= " + Integer.toString(eventListResponse.getData().getEventsCount()));
+
+                if (eventListResponse.getSuccess() == 1) {
+                    // Válasz rendben
+                    Log.v("listEvents_OK:",
+                            "events_all= " + Integer.toString(eventListResponse.getData().getEventsCount()));
+                } else {
+                    // Válasz visszautasítva
+                    Log.w("listEvents_Refused:",
+                            "FirstErrorText= " + eventListResponse.getError().get(0));
+
+                }
             }
 
             @Override
             public void forwardError(NetworkError networkError) {
-                Log.e("getEvents_Error:", networkError.getThrowable().getLocalizedMessage());
+                Log.e("listEvents_Error:", networkError.getThrowable().getLocalizedMessage());
+            }
+        });
+    }
+
+    static void listEventsById(Map<String, Object> map) {
+
+        if (map == null) {
+            map = new HashMap<>();
+            map.put("apikey", "a");
+            map.put("username", "ios@test.com");
+            map.put("password", "test");
+            map.put("facebookid", "no");
+            map.put("userid", "17");
+        }
+
+        NetworkManager.getInstance().listEventsById(map, new EventJoinedByIdCallback() {
+            @Override
+            public void forwardResponse(EventJoinedByIdResponse eventJoinedByIdResponse) {
+
+                if (eventJoinedByIdResponse.getSuccess() == 1) {
+                    // Válasz rendben
+                    Log.v("listEventsById_OK:",
+                            "title= " + eventJoinedByIdResponse.getData().getEventJoinedList().get(0).getTitle());
+                } else {
+                    // Válasz visszautasítva
+                    Log.w("listEventsById_Refused:",
+                            "FirstErrorText= " + eventJoinedByIdResponse.getError().get(0));
+
+                }
+            }
+
+            @Override
+            public void forwardError(NetworkError networkError) {
+                Log.e("listEventsById_Error:", networkError.getThrowable().getLocalizedMessage());
             }
         });
     }
@@ -226,7 +328,17 @@ class ApiTester {
         NetworkManager.getInstance().searchEvents(map, new EventsSearchCallback() {
             @Override
             public void forwardResponse(EventListResponse eventListResponse) {
-                Log.v("searchEvents_OK:", "events_all= " + Integer.toString(eventListResponse.getData().getEventsCount()));
+
+                if (eventListResponse.getSuccess() == 1) {
+                    // Válasz rendben
+                    Log.v("searchEvents_OK:",
+                            "events_all= " + Integer.toString(eventListResponse.getData().getEventsCount()));
+                } else {
+                    // Válasz visszautasítva
+                    Log.w("searchEvents_Refused:",
+                            "FirstErrorText= " + eventListResponse.getError().get(0));
+
+                }
             }
 
             @Override
@@ -251,13 +363,20 @@ class ApiTester {
 
         NetworkManager.getInstance().searchGeneral(map, new GeneralSearchCallback() {
             @Override
-            public void forwardResponse(GeneralSearchResponse eventListResponse) {
-                Log.v("searchGeneral_OK:",
-                        "events_all= " + Integer.toString(eventListResponse.getData().getEventsCount()));
+            public void forwardResponse(GeneralSearchResponse generalSearchResponse) {
 
-                Log.v("searchGeneral_OK:",
-                        "users_all= " + Integer.toString(eventListResponse.getData().getUsersCount()));
+                if (generalSearchResponse.getSuccess() == 1) {
+                    // Válasz rendben
+                    Log.v("searchGeneral_OK:",
+                            "events_all= " + Integer.toString(generalSearchResponse.getData().getEventsCount()));
 
+                    Log.v("searchGeneral_OK:",
+                            "users_all= " + Integer.toString(generalSearchResponse.getData().getUsersCount()));
+                } else {
+                    // Válasz visszautasítva
+                    Log.w("searchEvents_Refused:",
+                            "FirstErrorText= " + generalSearchResponse.getError().get(0));
+                }
             }
 
             @Override
@@ -280,9 +399,52 @@ class ApiTester {
         NetworkManager.getInstance().exploreUsers(map, new ExploreCallback() {
             @Override
             public void forwardResponse(ExploreResponse exploreResponse) {
-                Log.v("exploreUsers_OK:",
-                        "FullName(first_result)= "
-                                + exploreResponse.getData().getUsersList().get(0).getFullName());
+
+                if (exploreResponse.getSuccess() == 1) {
+                    // Válasz rendben
+                    Log.v("exploreUsers_OK:",
+                            "FullName(first_result)= "
+                                    + exploreResponse.getData().getUsersList().get(0).getFullName());
+                } else {
+                    // Válasz visszautasítva
+                    Log.w("exploreUsers_Refused:",
+                            "FirstErrorText= " + exploreResponse.getError().get(0));
+                }
+            }
+
+            @Override
+            public void forwardError(NetworkError networkError) {
+                Log.e("exploreUsers_Error:", networkError.getThrowable().getLocalizedMessage());
+            }
+        });
+    }
+
+    static void joinToEvent(Map<String, Object> map) {
+
+        if (map == null) {
+            map = new HashMap<>();
+            map.put("apikey", "a");
+            map.put("username", "ios@test.com");
+            map.put("password", "test");
+            map.put("facebookid", "no");
+            map.put("eventid", "33"); // Csak egyszer lehet egy event-hez csatlakozni, a számot változtatni kell
+        }
+
+        NetworkManager.getInstance().joinToEvent(map, new EventJoinCallback() {
+            @Override
+            public void forwardResponse(EventJoinResponse eventJoinResponse) {
+
+                if (eventJoinResponse.getSuccess() == 1) {
+                    // Válasz rendben
+                    Log.v("joinToEvent_OK:",
+                            "Data= "
+                                    + eventJoinResponse.getData()[0]);
+                } else {
+                    // Válasz visszautasítva
+                    Log.w("joinToEvent_Refused:",
+                            "FirstErrorText= " + eventJoinResponse.getError().get(0));
+                }
+
             }
 
             @Override

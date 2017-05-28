@@ -25,6 +25,7 @@ public class ProfileData {
     private String user_country_short;
     private String user_interest;
     private String user_description;
+    private String user_interest_text;
 
     public String getId() {
         return id;
@@ -100,5 +101,9 @@ public class ProfileData {
 
     public String getUserDescription() {
         return user_description;
+    }
+
+    public String getUserInterestText() {
+        return user_interest_text;
     }
 }

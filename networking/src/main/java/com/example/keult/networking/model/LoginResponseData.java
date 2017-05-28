@@ -9,23 +9,23 @@ import java.util.List;
 public class LoginResponseData {
 
     private ProfileData profile;
-    private List<EventsJoined> events_joined;
-    private List<DatesInLogin> profile_dates;
-    private List<FriendsInLogin> profile_friends;
+    private List<EventsJoinedData> events_joined;
+    private List<ProfileData> profile_dates;
+    private List<ProfileData> profile_friends;
 
     public ProfileData getProfileData() {
         return profile;
     }
 
-    public List<EventsJoined> getEventsJoinedList() {
+    public List<EventsJoinedData> getEventsJoinedList() {
         return events_joined;
     }
 
-    public List<DatesInLogin> getDatesInLogin() {
+    public List<ProfileData> getDatesInLogin() {
         return profile_dates;
     }
 
-    public List<FriendsInLogin> getFriendsInLoginList() {
+    public List<ProfileData> getFriendsInLoginList() {
         return profile_friends;
     }
 }

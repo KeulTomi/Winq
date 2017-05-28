@@ -4,7 +4,7 @@ package com.example.keult.networking.model;
  * Explore menü válasz adatmodell
  */
 
-public class ExploreResponse {
+public class ExploreResponse extends BaseResponse {
 
     private ExploreResponseData data;
 

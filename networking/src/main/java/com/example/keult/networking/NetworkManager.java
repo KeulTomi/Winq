@@ -4,6 +4,8 @@ import com.example.keult.networking.callback.ConditionsCallback;
 import com.example.keult.networking.callback.DateAddCallback;
 import com.example.keult.networking.callback.DateDoNotLikeCallback;
 import com.example.keult.networking.callback.DateListCallback;
+import com.example.keult.networking.callback.EventJoinCallback;
+import com.example.keult.networking.callback.EventJoinedByIdCallback;
 import com.example.keult.networking.callback.EventListCallback;
 import com.example.keult.networking.callback.EventsSearchCallback;
 import com.example.keult.networking.callback.ExploreCallback;
@@ -103,6 +105,15 @@ public class NetworkManager {
                 );
     }
 
+    public void listEventsById(Map<String, Object> body, EventJoinedByIdCallback eventJoinedByIdCallback) {
+        apiService.listEventsById(body)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        eventJoinedByIdCallback::forwardResponse,
+                        throwable -> eventJoinedByIdCallback.forwardError(ErrorFactory.createNetworkError(throwable))
+                );
+    }
+
     public void searchEvents(Map<String, Object> body, EventsSearchCallback eventsSearchCallback) {
         apiService.searchEvents(body)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -127,6 +138,15 @@ public class NetworkManager {
                 .subscribe(
                         exploreCallback::forwardResponse,
                         throwable -> exploreCallback.forwardError(ErrorFactory.createNetworkError(throwable))
+                );
+    }
+
+    public void joinToEvent(Map<String, Object> body, EventJoinCallback eventJoinCallback) {
+        apiService.joinToEvent(body)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        eventJoinCallback::forwardResponse,
+                        throwable -> eventJoinCallback.forwardError(ErrorFactory.createNetworkError(throwable))
                 );
     }
 }
