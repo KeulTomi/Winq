@@ -6,11 +6,15 @@ import com.example.keult.networking.callback.ConditionsCallback;
 import com.example.keult.networking.callback.DateAddCallback;
 import com.example.keult.networking.callback.DateDoNotLikeCallback;
 import com.example.keult.networking.callback.DateListCallback;
+import com.example.keult.networking.callback.EventListCallback;
+import com.example.keult.networking.callback.EventsSearchCallback;
+import com.example.keult.networking.callback.GeneralSearchCallback;
 import com.example.keult.networking.callback.LoginCallback;
 import com.example.keult.networking.callback.SignUpCallback;
 import com.example.keult.networking.di.component.DaggerNetworkComponent;
 import com.example.keult.networking.error.factory.ErrorFactory;
 import com.example.keult.networking.model.DateAddResponse;
+import com.example.keult.networking.model.GeneralSearchResponse;
 import com.example.keult.networking.service.ApiService;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -98,6 +102,39 @@ public class NetworkManager {
                         dateListCallback::forwardResponse,
                         throwable -> {
                             dateListCallback.forwardError(ErrorFactory.createNetworkError(throwable));
+                        }
+                );
+    }
+
+    public void getEvents(Map<String, Object> body, EventListCallback eventListCallback) {
+        apiService.getEvents(body)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        eventListCallback::forwardResponse,
+                        throwable -> {
+                            eventListCallback.forwardError(ErrorFactory.createNetworkError(throwable));
+                        }
+                );
+    }
+
+    public void searchEvents(Map<String, Object> body, EventsSearchCallback eventsSearchCallback) {
+        apiService.searchEvents(body)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        eventsSearchCallback::forwardResponse,
+                        throwable -> {
+                            eventsSearchCallback.forwardError(ErrorFactory.createNetworkError(throwable));
+                        }
+                );
+    }
+
+    public void searchGeneral(Map<String, Object> body, GeneralSearchCallback generalSearchCallback) {
+        apiService.searchGeneral(body)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        generalSearchCallback::forwardResponse,
+                        throwable -> {
+                            generalSearchCallback.forwardError(ErrorFactory.createNetworkError(throwable));
                         }
                 );
     }

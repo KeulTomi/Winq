@@ -6,6 +6,8 @@ import com.example.keult.networking.model.ConditionsResponse;
 import com.example.keult.networking.model.DateAddResponse;
 import com.example.keult.networking.model.DateDoNotLikeResponse;
 import com.example.keult.networking.model.DateListResponse;
+import com.example.keult.networking.model.EventListResponse;
+import com.example.keult.networking.model.GeneralSearchResponse;
 import com.example.keult.networking.model.LoginResponse;
 import com.example.keult.networking.model.SignUpResponse;
 
@@ -18,6 +20,9 @@ import static com.example.keult.networking.constant.ApiConstants.CONDITIONS;
 import static com.example.keult.networking.constant.ApiConstants.DATE_ADD;
 import static com.example.keult.networking.constant.ApiConstants.DATE_DONT_LIKE;
 import static com.example.keult.networking.constant.ApiConstants.DATE_LIST;
+import static com.example.keult.networking.constant.ApiConstants.EVENT_LIST;
+import static com.example.keult.networking.constant.ApiConstants.EVENT_SEARCH;
+import static com.example.keult.networking.constant.ApiConstants.GENERAL_SEARCH;
 import static com.example.keult.networking.constant.ApiConstants.LOG_IN;
 import static com.example.keult.networking.constant.ApiConstants.SIGN_UP;
 
@@ -50,5 +55,17 @@ public interface ApiService {
     @FormUrlEncoded
     @POST(DATE_LIST)
     Observable<DateListResponse> getDates(@FieldMap Map<String, Object> body);
+
+    @FormUrlEncoded
+    @POST(EVENT_LIST)
+    Observable<EventListResponse> getEvents(@FieldMap Map<String, Object> body);
+
+    @FormUrlEncoded
+    @POST(EVENT_SEARCH)
+    Observable<EventListResponse> searchEvents(@FieldMap Map<String, Object> body);
+
+    @FormUrlEncoded
+    @POST(GENERAL_SEARCH)
+    Observable<GeneralSearchResponse> searchGeneral(@FieldMap Map<String, Object> body);
 
 }

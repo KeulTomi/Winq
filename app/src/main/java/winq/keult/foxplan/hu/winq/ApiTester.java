@@ -7,6 +7,9 @@ import com.example.keult.networking.callback.ConditionsCallback;
 import com.example.keult.networking.callback.DateAddCallback;
 import com.example.keult.networking.callback.DateDoNotLikeCallback;
 import com.example.keult.networking.callback.DateListCallback;
+import com.example.keult.networking.callback.EventListCallback;
+import com.example.keult.networking.callback.EventsSearchCallback;
+import com.example.keult.networking.callback.GeneralSearchCallback;
 import com.example.keult.networking.callback.LoginCallback;
 import com.example.keult.networking.callback.SignUpCallback;
 import com.example.keult.networking.error.NetworkError;
@@ -14,6 +17,8 @@ import com.example.keult.networking.model.ConditionsResponse;
 import com.example.keult.networking.model.DateAddResponse;
 import com.example.keult.networking.model.DateDoNotLikeResponse;
 import com.example.keult.networking.model.DateListResponse;
+import com.example.keult.networking.model.EventListResponse;
+import com.example.keult.networking.model.GeneralSearchResponse;
 import com.example.keult.networking.model.LoginResponse;
 import com.example.keult.networking.model.SignUpResponse;
 
@@ -174,6 +179,88 @@ class ApiTester {
             @Override
             public void forwardError(NetworkError networkError) {
                 Log.e("getDates_Error:", networkError.getThrowable().getLocalizedMessage());
+            }
+        });
+    }
+
+    static void getEvents(Map<String, Object> map) {
+
+        if ( map == null ) {
+            map = new HashMap<>();
+            map.put("apikey", "a");
+            map.put("username", "ios@test.com");
+            map.put("password", "test");
+            map.put("facebookid", "no");
+            map.put("page", "0");
+            map.put("homepage", "0");
+        }
+
+        NetworkManager.getInstance().getEvents(map, new EventListCallback() {
+            @Override
+            public void forwardResponse(EventListResponse eventListResponse) {
+                Log.v("getEvents_OK:", "events_all= " + Integer.toString(eventListResponse.getData().getEventsCount()));
+            }
+
+            @Override
+            public void forwardError(NetworkError networkError) {
+                Log.e("getEvents_Error:", networkError.getThrowable().getLocalizedMessage());
+            }
+        });
+    }
+
+    static void searchEvents(Map<String, Object> map) {
+
+        if ( map == null ) {
+            map = new HashMap<>();
+            map.put("apikey", "a");
+            map.put("username", "ios@test.com");
+            map.put("password", "test");
+            map.put("facebookid", "no");
+            map.put("searchinput", "a");
+            map.put("page", "0");
+            map.put("homepage", "0");
+        }
+
+        NetworkManager.getInstance().searchEvents(map, new EventsSearchCallback() {
+            @Override
+            public void forwardResponse(EventListResponse eventListResponse) {
+                Log.v("searchEvents_OK:", "events_all= " + Integer.toString(eventListResponse.getData().getEventsCount()));
+            }
+
+            @Override
+            public void forwardError(NetworkError networkError) {
+                Log.e("searchEvents_Error:", networkError.getThrowable().getLocalizedMessage());
+            }
+        });
+    }
+
+    static void searchGeneral(Map<String, Object> map) {
+
+        if ( map == null ) {
+            map = new HashMap<>();
+            map.put("apikey", "a");
+            map.put("username", "ios@test.com");
+            map.put("password", "test");
+            map.put("facebookid", "no");
+            map.put("searchinput", "a");
+            map.put("page", "0");
+            map.put("homepage", "0");
+        }
+
+        NetworkManager.getInstance().searchGeneral(map, new GeneralSearchCallback() {
+            @Override
+            public void forwardResponse(GeneralSearchResponse eventListResponse) {
+                Log.v("searchGeneral_OK:",
+                        "events_all= " + Integer.toString(eventListResponse.getData().getEventsCount()));
+
+                Log.v("searchGeneral_OK:",
+                        "users_all= " + Integer.toString(eventListResponse.getData().getUsersCount()));
+
+            }
+
+            @Override
+            public void forwardError(NetworkError networkError) {
+                Log.e("searchGeneral_Error:", networkError.getThrowable().getLocalizedMessage());
             }
         });
     }

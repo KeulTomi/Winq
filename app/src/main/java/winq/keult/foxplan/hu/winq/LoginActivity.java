@@ -78,7 +78,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 //ApiTester.dontLikeDate(null);
 
                 // getDates használata: Beteszel egy map-et, vagy null-t írsz, ekkor demo adatokkal küldi
-                ApiTester.getDates(null);
+                //ApiTester.getDates(null);
+
+                // getEvents használata: Beteszel egy map-et, vagy null-t írsz, ekkor demo adatokkal küldi
+                //ApiTester.getEvents(null);
+
+                // searchEvents használata: Beteszel egy map-et, vagy null-t írsz, ekkor demo adatokkal küldi
+                //ApiTester.searchEvents(null);
+
+                // searchEvents használata: Beteszel egy map-et, vagy null-t írsz, ekkor demo adatokkal küldi
+                ApiTester.searchGeneral(null);
 
                 break;
         }
