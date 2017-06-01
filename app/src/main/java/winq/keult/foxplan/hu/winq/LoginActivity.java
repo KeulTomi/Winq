@@ -1,13 +1,23 @@
 package winq.keult.foxplan.hu.winq;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.example.keult.networking.NetworkManager;
+import com.example.keult.networking.callback.LoginCallback;
+import com.example.keult.networking.error.NetworkError;
+import com.example.keult.networking.model.LoginResponse;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -15,6 +25,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private EditText loginPassword;
     private TextView goButton;
     private TextView signUpButton;
+    private final Context mContext = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +59,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case R.id.GO_button:
 
                 // Login használata: Beteszel egy map-et, vagy null-t írsz, ekkor demo adatokkal küldi
-                ApiTester.login(null);
+                HashMap<String, Object> userParams = new HashMap<>();
+                userParams.put("username", loginEmail.getText().toString());
+                userParams.put("password", loginPassword.getText().toString());
+                userParams.put("apikey", "a");
+                userParams.put("facebookid", "no");
+                login(userParams);
 
                 // SignUp használata: Beteszel egy map-et, vagy null-t írsz, ekkor demo adatokkal küldi
                 //ApiTester.signup(null);
@@ -85,5 +101,35 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                 break;
         }
+    }
+
+    public void login(final Map<String, Object> map) {
+
+        NetworkManager.getInstance().login(map, new LoginCallback() {
+            @Override
+            public void forwardResponse(LoginResponse loginResponse) {
+                if (loginResponse.getSuccess() == 1) {
+                    // Válasz rendben
+                    Log.v("Login_OK:",
+                            "FullName= " + loginResponse.getData().getProfileData().getFullName());
+                            Winq.username = map.get("username").toString();
+                            Winq.password = map.get("password").toString();
+
+                            Intent loginToMain = new Intent(mContext, ProfileActivity.class);
+                            startActivity(loginToMain);
+                } else {
+                    // Válasz visszautasítva
+                    Log.w("Login_Refused:",
+                            "FirstErrorText= " + loginResponse.getError().get(0));
+
+
+                }
+            }
+
+            @Override
+            public void forwardError(NetworkError networkError) {
+                Log.e("Login_Error:", networkError.getThrowable().getLocalizedMessage());
+            }
+        });
     }
 }

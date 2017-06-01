@@ -2,8 +2,8 @@ package winq.keult.foxplan.hu.winq;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -63,10 +63,10 @@ public class SignUpActivity1 extends AppCompatActivity implements View.OnClickLi
                 HashMap<String, Object> userParams = (HashMap<String, Object>) bundleSecondPart.get("messageBody");
 
                 if (isWomanChoosen){
-                    userParams.put("sexType", "woman");
+                    userParams.put("sexType", "2");
                 }
                 else {
-                    userParams.put("sexType", "man");
+                    userParams.put("sexType", "1");
                 }
 
                 int day = signUpBirthDate.getDayOfMonth();

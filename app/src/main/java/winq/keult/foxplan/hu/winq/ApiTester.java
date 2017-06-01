@@ -43,8 +43,8 @@ class ApiTester {
         if ( map == null ) {
             map = new HashMap<>();
             map.put("apikey", "a");
-            map.put("username", "ios@test.com");
-            map.put("password", "test");
+            map.put("username", map.get("email"));
+            map.put("password", map.get("password"));
             map.put("facebookid", "no");
         }
 
@@ -55,10 +55,12 @@ class ApiTester {
                     // Válasz rendben
                     Log.v("Login_OK:",
                             "FullName= " + loginResponse.getData().getProfileData().getFullName());
+
                 } else {
                     // Válasz visszautasítva
                     Log.w("Login_Refused:",
                             "FirstErrorText= " + loginResponse.getError().get(0));
+
 
                 }
             }

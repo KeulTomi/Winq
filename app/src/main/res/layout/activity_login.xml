@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/login_background"
+    android:background="@drawable/trans_back"
     tools:context="winq.keult.foxplan.hu.winq.LoginActivity">
 
     <ImageView
@@ -18,7 +18,7 @@
         android:maxHeight="270dp"
         android:maxWidth="270dp"
         android:scaleType="fitCenter"
-        android:src="@drawable/wink_logo_big"/>
+        android:src="@drawable/wink_face"/>
 
     <LinearLayout
         android:layout_width="match_parent"
