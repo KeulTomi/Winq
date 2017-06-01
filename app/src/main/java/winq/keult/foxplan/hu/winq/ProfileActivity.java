@@ -26,6 +26,7 @@ public class ProfileActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_profile);
 
+
         /* Ez az 5 sor felelős azért, hogy (egyelőre csak) a profil képet kör alakban jeleníti meg. Amikor majd betöteted a profilképét
          * az adott usernek, akkor azt ilyennel kell majd megcsinálni csak az R.drawable.default_avatar helyett a megjelenítendő képet
          * rakod oda, ha pedig nincs képe az illetőnek, akkor defaultban ezt a képet allítsa be.
