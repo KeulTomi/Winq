@@ -11,6 +11,7 @@ import com.example.keult.networking.callback.EventsSearchCallback;
 import com.example.keult.networking.callback.ExploreCallback;
 import com.example.keult.networking.callback.GeneralSearchCallback;
 import com.example.keult.networking.callback.LoginCallback;
+import com.example.keult.networking.callback.ProfileImagesCallback;
 import com.example.keult.networking.callback.SignUpCallback;
 import com.example.keult.networking.di.component.DaggerNetworkComponent;
 import com.example.keult.networking.error.factory.ErrorFactory;
@@ -147,6 +148,15 @@ public class NetworkManager {
                 .subscribe(
                         eventJoinCallback::forwardResponse,
                         throwable -> eventJoinCallback.forwardError(ErrorFactory.createNetworkError(throwable))
+                );
+    }
+
+    public void getProfileImages(Map<String, Object> body, ProfileImagesCallback profileImagesCallback) {
+        apiService.getProfileImages(body)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        profileImagesCallback::forwardResponse,
+                        throwable -> profileImagesCallback.forwardError(ErrorFactory.createNetworkError(throwable))
                 );
     }
 }

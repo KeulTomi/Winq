@@ -10,6 +10,7 @@ import com.example.keult.networking.model.EventListResponse;
 import com.example.keult.networking.model.ExploreResponse;
 import com.example.keult.networking.model.GeneralSearchResponse;
 import com.example.keult.networking.model.LoginResponse;
+import com.example.keult.networking.model.ProfileImagesResponse;
 import com.example.keult.networking.model.SignUpResponse;
 
 import java.util.Map;
@@ -29,6 +30,7 @@ import static com.example.keult.networking.constant.ApiConstants.EVENT_LIST_BY_I
 import static com.example.keult.networking.constant.ApiConstants.EVENT_SEARCH;
 import static com.example.keult.networking.constant.ApiConstants.EXPLORE;
 import static com.example.keult.networking.constant.ApiConstants.GENERAL_SEARCH;
+import static com.example.keult.networking.constant.ApiConstants.GET_IMAGES;
 import static com.example.keult.networking.constant.ApiConstants.LOG_IN;
 import static com.example.keult.networking.constant.ApiConstants.SIGN_UP;
 
@@ -86,4 +88,7 @@ public interface ApiService {
     @POST(EVENT_JOIN)
     Observable<EventJoinResponse> joinToEvent(@FieldMap Map<String, Object> body);
 
+    @FormUrlEncoded
+    @POST(GET_IMAGES)
+    Observable<ProfileImagesResponse> getProfileImages(@FieldMap Map<String, Object> body);
 }

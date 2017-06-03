@@ -23,6 +23,7 @@ public class ApiConstants {
     public static final String EXPLORE = "profile/explore"; // Explore menü
     public static final String DATE_LIST = "profile/dates"; // Randi lista
     public static final String EVENT_JOIN = "profile/events_dojoin"; // Eseményhez csatlakozás
+    public static final String GET_IMAGES = "profile/getimages"; // Profil és story képek letöltése
         // api/profile/dates
         public static final String DATE_ADD = "profile/dates/add"; // Randi hozzáadása
         public static final String DATE_DONT_LIKE = "profile/dates/dont_like"; // Randi don't like
