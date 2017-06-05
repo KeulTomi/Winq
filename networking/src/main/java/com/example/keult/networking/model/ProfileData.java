@@ -35,12 +35,24 @@ public class ProfileData {
         return username;
     }
 
+    public void setUserName(String username) {
+        this.username = username;
+    }
+
     public String getPassword() {
         return password;
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public String getFacebookid() {
         return facebookid;
+    }
+
+    public void setFacebookId(String facebookId) {
+        this.facebookid = facebookId;
     }
 
     public String getEmail() {
@@ -106,4 +118,5 @@ public class ProfileData {
     public String getUserInterestText() {
         return user_interest_text;
     }
+
 }

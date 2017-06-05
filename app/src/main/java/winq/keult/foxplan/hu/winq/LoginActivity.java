@@ -21,15 +21,31 @@ import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private final Context mContext = this;
     private EditText loginEmail;
     private EditText loginPassword;
     private TextView goButton;
     private TextView signUpButton;
-    private final Context mContext = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Applikáció inicializálása
+        Winq.initApp(getApplicationContext());
+
+        if (Winq.savedDataExist()) {
+
+            HashMap<String, Object> userParams = new HashMap<>();
+            userParams.put("username", Winq.getCurrentUserProfileData().getUsername());
+            userParams.put("password", Winq.getCurrentUserProfileData().getPassword());
+            userParams.put("apikey", getResources().getString(R.string.apikey));
+            userParams.put("facebookid", Winq.getCurrentUserProfileData().getFacebookid());
+
+            login(userParams);
+
+        }
+
 
         //Fullscreent adunk az activitynek, hogy ne látszódjon a notificationbar
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -52,6 +68,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.sign_up_button:
+
                 Intent startSignUp = new Intent(this, SignUpActivity.class);
                 startActivity(startSignUp);
                 overridePendingTransition(R.anim.activity_slide_up, R.anim.activity_stay);
@@ -99,6 +116,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 // joinToEvent használata: Beteszel egy map-et, vagy null-t írsz, ekkor demo adatokkal küldi
                 //ApiTester.joinToEvent(null);
 
+                // getProfileImages használata: Beteszel egy map-et, vagy null-t írsz, ekkor demo adatokkal küldi
+                //ApiTester.getProfileImages(null);
+
                 break;
         }
     }
@@ -108,15 +128,23 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         NetworkManager.getInstance().login(map, new LoginCallback() {
             @Override
             public void forwardResponse(LoginResponse loginResponse) {
+
                 if (loginResponse.getSuccess() == 1) {
+
                     // Válasz rendben
                     Log.v("Login_OK:",
                             "FullName= " + loginResponse.getData().getProfileData().getFullName());
-                            Winq.username = map.get("username").toString();
-                            Winq.password = map.get("password").toString();
 
-                            Intent loginToMain = new Intent(mContext, ProfileActivity.class);
-                            startActivity(loginToMain);
+                    // Felhasználónév és jelszó mentése a beírt adatok alapján
+                    loginResponse.getData().getProfileData().setUserName(map.get("username").toString());
+                    loginResponse.getData().getProfileData().setPassword(map.get("password").toString());
+
+                    // Profile adatok mentése
+                    Winq.saveCurrentUserProfileData(loginResponse.getData().getProfileData());
+
+                    // Kezdő layout indítása
+                    Intent loginToMain = new Intent(mContext, ProfileActivity.class);
+                    startActivity(loginToMain);
                 } else {
                     // Válasz visszautasítva
                     Log.w("Login_Refused:",

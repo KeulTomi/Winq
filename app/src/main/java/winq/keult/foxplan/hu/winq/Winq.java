@@ -1,9 +1,12 @@
 package winq.keult.foxplan.hu.winq;
 
 import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.widget.TextView;
 
 import com.example.keult.networking.model.EventData;
+import com.example.keult.networking.model.ProfileData;
 
 import java.util.Calendar;
 import java.util.List;
@@ -16,10 +19,27 @@ public class Winq extends Application {
 
     public static String username;
     public static String password;
+    public static String facebookid;
     public static List<EventData> eventDatas;
+    private static ProfileData mCurrentUserProfileData;
+    private static Context mContext;
 
-    Winq () {
+    public static void initApp(Context context) {
+        mContext = context;
 
+        if (savedDataExist()) {
+
+            // Van mentett felhasználói adat, el kell tárolni
+            String usr = getAppPref(R.string.user_prefs_key).getString(getStringResource(R.string.saved_username_key), null);
+            String pass = getAppPref(R.string.user_prefs_key).getString(getStringResource(R.string.saved_password_key), null);
+            String fbid = getAppPref(R.string.user_prefs_key).getString(getStringResource(R.string.saved_facebookid_key), null);
+
+            mCurrentUserProfileData = new ProfileData();
+
+            mCurrentUserProfileData.setUserName(usr);
+            mCurrentUserProfileData.setPassword(pass);
+            mCurrentUserProfileData.setFacebookId(fbid);
+        }
     }
 
     public static void setTheRealTime (TextView yearText, TextView montAndDayText){
@@ -31,5 +51,50 @@ public class Winq extends Application {
 
         yearText.setText(String.valueOf(year));
         montAndDayText.setText(String.valueOf("0" + (month+1) + "." + day));
+    }
+
+    public static ProfileData getCurrentUserProfileData() {
+        return mCurrentUserProfileData;
+    }
+
+    public static void saveCurrentUserProfileData(ProfileData currentUserProfileData) {
+
+        SharedPreferences.Editor editor = getAppPref(R.string.user_prefs_key).edit();
+        editor.putString(getStringResource(R.string.saved_username_key), currentUserProfileData.getUsername());
+        editor.putString(getStringResource(R.string.saved_password_key), currentUserProfileData.getPassword());
+        editor.putString(getStringResource(R.string.saved_facebookid_key), currentUserProfileData.getFacebookid());
+        editor.putString(getStringResource(R.string.saved_userid_key), currentUserProfileData.getId());
+        editor.apply();
+        mCurrentUserProfileData = currentUserProfileData;
+    }
+
+    private static String getStringResource(int resource) {
+        return mContext.getResources().getString(resource);
+    }
+
+    public static void clearCurrentUserProfileData(ProfileData currentUserProfileData) {
+
+        SharedPreferences.Editor editor = getAppPref(R.string.user_prefs_key).edit();
+        editor.clear();
+        editor.apply();
+        mCurrentUserProfileData = null;
+    }
+
+
+    private static SharedPreferences getAppPref(int resourceId) {
+
+        String key = mContext.getResources().getString(resourceId);
+        return mContext.getSharedPreferences(key, Context.MODE_PRIVATE);
+    }
+
+    public static boolean savedDataExist() {
+
+        String savedUser = getAppPref(R.string.user_prefs_key).getString(getStringResource(R.string.saved_username_key), null);
+
+        if (savedUser == null)
+            return false;
+        else
+            return true;
+
     }
 }

@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Winq</string>
+    <string name="apikey">a</string>
+    <string name="user_prefs_key">user</string>
+    <string name="saved_username_key">username</string>
+    <string name="saved_password_key">password</string>
+    <string name="saved_facebookid_key">facebookid</string>
+    <string name="saved_userid_key">userid</string>
 </resources>

@@ -6,9 +6,9 @@ package com.example.keult.networking.model;
 
 public class ProfileImagesResponse extends BaseResponse {
 
-    private ProfileImagesResponseData[] data;
+    private ProfileImagesResponseData data;
 
-    public ProfileImagesResponseData[] getData() {
+    public ProfileImagesResponseData getData() {
         return data;
     }
 

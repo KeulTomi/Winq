@@ -14,6 +14,7 @@ import com.example.keult.networking.callback.EventsSearchCallback;
 import com.example.keult.networking.callback.ExploreCallback;
 import com.example.keult.networking.callback.GeneralSearchCallback;
 import com.example.keult.networking.callback.LoginCallback;
+import com.example.keult.networking.callback.ProfileImagesCallback;
 import com.example.keult.networking.callback.SignUpCallback;
 import com.example.keult.networking.error.NetworkError;
 import com.example.keult.networking.model.ConditionsResponse;
@@ -26,6 +27,7 @@ import com.example.keult.networking.model.EventListResponse;
 import com.example.keult.networking.model.ExploreResponse;
 import com.example.keult.networking.model.GeneralSearchResponse;
 import com.example.keult.networking.model.LoginResponse;
+import com.example.keult.networking.model.ProfileImagesResponse;
 import com.example.keult.networking.model.SignUpResponse;
 
 import java.util.HashMap;
@@ -452,6 +454,43 @@ class ApiTester {
             @Override
             public void forwardError(NetworkError networkError) {
                 Log.e("exploreUsers_Error:", networkError.getThrowable().getLocalizedMessage());
+            }
+        });
+    }
+
+    static void getProfileImages(Map<String, Object> map) {
+
+        if (map == null) {
+            map = new HashMap<>();
+            map.put("apikey", "a");
+            map.put("username", "ios@test.com");
+            map.put("password", "test");
+            map.put("facebookid", "no");
+            map.put("limit", "0");
+            map.put("story", "0");
+            map.put("userid", "17");
+        }
+
+        NetworkManager.getInstance().getProfileImages(map, new ProfileImagesCallback() {
+            @Override
+            public void forwardResponse(ProfileImagesResponse profileImagesResponse) {
+
+                if (profileImagesResponse.getSuccess() == 1) {
+                    // Válasz rendben
+                    Log.v("getImagest_OK:",
+                            "ImgUrl= "
+                                    + profileImagesResponse.getData().getImageList().get(0).getUrl());
+                } else {
+                    // Válasz visszautasítva
+                    Log.w("getImages_Refused:",
+                            "FirstErrorText= " + profileImagesResponse.getError().get(0));
+                }
+
+            }
+
+            @Override
+            public void forwardError(NetworkError networkError) {
+
             }
         });
     }
