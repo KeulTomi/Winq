@@ -12,8 +12,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.keult.networking.NetworkManager;
+import com.example.keult.networking.callback.DateDoNotLikeCallback;
 import com.example.keult.networking.callback.ExploreCallback;
 import com.example.keult.networking.error.NetworkError;
+import com.example.keult.networking.model.DateDoNotLikeResponse;
 import com.example.keult.networking.model.ExploreResponse;
 import com.example.keult.networking.model.ProfileData;
 
@@ -31,11 +33,99 @@ public class ExploreActivity extends AppCompatActivity implements View.OnClickLi
     private static TextView headerDateYear;
     private static TextView headerDateMonthAndDay;
     private static ImageView currentUserImage;
+    private static String currentUserID;
     private static List<ProfileData> currentUserProfile;
     private static int numberOfUser = 0;
-    Handler mUiHandler = new Handler();
     private static ImageView dontLike;
     private static ImageView like;
+    Handler mUiHandler = new Handler();
+
+    static void exploreUsers() {
+
+        Map<String, Object> map;
+
+
+        map = new HashMap<>();
+        map.put("apikey", "a");
+        map.put("username", Winq.username);
+        map.put("password", Winq.password);
+        map.put("facebookid", "no");
+
+        NetworkManager.getInstance().exploreUsers(map, new ExploreCallback() {
+            @Override
+            public void forwardResponse(ExploreResponse exploreResponse) {
+
+                if (exploreResponse.getSuccess() == 1) {
+                    // Válasz rendben
+                    Log.v("exploreUsers_OK:",
+                            "FullName(first_result)= "
+                                    + exploreResponse.getData().getUsersList().get(0).getFullName());
+
+                    currentUserProfile = exploreResponse.getData().getUsersList();
+
+                    setTheCurrentInfos(currentUserProfile, numberOfUser);
+                } else {
+                    // Válasz visszautasítva
+                    Log.w("exploreUsers_Refused:",
+                            "FirstErrorText= " + exploreResponse.getError().get(0));
+                }
+            }
+
+            @Override
+            public void forwardError(NetworkError networkError) {
+                Log.e("exploreUsers_Error:", networkError.getThrowable().getLocalizedMessage());
+            }
+        });
+    }
+
+    static void dontLikeDate() {
+
+        if (numberOfUser == 5) {
+            numberOfUser = 0;
+            exploreUsers();
+            return;
+        }
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("apikey", "a");
+        map.put("username", Winq.username);
+        map.put("password", Winq.password);
+        map.put("facebookid", "no");
+        map.put("to_user", currentUserProfile.get(numberOfUser).getId());
+
+        NetworkManager.getInstance().dontLikeDate(map, new DateDoNotLikeCallback() {
+            @Override
+            public void forwardResponse(DateDoNotLikeResponse dateDoNotLikeResponse) {
+
+                if (dateDoNotLikeResponse.getSuccess() == 1) {
+                    // Válasz rendben
+                    setTheCurrentInfos(currentUserProfile, numberOfUser);
+                } else {
+                    // Válasz visszautasítva
+                    Log.w("dontLikeDate_Refused:",
+                            "FirstErrorText= " + dateDoNotLikeResponse.getError().get(0));
+
+                }
+            }
+
+            @Override
+            public void forwardError(NetworkError networkError) {
+                Log.e("dontLikeDate_Error:", networkError.getThrowable().getLocalizedMessage());
+            }
+        });
+    }
+
+    public static void setTheCurrentInfos(List<ProfileData> profileData, int listNumber) {
+//        // Kép aszinkron betöltése
+//        ImageLoader imageLoader = new ImageLoader(getActivity());
+//        imageLoader.DisplayImage(profileData.get(listNumber).getImage(), currentUserImage, mUiHandler);
+
+        //currentUserAge.setText(profileData.get(listNumber));
+        currentUserCountry.setText(profileData.get(listNumber).getUserCountryShort());
+        currentUserFullname.setText(profileData.get(listNumber).getFullName());
+        currentUserIntrest.setText(profileData.get(listNumber).getUserInterestText());
+        currentUserDescription.setText(profileData.get(listNumber).getUserDescription());
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +137,8 @@ public class ExploreActivity extends AppCompatActivity implements View.OnClickLi
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_explore);
 
+        headerDateYear = (TextView) findViewById(R.id.explore_headertime_year);
+        headerDateMonthAndDay = (TextView) findViewById(R.id.explore_headertime_month_day);
 
         //A headerre kiírjuk a valós dátumot
         Winq.setTheRealTime(headerDateYear, headerDateMonthAndDay);
@@ -96,67 +188,15 @@ public class ExploreActivity extends AppCompatActivity implements View.OnClickLi
                 break;
 
             case R.id.explore_dont_like:
+                dontLikeDate();
                 numberOfUser++;
-                exploreUsers();
                 break;
 
             case R.id.explore_like:
-                numberOfUser++;
-                exploreUsers();
+                //setTheCurrentInfos(currentUserProfile, numberOfUser);
+                //numberOfUser++;
                 break;
         }
-    }
-
-    static void exploreUsers() {
-
-        Map<String, Object> map;
-
-
-            map = new HashMap<>();
-            map.put("apikey", "a");
-            map.put("username", Winq.username);
-            map.put("password", Winq.password);
-            map.put("facebookid", "no");
-
-        NetworkManager.getInstance().exploreUsers(map, new ExploreCallback() {
-            @Override
-            public void forwardResponse(ExploreResponse exploreResponse) {
-
-                if (exploreResponse.getSuccess() == 1) {
-                    // Válasz rendben
-                    Log.v("exploreUsers_OK:",
-                            "FullName(first_result)= "
-                                    + exploreResponse.getData().getUsersList().get(0).getFullName());
-
-                    currentUserProfile = exploreResponse.getData().getUsersList();
-                    if (numberOfUser == 5){
-                        numberOfUser = 0;
-                    }
-                    setTheCurrentInfos(currentUserProfile, numberOfUser);
-                } else {
-                    // Válasz visszautasítva
-                    Log.w("exploreUsers_Refused:",
-                            "FirstErrorText= " + exploreResponse.getError().get(0));
-                }
-            }
-
-            @Override
-            public void forwardError(NetworkError networkError) {
-                Log.e("exploreUsers_Error:", networkError.getThrowable().getLocalizedMessage());
-            }
-        });
-    }
-
-    public static void setTheCurrentInfos (List<ProfileData> profileData, int listNumber) {
-//        // Kép aszinkron betöltése
-//        ImageLoader imageLoader = new ImageLoader(getActivity());
-//        imageLoader.DisplayImage(profileData.get(listNumber).getImage(), currentUserImage, mUiHandler);
-
-        //currentUserAge.setText(profileData.get(listNumber));
-        currentUserCountry.setText(profileData.get(listNumber).getUserCountryShort());
-        currentUserFullname.setText(profileData.get(listNumber).getFullName());
-        currentUserIntrest.setText(profileData.get(listNumber).getUserInterestText());
-        currentUserDescription.setText(profileData.get(listNumber).getUserDescription());
     }
 
 }

@@ -50,7 +50,16 @@ public class Winq extends Application {
         int day = c.get(Calendar.DAY_OF_MONTH);
 
         yearText.setText(String.valueOf(year));
+        if (month + 1 <= 10)
         montAndDayText.setText(String.valueOf("0" + (month+1) + "." + day));
+        if (day <= 10) {
+            montAndDayText.setText(String.valueOf("0" + (month + 1) + "." + "0" + day));
+        } else {
+            montAndDayText.setText(String.valueOf((month + 1) + "." + day));
+            if (day <= 10) {
+                montAndDayText.setText(String.valueOf((month + 1) + "." + "0" + day));
+            }
+        }
     }
 
     public static ProfileData getCurrentUserProfileData() {

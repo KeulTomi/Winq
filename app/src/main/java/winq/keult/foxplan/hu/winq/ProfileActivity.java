@@ -1,5 +1,6 @@
 package winq.keult.foxplan.hu.winq;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
@@ -14,19 +15,25 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.keult.networking.NetworkManager;
 import com.example.keult.networking.callback.ProfileImagesCallback;
 import com.example.keult.networking.error.NetworkError;
+import com.example.keult.networking.model.ImageData;
 import com.example.keult.networking.model.ProfileImagesResponse;
 
 import java.util.HashMap;
+import java.util.List;
 
 
 public class ProfileActivity extends AppCompatActivity implements View.OnClickListener {
 
     private TextView headerDateYear;
     private TextView headerDateMonthAndDay;
+    private List<ImageData> mStoryImages;
+    private Bitmap mFirstStoryImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +56,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         Winq.setTheRealTime(headerDateYear, headerDateMonthAndDay);
 
         // Képek lékérése
-        requestProfileData();
+        requestForProfileImages();
 
     }
 
@@ -57,6 +64,20 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View v) {
 
         switch (v.getId()) {
+
+            case R.id.profile_image:
+
+                if (mStoryImages != null
+                        && mStoryImages.size() != 0
+                        && mFirstStoryImage != null) {
+                    // Ha vannak story képek és van első kép a akkor StoryActivity indítása
+                    Intent openStory = new Intent(this, StoryActivity.class);
+                    startActivity(openStory);
+                    overridePendingTransition(R.anim.activity_slide_up, R.anim.activity_stay);
+                }
+
+                break;
+
             case R.id.profile_images_01:
             case R.id.profile_images_02:
             case R.id.profile_images_03:
@@ -77,7 +98,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-    private void requestProfileData() {
+    private void requestForProfileImages() {
 
         HashMap<String, Object> map = new HashMap<>();
         map.put("username", Winq.getCurrentUserProfileData().getEmail());
@@ -101,6 +122,9 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
                     // Képek betöltése
                     initLayoutImages(profileImagesResponse);
+
+                    // Story képek lekérdezése
+                    requestForStoryImages();
 
                 } else {
                     // Válasz visszautasítva
@@ -221,6 +245,60 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             imageView.setOnClickListener(this);
 
         }
+    }
 
+    private void requestForStoryImages() {
+
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("username", Winq.getCurrentUserProfileData().getEmail());
+        map.put("password", Winq.getCurrentUserProfileData().getPassword());
+        map.put("apikey", getResources().getString(R.string.apikey));
+        map.put("facebookid", Winq.getCurrentUserProfileData().getFacebookid());
+        map.put("story", "1");
+        map.put("userid", Winq.getCurrentUserProfileData().getId());
+        map.put("limit", "0");
+
+        NetworkManager.getInstance().getProfileImages(map, new ProfileImagesCallback() {
+            @Override
+            public void forwardResponse(ProfileImagesResponse profileImagesResponse) {
+
+                if (profileImagesResponse.getSuccess() == 1) {
+                    // Válasz rendben
+                    Log.v("getImages_OK:",
+                            "Success");
+
+                    mStoryImages = profileImagesResponse.getData().getImageList();
+
+                    if (mStoryImages.size() != 0)
+                        preloadFirstStoryImage();
+
+                } else {
+                    // Válasz visszautasítva
+                    Log.w("geImages_Refused:",
+                            "FirstErrorText= " + profileImagesResponse.getError().get(0));
+                }
+            }
+
+            @Override
+            public void forwardError(NetworkError networkError) {
+                Log.e("geImages_Error:", networkError.getThrowable().getLocalizedMessage());
+            }
+        });
+    }
+
+    private void preloadFirstStoryImage() {
+
+        SimpleTarget target = new SimpleTarget() {
+
+            @Override
+            public void onResourceReady(Object bmp, GlideAnimation glideAnimation) {
+                mFirstStoryImage = (Bitmap) bmp;
+            }
+        };
+
+        Glide.with(this)
+                .load(mStoryImages.get(0).getUrl())
+                .asBitmap()
+                .into(target);
     }
 }

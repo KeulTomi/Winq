@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.keult.networking.NetworkManager;
@@ -26,6 +27,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private EditText loginPassword;
     private TextView goButton;
     private TextView signUpButton;
+    private ProgressBar goButtonProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +58,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         signUpButton = (TextView) findViewById(R.id.sign_up_button);
         goButton = (TextView) findViewById(R.id.GO_button);
+        goButtonProgress = (ProgressBar) findViewById(R.id.GO_button_progress);
 
         loginEmail = (EditText) findViewById(R.id.email_edittext);
         loginPassword = (EditText) findViewById(R.id.password_edittext);
@@ -76,6 +79,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case R.id.GO_button:
 
                 // Login használata: Beteszel egy map-et, vagy null-t írsz, ekkor demo adatokkal küldi
+                goButton.setText("");
+                goButtonProgress.setVisibility(View.VISIBLE);
                 HashMap<String, Object> userParams = new HashMap<>();
                 userParams.put("username", loginEmail.getText().toString());
                 userParams.put("password", loginPassword.getText().toString());
@@ -134,6 +139,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     // Válasz rendben
                     Log.v("Login_OK:",
                             "FullName= " + loginResponse.getData().getProfileData().getFullName());
+                    Winq.username = map.get("username").toString();
+                    Winq.password = map.get("password").toString();
+
+                    goButton.setText("GO");
+                    goButtonProgress.setVisibility(View.INVISIBLE);
 
                     // Felhasználónév és jelszó mentése a beírt adatok alapján
                     loginResponse.getData().getProfileData().setUserName(map.get("username").toString());
@@ -149,14 +159,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     // Válasz visszautasítva
                     Log.w("Login_Refused:",
                             "FirstErrorText= " + loginResponse.getError().get(0));
-
-
+                    goButton.setText("GO");
+                    goButtonProgress.setVisibility(View.INVISIBLE);
                 }
             }
 
             @Override
             public void forwardError(NetworkError networkError) {
                 Log.e("Login_Error:", networkError.getThrowable().getLocalizedMessage());
+                goButton.setVisibility(View.VISIBLE);
+                goButtonProgress.setVisibility(View.INVISIBLE);
             }
         });
     }
