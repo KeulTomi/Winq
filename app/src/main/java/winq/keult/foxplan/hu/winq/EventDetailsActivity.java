@@ -11,7 +11,6 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.keult.networking.NetworkManager;
 import com.example.keult.networking.callback.EventJoinCallback;
@@ -130,17 +129,14 @@ public class EventDetailsActivity extends AppCompatActivity implements View.OnCl
 
                 if (eventJoinResponse.getSuccess() == 1) {
                     // Válasz rendben
-                    Log.v("joinToEvent_OK:",
-                            "Data= "
-                                    + eventJoinResponse.getData()[0]);
 
-                    Toast.makeText(context, "Sikeresen csatlakoztál az eseményhez", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(context, "Sikeresen csatlakoztál az eseményhez", Toast.LENGTH_LONG).show();
                 } else {
                     // Válasz visszautasítva
                     Log.w("joinToEvent_Refused:",
                             "FirstErrorText= " + eventJoinResponse.getError().get(0));
 
-                    Toast.makeText(context, eventJoinResponse.getError().get(0), Toast.LENGTH_LONG).show();
+                    //Toast.makeText(context, eventJoinResponse.getError().get(0), Toast.LENGTH_LONG).show();
                 }
 
             }
@@ -148,7 +144,7 @@ public class EventDetailsActivity extends AppCompatActivity implements View.OnCl
             @Override
             public void forwardError(NetworkError networkError) {
                 Log.e("exploreUsers_Error:", networkError.getThrowable().getLocalizedMessage());
-                Toast.makeText(context, "Nincs internethozzáférés", Toast.LENGTH_LONG).show();
+                //Toast.makeText(context, "Nincs internethozzáférés", Toast.LENGTH_LONG).show();
             }
         });
     }

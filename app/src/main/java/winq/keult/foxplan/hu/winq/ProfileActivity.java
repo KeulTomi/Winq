@@ -100,13 +100,23 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
     private void requestForProfileImages() {
 
-        HashMap<String, Object> map = new HashMap<>();
+        /*HashMap<String, Object> map = new HashMap<>();
         map.put("username", Winq.getCurrentUserProfileData().getEmail());
         map.put("password", Winq.getCurrentUserProfileData().getPassword());
         map.put("apikey", getResources().getString(R.string.apikey));
         map.put("facebookid", Winq.getCurrentUserProfileData().getFacebookid());
         map.put("story", "0");
         map.put("userid", Winq.getCurrentUserProfileData().getId());
+*/
+
+        // TODO: Ez a rész csak teszteléshez kell, amíg nem működik a login
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("username", "ios@test.com");
+        map.put("password", "test");
+        map.put("apikey", "a");
+        map.put("facebookid", "no");
+        map.put("story", "0");
+        map.put("userid", "17");
 
         // Elég annyit lekérdezni, ahány ImageView van a scrollozható layoutban
         map.put("limit", 1 + ((ViewGroup) findViewById(R.id.profile_image_layout)).getChildCount());
@@ -143,22 +153,25 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
     private void initLayoutTexts() {
 
-        // Országkód beállítása
-        ((TextView) findViewById(R.id.profile_country_of_current_user))
-                .setText(Winq.getCurrentUserProfileData().getUserCountryShort());
+        if (Winq.getCurrentUserProfileData() != null) {
 
-        // Név beállítása
-        ((TextView) findViewById(R.id.profile_fullname_of_current_user))
-                .setText(Winq.getCurrentUserProfileData().getFullName());
+            // Országkód beállítása
+            ((TextView) findViewById(R.id.profile_country_of_current_user))
+                    .setText(Winq.getCurrentUserProfileData().getUserCountryShort());
 
-        // Leírás mező beállítása
-        ((TextView) findViewById(R.id.profile_description))
-                .setText(Winq.getCurrentUserProfileData().getUserDescription());
+            // Név beállítása
+            ((TextView) findViewById(R.id.profile_fullname_of_current_user))
+                    .setText(Winq.getCurrentUserProfileData().getFullName());
 
-        // Életkor mező beállítása TODO:A felhasználó korát nem tudom honnan vegyem
-        ((TextView) findViewById(R.id.profile_age_of_current_user))
-                .setText("21");
+            // Leírás mező beállítása
+            ((TextView) findViewById(R.id.profile_description))
+                    .setText(Winq.getCurrentUserProfileData().getUserDescription());
 
+            // Életkor mező beállítása TODO:A felhasználó korát nem tudom honnan vegyem
+            ((TextView) findViewById(R.id.profile_age_of_current_user))
+                    .setText("21");
+
+        }
     }
 
     private void initLayoutImages(ProfileImagesResponse profileImagesResponse) {
@@ -249,14 +262,25 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
     private void requestForStoryImages() {
 
-        HashMap<String, Object> map = new HashMap<>();
+        /*HashMap<String, Object> map = new HashMap<>();
         map.put("username", Winq.getCurrentUserProfileData().getEmail());
         map.put("password", Winq.getCurrentUserProfileData().getPassword());
         map.put("apikey", getResources().getString(R.string.apikey));
         map.put("facebookid", Winq.getCurrentUserProfileData().getFacebookid());
         map.put("story", "1");
         map.put("userid", Winq.getCurrentUserProfileData().getId());
+        map.put("limit", "0");*/
+
+        // TODO: Ez a rész csak teszteléshez kell, amíg nem működik a login
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("username", "ios@test.com");
+        map.put("password", "test");
+        map.put("apikey", "a");
+        map.put("facebookid", "no");
+        map.put("story", "1");
+        map.put("userid", "17");
         map.put("limit", "0");
+
 
         NetworkManager.getInstance().getProfileImages(map, new ProfileImagesCallback() {
             @Override

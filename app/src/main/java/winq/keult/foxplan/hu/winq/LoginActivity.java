@@ -48,7 +48,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         }
 
-
         //Fullscreent adunk az activitynek, hogy ne látszódjon a notificationbar
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -81,13 +80,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 // Login használata: Beteszel egy map-et, vagy null-t írsz, ekkor demo adatokkal küldi
                 goButton.setText("");
                 goButtonProgress.setVisibility(View.VISIBLE);
-                HashMap<String, Object> userParams = new HashMap<>();
+
+                // TODO: csak tesztelésre, itt a profile activity elindul
+
+                Intent loginToMain = new Intent(mContext, ProfileActivity.class);
+                startActivity(loginToMain);
+
+                /*Map<String, Object> userParams = new HashMap<>();
                 userParams.put("username", loginEmail.getText().toString());
                 userParams.put("password", loginPassword.getText().toString());
-                userParams.put("apikey", "a");
+                userParams.put("apikey", getResources().getString(R.string.apikey));
                 userParams.put("facebookid", "no");
-                login(userParams);
-
+                login(userParams);*/
                 // SignUp használata: Beteszel egy map-et, vagy null-t írsz, ekkor demo adatokkal küldi
                 //ApiTester.signup(null);
 

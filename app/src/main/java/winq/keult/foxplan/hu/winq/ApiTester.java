@@ -45,8 +45,8 @@ class ApiTester {
         if ( map == null ) {
             map = new HashMap<>();
             map.put("apikey", "a");
-            map.put("username", map.get("email"));
-            map.put("password", map.get("password"));
+            map.put("username", "ios@test.com");
+            map.put("password", "test");
             map.put("facebookid", "no");
         }
 

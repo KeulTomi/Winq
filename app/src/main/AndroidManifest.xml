@@ -22,7 +22,8 @@
         <activity android:name=".MainActivity" />
         <activity android:name=".ExploreActivity" />
         <activity android:name=".EventDetailsActivity" />
-        <activity android:name=".ProfileActivity"></activity>
+        <activity android:name=".ProfileActivity" />
+        <activity android:name=".EventsActivity"></activity>
     </application>
 
 </manifest>
