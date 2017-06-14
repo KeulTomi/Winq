@@ -7,6 +7,7 @@ import com.example.keult.networking.callback.DateListCallback;
 import com.example.keult.networking.callback.EventJoinCallback;
 import com.example.keult.networking.callback.EventJoinedByIdCallback;
 import com.example.keult.networking.callback.EventListCallback;
+import com.example.keult.networking.callback.EventsJoinedCallback;
 import com.example.keult.networking.callback.EventsSearchCallback;
 import com.example.keult.networking.callback.ExploreCallback;
 import com.example.keult.networking.callback.GeneralSearchCallback;
@@ -103,6 +104,15 @@ public class NetworkManager {
                 .subscribe(
                         eventListCallback::forwardResponse,
                         throwable -> eventListCallback.forwardError(ErrorFactory.createNetworkError(throwable))
+                );
+    }
+
+    public void listJoinedEvents(Map<String, Object> body, EventsJoinedCallback eventsJoinedCallback) {
+        apiService.listJoinedEvents(body)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        eventsJoinedCallback::forwardResponse,
+                        throwable -> eventsJoinedCallback.forwardError(ErrorFactory.createNetworkError(throwable))
                 );
     }
 

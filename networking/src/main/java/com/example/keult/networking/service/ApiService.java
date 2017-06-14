@@ -7,6 +7,7 @@ import com.example.keult.networking.model.DateListResponse;
 import com.example.keult.networking.model.EventJoinResponse;
 import com.example.keult.networking.model.EventJoinedByIdResponse;
 import com.example.keult.networking.model.EventListResponse;
+import com.example.keult.networking.model.EventsJoinedResponse;
 import com.example.keult.networking.model.ExploreResponse;
 import com.example.keult.networking.model.GeneralSearchResponse;
 import com.example.keult.networking.model.LoginResponse;
@@ -25,6 +26,7 @@ import static com.example.keult.networking.constant.ApiConstants.DATE_ADD;
 import static com.example.keult.networking.constant.ApiConstants.DATE_DONT_LIKE;
 import static com.example.keult.networking.constant.ApiConstants.DATE_LIST;
 import static com.example.keult.networking.constant.ApiConstants.EVENT_JOIN;
+import static com.example.keult.networking.constant.ApiConstants.EVENT_JOINED;
 import static com.example.keult.networking.constant.ApiConstants.EVENT_LIST;
 import static com.example.keult.networking.constant.ApiConstants.EVENT_LIST_BY_ID;
 import static com.example.keult.networking.constant.ApiConstants.EVENT_SEARCH;
@@ -87,6 +89,10 @@ public interface ApiService {
     @FormUrlEncoded
     @POST(EVENT_JOIN)
     Observable<EventJoinResponse> joinToEvent(@FieldMap Map<String, Object> body);
+
+    @FormUrlEncoded
+    @POST(EVENT_JOINED)
+    Observable<EventsJoinedResponse> listJoinedEvents(@FieldMap Map<String, Object> body);
 
     @FormUrlEncoded
     @POST(GET_IMAGES)

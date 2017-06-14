@@ -28,25 +28,16 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/events_eventstime_year"
+                android:id="@+id/events_eventstime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="0dp"
                 android:layout_marginLeft="14dp"
                 android:layout_marginRight="0dp"
-                android:text="2017"
+                android:text="2017 05.29"
                 android:textColor="@android:color/white"
                 android:textSize="13sp" />
 
-            <TextView
-                android:id="@+id/events_eventstime_month_day"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="12dp"
-                android:layout_marginRight="2dp"
-                android:text="05.29"
-                android:textColor="@android:color/white"
-                android:textSize="13sp" />
 
         </LinearLayout>
 
