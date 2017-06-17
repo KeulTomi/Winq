@@ -1,7 +1,6 @@
 package winq.keult.foxplan.hu.winq;
 
 import android.content.Context;
-import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +10,8 @@ import android.widget.TextView;
 
 import com.example.keult.networking.model.EventData;
 
+import java.util.ArrayList;
+
 /**
  * Created by tomi on 2017.06.13..
  */
@@ -18,8 +19,8 @@ import com.example.keult.networking.model.EventData;
 public class EventsSearchAdapter extends ArrayAdapter<EventData> {
 
 
-    public EventsSearchAdapter(@NonNull Context context, @LayoutRes int resource) {
-        super(context, resource);
+    public EventsSearchAdapter(@NonNull Context context, ArrayList<EventData> eventDatas) {
+        super(context, 0, eventDatas);
     }
 
     @NonNull
@@ -38,17 +39,32 @@ public class EventsSearchAdapter extends ArrayAdapter<EventData> {
 
         EventData currentItem = getItem(position);
 
-        TextView forenameTextView = (TextView) listItemView.findViewById(R.id.events_item_name);
-        forenameTextView.setText(currentItem.getTitle());
+        TextView nameTextView = (TextView) listItemView.findViewById(R.id.events_item_name);
+        //Ha hosszabb a title mint 19 betű akkor utána már csak ...-ot irunk
+        if (currentItem.getTitle().length() > 11) {
+            String cuttedText = currentItem.getTitle().substring(0, 12);
+            nameTextView.setText(cuttedText + "...");
+        } else {
+            nameTextView.setText(currentItem.getTitle());
+        }
 
-        TextView surenameTextView = (TextView) listItemView.findViewById(R.id.events_item_place);
-        surenameTextView.setText(currentItem.getLocation());
+        TextView placeTextView = (TextView) listItemView.findViewById(R.id.events_item_place);
+        //Ha hosszabb a location mint 19 betű akkor utána már csak ...-ot irunk
+        if (currentItem.getLocation().length() > 19) {
+            String cuttedText = currentItem.getLocation().substring(0, 12);
+            placeTextView.setText(cuttedText + "...");
+        } else {
+            placeTextView.setText(currentItem.getLocation());
+        }
 
         TextView timeTextView = (TextView) listItemView.findViewById(R.id.events_eventstime);
-        timeTextView.setText(currentItem.getDate());
-
-        TextView countryTextView = (TextView) listItemView.findViewById(R.id.events_item_country);
-        countryTextView.setText("/HUN/");
+        //Ha hosszabb a date mint 19 betű akkor utána már csak ...-ot irunk
+        if (currentItem.getDate().length() > 19) {
+            String cuttedText = currentItem.getDate().substring(0, 19);
+            timeTextView.setText(cuttedText + "...");
+        } else {
+            timeTextView.setText(currentItem.getDate());
+        }
 
         return listItemView;
     }

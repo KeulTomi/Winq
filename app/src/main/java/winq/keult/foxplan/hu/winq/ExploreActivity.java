@@ -12,9 +12,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.keult.networking.NetworkManager;
+import com.example.keult.networking.callback.DateAddCallback;
 import com.example.keult.networking.callback.DateDoNotLikeCallback;
 import com.example.keult.networking.callback.ExploreCallback;
 import com.example.keult.networking.error.NetworkError;
+import com.example.keult.networking.model.DateAddResponse;
 import com.example.keult.networking.model.DateDoNotLikeResponse;
 import com.example.keult.networking.model.ExploreResponse;
 import com.example.keult.networking.model.ProfileData;
@@ -100,6 +102,7 @@ public class ExploreActivity extends AppCompatActivity implements View.OnClickLi
                 if (dateDoNotLikeResponse.getSuccess() == 1) {
                     // Válasz rendben
                     setTheCurrentInfos(currentUserProfile, numberOfUser);
+                    numberOfUser++;
                 } else {
                     // Válasz visszautasítva
                     Log.w("dontLikeDate_Refused:",
@@ -111,6 +114,46 @@ public class ExploreActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void forwardError(NetworkError networkError) {
                 Log.e("dontLikeDate_Error:", networkError.getThrowable().getLocalizedMessage());
+            }
+        });
+    }
+
+    static void requestForDate() {
+
+        if (numberOfUser == 5) {
+            numberOfUser = 0;
+            exploreUsers();
+            return;
+        }
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("apikey", "a");
+        map.put("username", Winq.username);
+        map.put("password", Winq.password);
+        map.put("facebookid", "no");
+        map.put("to_user", currentUserProfile.get(numberOfUser).getId());
+
+        NetworkManager.getInstance().requestForDate(map, new DateAddCallback() {
+            @Override
+            public void forwardResponse(DateAddResponse dateAddResponse) {
+
+                if (dateAddResponse.getSuccess() == 1) {
+                    // Válasz rendben
+                    setTheCurrentInfos(currentUserProfile, numberOfUser);
+                    numberOfUser++;
+                } else {
+                    // Válasz visszautasítva
+                    Log.w("addDate_Refused:",
+                            "FirstErrorText= " + dateAddResponse.getError().get(0));
+                    setTheCurrentInfos(currentUserProfile, numberOfUser);
+                    numberOfUser++;
+
+                }
+            }
+
+            @Override
+            public void forwardError(NetworkError networkError) {
+                Log.e("addDate_Error:", networkError.getThrowable().getLocalizedMessage());
             }
         });
     }
@@ -189,12 +232,10 @@ public class ExploreActivity extends AppCompatActivity implements View.OnClickLi
 
             case R.id.explore_dont_like:
                 dontLikeDate();
-                numberOfUser++;
                 break;
 
             case R.id.explore_like:
-                //setTheCurrentInfos(currentUserProfile, numberOfUser);
-                //numberOfUser++;
+                requestForDate();
                 break;
         }
     }

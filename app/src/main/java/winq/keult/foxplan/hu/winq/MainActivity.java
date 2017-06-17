@@ -32,59 +32,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static TextView mainUpcEventSecondPlace;
     private static Handler mUiHandler = new Handler();
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        //Fullscreent adunk az activitynek, hogy ne látszódjon a notificationbar
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_main);
-
-        //Betöltjük a homePage-en lévő eventeket
-        listEvents();
-
-        //Innicializálás
-        RelativeLayout mainExploreButton = (RelativeLayout) findViewById(R.id.main_button_explore);
-        mainUpcEventFirstImg = (ImageView) findViewById(R.id.main_first_upcoming_event);
-        mainUpcEventSecondImg = (ImageView) findViewById(R.id.main_second_upcoming_event);
-        mainUpcEventFirstName = (TextView) findViewById(R.id.main_first_upc_event_name);
-        mainUpcEventSecondName = (TextView) findViewById(R.id.main_second_upc_event_name);
-        mainUpcEventFirstPlace = (TextView) findViewById(R.id.main_first_upc_event_city);
-        mainUpcEventSecondPlace = (TextView) findViewById(R.id.main_second_upc_event_city);
-
-
-        //OnCickListenerek
-        mainExploreButton.setOnClickListener(this);
-        mainUpcEventFirstImg.setOnClickListener(this);
-        mainUpcEventSecondImg.setOnClickListener(this);
-    }
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-
-            case R.id.main_button_explore:
-                Intent openExplore = new Intent(this, ExploreActivity.class);
-                startActivity(openExplore);
-                overridePendingTransition(R.anim.activity_slide_up, R.anim.activity_stay);
-                break;
-
-            case R.id.main_first_upcoming_event:
-                Intent openDetails1 = new Intent(this, EventDetailsActivity.class);
-                openDetails1.putExtra("eventNum", 0);
-                startActivity(openDetails1);
-                break;
-
-            case R.id.main_second_upcoming_event:
-                Intent openDetails2 = new Intent(this, EventDetailsActivity.class);
-                openDetails2.putExtra("eventNum", 1);
-                startActivity(openDetails2);
-                break;
-        }
-    }
-
     static void listEvents() {
 
         Map<String, Object> map = new HashMap<>();
@@ -180,6 +127,67 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         }
 
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        //Fullscreent adunk az activitynek, hogy ne látszódjon a notificationbar
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        setContentView(R.layout.activity_main);
+
+        //Betöltjük a homePage-en lévő eventeket
+        listEvents();
+
+        //Innicializálás
+        RelativeLayout mainExploreButton = (RelativeLayout) findViewById(R.id.main_button_explore);
+        RelativeLayout mainEventsButton = (RelativeLayout) findViewById(R.id.main_button_events);
+        mainUpcEventFirstImg = (ImageView) findViewById(R.id.main_first_upcoming_event);
+        mainUpcEventSecondImg = (ImageView) findViewById(R.id.main_second_upcoming_event);
+        mainUpcEventFirstName = (TextView) findViewById(R.id.main_first_upc_event_name);
+        mainUpcEventSecondName = (TextView) findViewById(R.id.main_second_upc_event_name);
+        mainUpcEventFirstPlace = (TextView) findViewById(R.id.main_first_upc_event_city);
+        mainUpcEventSecondPlace = (TextView) findViewById(R.id.main_second_upc_event_city);
+
+
+        //OnCickListenerek
+        mainExploreButton.setOnClickListener(this);
+        mainEventsButton.setOnClickListener(this);
+        mainUpcEventFirstImg.setOnClickListener(this);
+        mainUpcEventSecondImg.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+
+            case R.id.main_button_explore:
+                Intent openExplore = new Intent(this, ExploreActivity.class);
+                startActivity(openExplore);
+                overridePendingTransition(R.anim.activity_slide_up, R.anim.activity_stay);
+                break;
+
+            case R.id.main_button_events:
+                Intent openEvents = new Intent(this, EventsActivity.class);
+                startActivity(openEvents);
+                overridePendingTransition(R.anim.activity_slide_up, R.anim.activity_stay);
+                break;
+
+            case R.id.main_first_upcoming_event:
+                Intent openDetails1 = new Intent(this, EventDetailsActivity.class);
+                openDetails1.putExtra("eventNum", 0);
+                startActivity(openDetails1);
+                break;
+
+            case R.id.main_second_upcoming_event:
+                Intent openDetails2 = new Intent(this, EventDetailsActivity.class);
+                openDetails2.putExtra("eventNum", 1);
+                startActivity(openDetails2);
+                break;
+        }
     }
 
 }

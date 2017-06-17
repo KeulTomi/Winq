@@ -1,6 +1,5 @@
 package winq.keult.foxplan.hu.winq;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
@@ -15,6 +14,7 @@ import android.widget.TextView;
 import com.example.keult.networking.NetworkManager;
 import com.example.keult.networking.callback.EventJoinCallback;
 import com.example.keult.networking.error.NetworkError;
+import com.example.keult.networking.model.EventData;
 import com.example.keult.networking.model.EventJoinResponse;
 
 import java.util.HashMap;
@@ -33,6 +33,9 @@ public class EventDetailsActivity extends AppCompatActivity implements View.OnCl
     private static TextView eventJoinButton;
     private static LinearLayout eventShareOpinion;
     private static LinearLayout backToMainMenu;
+
+    private static int eventNumber;
+    private static HashMap<String, EventData> eventData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,21 +67,43 @@ public class EventDetailsActivity extends AppCompatActivity implements View.OnCl
         //A headerre kiírjuk a valós dátumot
         Winq.setTheRealTime(headerDateYear, headerDateMonthAndDay);
 
-        int eventNumber = getIntent().getIntExtra("eventNum", 0);
+        eventNumber = getIntent().getIntExtra("eventNum", 2);
 
         switch (eventNumber) {
 
             case 0:
-                setTheDatailsInfos(0);
+                setHomepageInfos(0);
                 break;
             case 1:
-                setTheDatailsInfos(1);
+                setHomepageInfos(1);
                 break;
+
+            case 2:
+                setEventInfos();
         }
 
     }
 
-    private void setTheDatailsInfos(int eventNum) {
+    private void setEventInfos() {
+
+        eventData = (HashMap<String, EventData>) Winq.eventDatas;
+
+        //Kiíratjuk az adatokat
+        eventTitle.setText(eventData.get("eventData").getTitle());
+
+        //Ha hosszabb a location mint 12 betű akkor utána már csak ...-ot irunk
+        if (eventData.get("eventData").getLocation().length() > 19) {
+            String cuttedText = eventData.get("eventData").getLocation().substring(0, 19);
+            eventPlace.setText(cuttedText + "...");
+        } else {
+            eventPlace.setText(eventData.get("eventData").getLocation());
+        }
+
+        eventDate.setText(eventData.get("eventData").getDate());
+        eventDescription.setText(eventData.get("eventData").getText());
+    }
+
+    private void setHomepageInfos(int eventNum) {
 
         eventTitle.setText(Winq.eventDatas.get(eventNum).getTitle());
 
@@ -112,15 +137,27 @@ public class EventDetailsActivity extends AppCompatActivity implements View.OnCl
 
     public void joinToEvent() {
 
-        final Context context = this;
-
+//        final Context context = getApplicationContext();
 
         Map<String, Object> map = new HashMap<>();
+
+        if (eventNumber == 2) {
+
+
             map.put("apikey", "a");
             map.put("username", Winq.username);
             map.put("password", Winq.password);
             map.put("facebookid", "no");
-            map.put("eventid", "1"); // Csak egyszer lehet egy event-hez csatlakozni, a számot változtatni kell
+            map.put("eventid", eventData.get("eventData").getId());
+            // Csak egyszer lehet egy event-hez csatlakozni, a számot változtatni kell
+        } else {
+            map.put("apikey", "a");
+            map.put("username", Winq.username);
+            map.put("password", Winq.password);
+            map.put("facebookid", "no");
+            map.put("eventid", Winq.eventDatas.get(eventNumber).getId());
+            // Csak egyszer lehet egy event-hez csatlakozni, a számot változtatni kell
+        }
 
 
         NetworkManager.getInstance().joinToEvent(map, new EventJoinCallback() {
@@ -129,14 +166,14 @@ public class EventDetailsActivity extends AppCompatActivity implements View.OnCl
 
                 if (eventJoinResponse.getSuccess() == 1) {
                     // Válasz rendben
-
+                    Log.v("joinToEvent", "siker");
                     //Toast.makeText(context, "Sikeresen csatlakoztál az eseményhez", Toast.LENGTH_LONG).show();
                 } else {
                     // Válasz visszautasítva
                     Log.w("joinToEvent_Refused:",
                             "FirstErrorText= " + eventJoinResponse.getError().get(0));
 
-                    //Toast.makeText(context, eventJoinResponse.getError().get(0), Toast.LENGTH_LONG).show();
+                    // Toast.makeText(context, eventJoinResponse.getError().get(0), Toast.LENGTH_LONG).show();
                 }
 
             }
@@ -144,7 +181,7 @@ public class EventDetailsActivity extends AppCompatActivity implements View.OnCl
             @Override
             public void forwardError(NetworkError networkError) {
                 Log.e("exploreUsers_Error:", networkError.getThrowable().getLocalizedMessage());
-                //Toast.makeText(context, "Nincs internethozzáférés", Toast.LENGTH_LONG).show();
+                // Toast.makeText(context, "Nincs internethozzáférés", Toast.LENGTH_LONG).show();
             }
         });
     }
