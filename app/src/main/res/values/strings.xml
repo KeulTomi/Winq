@@ -6,4 +6,6 @@
     <string name="saved_password_key">password</string>
     <string name="saved_facebookid_key">facebookid</string>
     <string name="saved_userid_key">userid</string>
+    <string name="add_as_friend">add as friend</string>
+    <string name="write_message">write</string>
 </resources>

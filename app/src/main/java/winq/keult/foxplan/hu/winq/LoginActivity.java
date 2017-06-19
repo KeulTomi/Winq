@@ -153,7 +153,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     Winq.saveCurrentUserProfileData(loginResponse.getData().getProfileData());
 
                     // Kezdő layout indítása
-                    Intent loginToMain = new Intent(mContext, MainActivity.class);
+                    Intent loginToMain = new Intent(mContext, ProfileActivity.class);
                     startActivity(loginToMain);
                 } else {
                     // Válasz visszautasítva

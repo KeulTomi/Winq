@@ -86,7 +86,7 @@ public class EventDetailsActivity extends AppCompatActivity implements View.OnCl
 
     private void setEventInfos() {
 
-        eventData = (HashMap<String, EventData>) Winq.eventDatas;
+        eventData = (HashMap<String, EventData>) Winq.eventsEventData;
 
         //Kiíratjuk az adatokat
         eventTitle.setText(eventData.get("eventData").getTitle());
@@ -105,19 +105,19 @@ public class EventDetailsActivity extends AppCompatActivity implements View.OnCl
 
     private void setHomepageInfos(int eventNum) {
 
-        eventTitle.setText(Winq.eventDatas.get(eventNum).getTitle());
+        eventTitle.setText(Winq.homepageEventDatas.get(eventNum).getTitle());
 
         //Ha hosszabb a location mint 12 betű akkor utána már csak ...-ot irunk
-        if (Winq.eventDatas.get(0).getLocation().length() > 19){
-            String cuttedText = Winq.eventDatas.get(0).getLocation().substring(0, 19);
+        if (Winq.homepageEventDatas.get(0).getLocation().length() > 19) {
+            String cuttedText = Winq.homepageEventDatas.get(0).getLocation().substring(0, 19);
             eventPlace.setText(cuttedText + "...");
         }
         else {
-            eventPlace.setText(Winq.eventDatas.get(eventNum).getLocation());
+            eventPlace.setText(Winq.homepageEventDatas.get(eventNum).getLocation());
         }
 
-        eventDate.setText(Winq.eventDatas.get(eventNum).getDate());
-        eventDescription.setText(Winq.eventDatas.get(eventNum).getText());
+        eventDate.setText(Winq.homepageEventDatas.get(eventNum).getDate());
+        eventDescription.setText(Winq.homepageEventDatas.get(eventNum).getText());
 
     }
 
@@ -155,7 +155,7 @@ public class EventDetailsActivity extends AppCompatActivity implements View.OnCl
             map.put("username", Winq.username);
             map.put("password", Winq.password);
             map.put("facebookid", "no");
-            map.put("eventid", Winq.eventDatas.get(eventNumber).getId());
+            map.put("eventid", Winq.homepageEventDatas.get(eventNumber).getId());
             // Csak egyszer lehet egy event-hez csatlakozni, a számot változtatni kell
         }
 

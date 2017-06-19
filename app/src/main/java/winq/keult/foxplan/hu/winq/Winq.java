@@ -9,6 +9,7 @@ import com.example.keult.networking.model.EventData;
 import com.example.keult.networking.model.ProfileData;
 
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -20,7 +21,8 @@ public class Winq extends Application {
     public static String username;
     public static String password;
     public static String facebookid;
-    public static List<EventData> eventDatas;
+    public static List<EventData> homepageEventDatas;
+    public static HashMap<String, EventData> eventsEventData = new HashMap<>();
     private static ProfileData mCurrentUserProfileData;
     private static Context mContext;
 
@@ -50,10 +52,12 @@ public class Winq extends Application {
         int day = c.get(Calendar.DAY_OF_MONTH);
 
         yearText.setText(String.valueOf(year));
-        if (month + 1 <= 10)
+
+        if (month + 1 <= 10) {
         montAndDayText.setText(String.valueOf("0" + (month+1) + "." + day));
         if (day <= 10) {
             montAndDayText.setText(String.valueOf("0" + (month + 1) + "." + "0" + day));
+        }
         } else {
             montAndDayText.setText(String.valueOf((month + 1) + "." + day));
             if (day <= 10) {

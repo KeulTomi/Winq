@@ -50,9 +50,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     // Válasz rendben
                     Log.v("listEvents_OK:",
                             "events_all= " + Integer.toString(eventListResponse.getData().getEventsCount()));
-                    Winq.eventDatas = eventListResponse.getData().getEventList();
-                    setTheEventInfos(Winq.eventDatas, 0);
-                    setTheEventInfos(Winq.eventDatas, 1);
+                    Winq.homepageEventDatas = eventListResponse.getData().getEventList();
+                    setTheEventInfos(Winq.homepageEventDatas, 0);
+                    setTheEventInfos(Winq.homepageEventDatas, 1);
                 } else {
                     // Válasz visszautasítva
                     Log.w("listEvents_Refused:",

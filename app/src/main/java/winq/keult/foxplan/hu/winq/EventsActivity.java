@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -28,7 +29,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class EventsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, View.OnClickListener {
+public class EventsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, View.OnClickListener, View.OnKeyListener {
 
     static TextView joinedTab;
     static TextView upcomingTab;
@@ -43,6 +44,8 @@ public class EventsActivity extends AppCompatActivity implements AdapterView.OnI
     private static LinearLayout searchBar;
     private static EditText searchEditText;
     private static EventsActivity activity = new EventsActivity();
+    private TextView headerDateYear;
+    private TextView headerDateMonthAndDay;
 
     public static void eventsTabBar(String tabName) {
 
@@ -114,10 +117,10 @@ public class EventsActivity extends AppCompatActivity implements AdapterView.OnI
         setContentView(R.layout.activity_events);
 
         //A kezdő tab a joined ezért betöltjük azt
-        //TODO teszt céljából előszőr az upcomingot töltjük be
         eventsList = (ListView) findViewById(R.id.events_list);
-        upcomingEvents();
+        joinedEvents();
 
+        //Inicializálások
         joinedTab = (TextView) findViewById(R.id.evetns_joined);
         upcomingTab = (TextView) findViewById(R.id.events_upcoming);
         searchTab = (TextView) findViewById(R.id.events_search);
@@ -125,29 +128,35 @@ public class EventsActivity extends AppCompatActivity implements AdapterView.OnI
         backPoints = (LinearLayout) findViewById(R.id.events_back_points);
         searchBar = (LinearLayout) findViewById(R.id.events_search_bar);
         searchEditText = (EditText) findViewById(R.id.events_search_edittext);
+        headerDateYear = (TextView) findViewById(R.id.events_headertime_year);
+        headerDateMonthAndDay = (TextView) findViewById(R.id.events_headertime_month_day);
 
+        //Listenerek
         joinedTab.setOnClickListener(this);
         upcomingTab.setOnClickListener(this);
         searchTab.setOnClickListener(this);
         eventsList.setOnItemClickListener(this);
         backPoints.setOnClickListener(this);
+        searchEditText.setOnKeyListener(this);
 
         //Feltöltjük az első adatokkal
-        upcomingAdapter = new EventsUpcomingAdapter(this, currentEventList);
+        joinedAdapter = new EventsJoinedAdapter(this, currentEventList);
         eventsList.setAdapter(joinedAdapter);
+
+        //A headerre kiírjuk a valós dátumot
+        Winq.setTheRealTime(headerDateYear, headerDateMonthAndDay);
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
         Bundle bundleDetails = new Bundle();
-        HashMap<String, EventData> eventData = new HashMap<>();
 
         //Telerakjuk az adott Event adataival egy Bundle-t
-        //eventData.put("eventData", (EventData) parent.getItemAtPosition(position));
         //bundleDetails.putSerializable("messageBody", eventData);
+        Winq.eventsEventData.put("eventData", (EventData) parent.getItemAtPosition(position));
 
-        Winq.eventDatas = (ArrayList<EventData>) parent.getItemAtPosition(position);
+        //Winq.homepageEventDatas = (List<EventData>) parent.getItemAtPosition(position);
 
         //Elküldjük az EventDetailsActivity-nek
         Intent openEventDatails = new Intent(this, EventDetailsActivity.class);
@@ -183,10 +192,14 @@ public class EventsActivity extends AppCompatActivity implements AdapterView.OnI
             case R.id.events_search:
                 //A tabbaron színváltás történik
                 eventsTabBar("search");
-                //Adatlekérdezés
+                //Adatok törlése és várakozás az Enter gombra, hogy kereshessen
                 currentEventList.clear();
-                searchEvents();
 
+                break;
+
+            case R.id.events_back_points:
+                finish();
+                overridePendingTransition(R.anim.activity_stay, R.anim.activity_slide_down);
                 break;
         }
 
@@ -277,7 +290,7 @@ public class EventsActivity extends AppCompatActivity implements AdapterView.OnI
                 if (eventListResponse.getSuccess() == 1) {
                     // Válasz rendben
                     currentEventList = (ArrayList<EventData>) eventListResponse.getData().getEventList();
-                    searchAdapter.notifyDataSetChanged();
+                    //searchAdapter.notifyDataSetChanged();
                     setAdapters("search");
                 } else {
                     // Válasz visszautasítva
@@ -314,5 +327,19 @@ public class EventsActivity extends AppCompatActivity implements AdapterView.OnI
                 break;
         }
 
+    }
+
+    @Override
+    public boolean onKey(View v, int keyCode, KeyEvent event) {
+
+        if (event.getAction() != event.ACTION_DOWN) {
+
+            if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                //Akkor indítjuk a keresést amikot lenyomta az Entert
+                searchEvents();
+            }
+        }
+
+        return false;
     }
 }
