@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Képfeltöltés dialóg ablak választéklistája-->
+    <string-array name="photo_types_array">
+        <item>Profile</item>
+        <item>Image</item>
+        <item>Story</item>
+    </string-array>
+
+</resources>

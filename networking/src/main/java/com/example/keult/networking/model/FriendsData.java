@@ -1,20 +1,21 @@
 package com.example.keult.networking.model;
 
-import java.io.Serializable;
-
 /**
- * Felhasználói profil adatok
+ * Friends adatok modellje
  */
 
-public class ProfileData implements Serializable {
+public class FriendsData {
 
     private String id;
+    private String friends_from;
+    private String friends_to;
+    private String friends_both;
     private String username;
     private String password;
     private String facebookid;
     private String email;
     private String fullname;
-    private String fiulany;
+    //private String fiulany;
     private String image;
     private String regip;
     private String regdate;
@@ -27,46 +28,42 @@ public class ProfileData implements Serializable {
     private String user_country_short;
     private String user_interest;
     private String user_description;
-    private String user_interest_text;
+    //private String user_interest_text;
 
     public String getId() {
         return id;
+    }
+
+    public String getFriendsFrom() {
+        return friends_from;
+    }
+
+    public String getFriendsTo() {
+        return friends_to;
+    }
+
+    public String getFriendsBoth() {
+        return friends_both;
     }
 
     public String getUsername() {
         return username;
     }
 
-    public void setUserName(String username) {
-        this.username = username;
-    }
-
     public String getPassword() {
         return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getFacebookid() {
         return facebookid;
     }
 
-    public void setFacebookId(String facebookId) {
-        this.facebookid = facebookId;
-    }
-
     public String getEmail() {
         return email;
     }
 
-    public String getFullName() {
+    public String getFullname() {
         return fullname;
-    }
-
-    public String getSex() {
-        return fiulany;
     }
 
     public String getImage() {
@@ -101,7 +98,7 @@ public class ProfileData implements Serializable {
         return loc_y;
     }
 
-    public String getUserborn() {
+    public String getUserBorn() {
         return user_born;
     }
 
@@ -116,9 +113,4 @@ public class ProfileData implements Serializable {
     public String getUserDescription() {
         return user_description;
     }
-
-    public String getUserInterestText() {
-        return user_interest_text;
-    }
-
 }

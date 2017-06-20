@@ -284,6 +284,7 @@
                 </RelativeLayout>
 
                 <RelativeLayout
+                    android:id="@+id/main_button_profile"
                     android:layout_width="182dp"
                     android:layout_height="wrap_content"
                     android:background="#85c9d4"

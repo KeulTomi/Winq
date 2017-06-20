@@ -219,7 +219,8 @@ public class EventsActivity extends AppCompatActivity implements AdapterView.OnI
 
                 if (eventsJoinedResponse.getSuccess() == 1) {
                     // Válasz rendben
-                    //currentEventList = (ArrayList<EventData>) eventsJoinedResponse.getData();
+                    currentEventList = (ArrayList<EventData>) eventsJoinedResponse.getData().getEventsJoined();
+                    setAdapters("joined");
 
                 } else {
                     // Válasz visszautasítva

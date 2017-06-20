@@ -1,8 +1,14 @@
 package winq.keult.foxplan.hu.winq;
 
+import android.app.DialogFragment;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
+import android.provider.MediaStore;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +18,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -22,18 +29,33 @@ import com.example.keult.networking.NetworkManager;
 import com.example.keult.networking.callback.ProfileImagesCallback;
 import com.example.keult.networking.error.NetworkError;
 import com.example.keult.networking.model.ImageData;
+import com.example.keult.networking.model.ProfileData;
 import com.example.keult.networking.model.ProfileImagesResponse;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 
-public class ProfileActivity extends AppCompatActivity implements View.OnClickListener {
+public class ProfileActivity extends AppCompatActivity
+        implements View.OnClickListener, UploadSelectorDialog.UploadSelectorListener {
 
-    private TextView headerDateYear;
-    private TextView headerDateMonthAndDay;
+    private static final int MSG_GET_STORY_IMAGES = 1;
+    private static final int MSG_PRELOAD_FIRST_STORY_IMAGE = 2;
+    private static final int MSG_SET_LAYOUT_IMAGES = 3;
+    private static final int CAMERA_REQUEST = 1001;
     private List<ImageData> mStoryImages;
     private Bitmap mFirstStoryImage;
+    private String mLastPhotoPath;
+    private Uri fileUri;
+    private ProfileData mProfileData;
+    private boolean isItUsersProfile;
+
+    private Handler mHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,19 +67,78 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_profile);
 
+        // Activity indításával kapott adatok tárolása
+        Bundle bundle = getIntent().getExtras();
 
-        // Szövegmezők beállítása
-        initLayoutTexts();
+        if (bundle != null) {
+            mProfileData = (ProfileData) bundle.getSerializable(getString(R.string.intent_key_profile_data));
+        }
 
-        headerDateYear = (TextView) findViewById(R.id.profile_headertime_year);
-        headerDateMonthAndDay = (TextView) findViewById(R.id.profile_headertime_month_day);
+        mHandler = new MessageHandler();
 
-        //A headerre kiírjuk a valós dátumot
-        Winq.setTheRealTime(headerDateYear, headerDateMonthAndDay);
+        isItUsersProfile = false;
 
-        // Képek lékérése
-        requestForProfileImages();
+        // Saját vs. idegen profil eldöntése
+        if (mProfileData != null) {
+            if (mProfileData.getId().equals(Winq.getCurrentUserProfileData().getId())) {
+                isItUsersProfile = true;
+            }
+        }
 
+        // Layout inicializálása attól függően, hogy saját vagy idegen profilt kell-e megnyitni
+        if (isItUsersProfile) {
+
+            // Saját profil layout elemek engedélyezése
+            findViewById(R.id.connect_add_as_friend).setVisibility(View.GONE);
+            findViewById(R.id.connect_messages_layout).setVisibility(View.GONE);
+            findViewById(R.id.connect_extra_images_scrollView).setVisibility(View.GONE);
+            findViewById(R.id.profile_image_layout_header_3).setVisibility(View.GONE);
+
+            findViewById(R.id.profile_kamera_buttons_layout).setVisibility(View.VISIBLE);
+            findViewById(R.id.profile_settings_button).setVisibility(View.VISIBLE);
+            findViewById(R.id.profile_logout_button).setVisibility(View.VISIBLE);
+
+            // Gombok listenereinek beállítása
+            findViewById(R.id.profile_take_photo_button).setOnClickListener(this);
+            findViewById(R.id.profile_choose_from_gallery_button).setOnClickListener(this);
+            findViewById(R.id.profile_settings_button).setOnClickListener(this);
+            findViewById(R.id.profile_logout_button).setOnClickListener(this);
+
+        } else {
+            // Idegen profil layout elemeinek engedélyezése
+            findViewById(R.id.profile_kamera_buttons_layout).setVisibility(View.GONE);
+            findViewById(R.id.profile_settings_button).setVisibility(View.GONE);
+            findViewById(R.id.profile_logout_button).setVisibility(View.GONE);
+
+            findViewById(R.id.connect_add_as_friend).setVisibility(View.VISIBLE);
+            findViewById(R.id.connect_messages_layout).setVisibility(View.VISIBLE);
+            findViewById(R.id.connect_extra_images_scrollView).setVisibility(View.VISIBLE);
+            findViewById(R.id.profile_image_layout_header_3).setVisibility(View.VISIBLE);
+
+            // Gombok listenereinek beállítása
+            findViewById(R.id.connect_add_as_friend).setOnClickListener(this);
+            findViewById(R.id.connect_write_message).setOnClickListener(this);
+            findViewById(R.id.connect_get_message).setOnClickListener(this);
+
+            // Relative layout átállítása
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) findViewById(R.id.profile_description).getLayoutParams();
+            layoutParams.addRule(RelativeLayout.BELOW, R.id.profile_image_layout_header_3);
+            findViewById(R.id.profile_description).setLayoutParams(layoutParams);
+        }
+
+        // Szövegmezők inicializálása
+        initLayoutTexts(mProfileData);
+
+        // Aktuális dátum kiírása a headerre
+        Winq.setTheRealTime(
+                (TextView) findViewById(R.id.profile_headertime_year),
+                (TextView) findViewById(R.id.profile_headertime_month_day));
+
+        // Profil és további képek lékérése (második paraméter: false)
+        requestForImages(mProfileData, false);
+
+        // Wissza gomb onClickListenerek beállítása
+        findViewById(R.id.profile_back_points).setOnClickListener(this);
     }
 
     @Override
@@ -95,33 +176,40 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 // TODO: Popup ablakot megjeleníteni a kép részletes nézetével
 
                 break;
+            case R.id.profile_take_photo_button:
+                takePhotoWithCamera();
+                break;
+
+            case R.id.profile_back_points:
+                finish();
+                break;
         }
     }
 
-    private void requestForProfileImages() {
+    private void requestForImages(ProfileData profileData, final boolean getStoryImages) {
+
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("username", profileData.getEmail());
+        map.put("password", profileData.getPassword());
+        map.put("apikey", getResources().getString(R.string.apikey));
+        map.put("facebookid", profileData.getFacebookid());
+        map.put("story", (getStoryImages ? "1" : "0"));
+        map.put("userid", profileData.getId());
 
         /*HashMap<String, Object> map = new HashMap<>();
-        map.put("username", Winq.getCurrentUserProfileData().getEmail());
-        map.put("password", Winq.getCurrentUserProfileData().getPassword());
-        map.put("apikey", getResources().getString(R.string.apikey));
-        map.put("facebookid", Winq.getCurrentUserProfileData().getFacebookid());
-        map.put("story", "0");
-        map.put("userid", Winq.getCurrentUserProfileData().getId());
-*/
-
-        // TODO: Ez a rész csak teszteléshez kell, amíg nem működik a login
-        HashMap<String, Object> map = new HashMap<>();
         map.put("username", "ios@test.com");
         map.put("password", "test");
         map.put("apikey", "a");
         map.put("facebookid", "no");
         map.put("story", "0");
-        map.put("userid", "17");
+        map.put("userid", "17");*/
 
         // Elég annyit lekérdezni, ahány ImageView van a scrollozható layoutban
         map.put("limit", 1 + ((ViewGroup) findViewById(R.id.profile_image_layout)).getChildCount());
 
         NetworkManager.getInstance().getProfileImages(map, new ProfileImagesCallback() {
+
+            final boolean gettingStory = getStoryImages;
             @Override
             public void forwardResponse(ProfileImagesResponse profileImagesResponse) {
 
@@ -131,10 +219,11 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                             "Success");
 
                     // Képek betöltése
-                    initLayoutImages(profileImagesResponse);
+                    mHandler.sendEmptyMessage(MSG_SET_LAYOUT_IMAGES);
 
-                    // Story képek lekérdezése
-                    requestForStoryImages();
+                    // Story képek lekérdezése ha még nem éppen azt kérdezi le
+                    if (!gettingStory)
+                        mHandler.sendEmptyMessage(MSG_GET_STORY_IMAGES);
 
                 } else {
                     // Válasz visszautasítva
@@ -145,31 +234,32 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
             @Override
             public void forwardError(NetworkError networkError) {
-                Log.e("geImages_Error:", networkError.getThrowable().getLocalizedMessage());
+                Log.e("getImages_Error:", networkError.getThrowable().getLocalizedMessage());
             }
         });
 
     }
 
-    private void initLayoutTexts() {
+    private void initLayoutTexts(ProfileData profileData) {
 
-        if (Winq.getCurrentUserProfileData() != null) {
+        if (profileData != null) {
 
             // Országkód beállítása
             ((TextView) findViewById(R.id.profile_country_of_current_user))
-                    .setText(Winq.getCurrentUserProfileData().getUserCountryShort());
+                    .setText(profileData.getUserCountryShort());
 
             // Név beállítása
             ((TextView) findViewById(R.id.profile_fullname_of_current_user))
-                    .setText(Winq.getCurrentUserProfileData().getFullName());
+                    .setText(profileData.getFullName());
 
             // Leírás mező beállítása
             ((TextView) findViewById(R.id.profile_description))
-                    .setText(Winq.getCurrentUserProfileData().getUserDescription());
+                    .setText(profileData.getUserDescription());
 
-            // Életkor mező beállítása TODO:A felhasználó korát nem tudom honnan vegyem
+            // Életkor mező beállítása
+            int userAge = Calendar.getInstance().get(Calendar.YEAR) - Integer.parseInt(profileData.getUserborn().substring(0, 4));
             ((TextView) findViewById(R.id.profile_age_of_current_user))
-                    .setText("21");
+                    .setText(String.valueOf(userAge));
 
         }
     }
@@ -260,56 +350,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-    private void requestForStoryImages() {
-
-        /*HashMap<String, Object> map = new HashMap<>();
-        map.put("username", Winq.getCurrentUserProfileData().getEmail());
-        map.put("password", Winq.getCurrentUserProfileData().getPassword());
-        map.put("apikey", getResources().getString(R.string.apikey));
-        map.put("facebookid", Winq.getCurrentUserProfileData().getFacebookid());
-        map.put("story", "1");
-        map.put("userid", Winq.getCurrentUserProfileData().getId());
-        map.put("limit", "0");*/
-
-        // TODO: Ez a rész csak teszteléshez kell, amíg nem működik a login
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("username", "ios@test.com");
-        map.put("password", "test");
-        map.put("apikey", "a");
-        map.put("facebookid", "no");
-        map.put("story", "1");
-        map.put("userid", "17");
-        map.put("limit", "0");
-
-
-        NetworkManager.getInstance().getProfileImages(map, new ProfileImagesCallback() {
-            @Override
-            public void forwardResponse(ProfileImagesResponse profileImagesResponse) {
-
-                if (profileImagesResponse.getSuccess() == 1) {
-                    // Válasz rendben
-                    Log.v("getImages_OK:",
-                            "Success");
-
-                    mStoryImages = profileImagesResponse.getData().getImageList();
-
-                    if (mStoryImages.size() != 0)
-                        preloadFirstStoryImage();
-
-                } else {
-                    // Válasz visszautasítva
-                    Log.w("geImages_Refused:",
-                            "FirstErrorText= " + profileImagesResponse.getError().get(0));
-                }
-            }
-
-            @Override
-            public void forwardError(NetworkError networkError) {
-                Log.e("geImages_Error:", networkError.getThrowable().getLocalizedMessage());
-            }
-        });
-    }
-
     private void preloadFirstStoryImage() {
 
         SimpleTarget target = new SimpleTarget() {
@@ -324,5 +364,103 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 .load(mStoryImages.get(0).getUrl())
                 .asBitmap()
                 .into(target);
+    }
+
+    /**
+     * Fénykép készítés kezelése
+     */
+    private void takePhotoWithCamera() {
+
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        // Ellenőrizni kell, hogy van-e egyáltalán kamera app a telefonon, különben elszáll
+        if (cameraIntent.resolveActivity(getPackageManager()) != null) {
+
+            // Fájl és könyvtár előkészítése és Intent-ben tárolása
+            fileUri = getPhotoFileUri();
+            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+
+            // Kamera activity hívása
+            startActivityForResult(cameraIntent, CAMERA_REQUEST);
+        }
+
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CAMERA_REQUEST && resultCode == RESULT_OK) {
+
+            // Jelezni kell a galéria számára, hogy új fájl jött létre (különben sokáig nem látszik)
+            if (fileUri != null)
+                sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, fileUri));
+
+
+            DialogFragment uploadSelectorDialog = new UploadSelectorDialog();
+            uploadSelectorDialog.show(getFragmentManager(), "UploadFilePicker");
+
+        }
+    }
+
+    /**
+     * Fotó fájl és könyvtár előkészítése
+     */
+    public Uri getPhotoFileUri() {
+
+        // Nyilvános fénykép könyvtár megnyitása
+        File mediaStorageDir = new File(
+                Environment
+                        .getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),
+                getString(R.string.photo_album_name));
+
+        // Album (könyvtár) létrehozása ha még nem létezik
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
+                Log.d(getString(R.string.photo_album_name), "Oops! Failed create "
+                        + getString(R.string.photo_album_name) + " directory");
+                return null;
+            }
+        }
+
+        // Fotó fájl létrehozása
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
+                Locale.getDefault()).format(new Date());
+
+        File mediaFile;
+
+        mediaFile = new File(mediaStorageDir.getPath() + File.separator
+                + getString(R.string.app_name) + "_" + timeStamp + ".jpg");
+
+        return Uri.fromFile(mediaFile);
+    }
+
+    @Override
+    public void onProfileUploadSelected(DialogFragment dialogFragment) {
+
+    }
+
+    @Override
+    public void onImageUploadSelected(DialogFragment dialogFragment) {
+
+    }
+
+    @Override
+    public void onStoryUploadSelected(DialogFragment dialogFragment) {
+
+    }
+
+    private class MessageHandler extends Handler {
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+
+            switch (msg.what) {
+                case MSG_GET_STORY_IMAGES:
+                    requestForImages(mProfileData, true);
+                    break;
+                case MSG_PRELOAD_FIRST_STORY_IMAGE:
+                    break;
+            }
+
+        }
     }
 }

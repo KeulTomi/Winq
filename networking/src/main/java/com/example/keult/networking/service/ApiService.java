@@ -9,6 +9,8 @@ import com.example.keult.networking.model.EventJoinedByIdResponse;
 import com.example.keult.networking.model.EventListResponse;
 import com.example.keult.networking.model.EventsJoinedResponse;
 import com.example.keult.networking.model.ExploreResponse;
+import com.example.keult.networking.model.FriendAddResponse;
+import com.example.keult.networking.model.FriendsListResponse;
 import com.example.keult.networking.model.GeneralSearchResponse;
 import com.example.keult.networking.model.LoginResponse;
 import com.example.keult.networking.model.ProfileImagesResponse;
@@ -31,6 +33,8 @@ import static com.example.keult.networking.constant.ApiConstants.EVENT_LIST;
 import static com.example.keult.networking.constant.ApiConstants.EVENT_LIST_BY_ID;
 import static com.example.keult.networking.constant.ApiConstants.EVENT_SEARCH;
 import static com.example.keult.networking.constant.ApiConstants.EXPLORE;
+import static com.example.keult.networking.constant.ApiConstants.FRIEND_ADD;
+import static com.example.keult.networking.constant.ApiConstants.FRIEND_LIST;
 import static com.example.keult.networking.constant.ApiConstants.GENERAL_SEARCH;
 import static com.example.keult.networking.constant.ApiConstants.GET_IMAGES;
 import static com.example.keult.networking.constant.ApiConstants.LOG_IN;
@@ -87,6 +91,10 @@ public interface ApiService {
     Observable<ExploreResponse> exploreUsers(@FieldMap Map<String, Object> body);
 
     @FormUrlEncoded
+    @POST(FRIEND_LIST)
+    Observable<FriendsListResponse> listFriends(@FieldMap Map<String, Object> body);
+
+    @FormUrlEncoded
     @POST(EVENT_JOIN)
     Observable<EventJoinResponse> joinToEvent(@FieldMap Map<String, Object> body);
 
@@ -97,4 +105,8 @@ public interface ApiService {
     @FormUrlEncoded
     @POST(GET_IMAGES)
     Observable<ProfileImagesResponse> getProfileImages(@FieldMap Map<String, Object> body);
+
+    @FormUrlEncoded
+    @POST(FRIEND_ADD)
+    Observable<FriendAddResponse> addAsFriend(@FieldMap Map<String, Object> body);
 }

@@ -10,6 +10,8 @@ import com.example.keult.networking.callback.EventListCallback;
 import com.example.keult.networking.callback.EventsJoinedCallback;
 import com.example.keult.networking.callback.EventsSearchCallback;
 import com.example.keult.networking.callback.ExploreCallback;
+import com.example.keult.networking.callback.FriendsAddCallback;
+import com.example.keult.networking.callback.FriendsListCallback;
 import com.example.keult.networking.callback.GeneralSearchCallback;
 import com.example.keult.networking.callback.LoginCallback;
 import com.example.keult.networking.callback.ProfileImagesCallback;
@@ -44,6 +46,7 @@ public class NetworkManager {
         return instance;
     }
 
+    // Belépés
     public void login(Map<String, Object> body, LoginCallback loginCallback) {
         apiService.login(body)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -53,24 +56,7 @@ public class NetworkManager {
                 );
     }
 
-    public void signup(Map<String, Object> body, SignUpCallback signUpCallback) {
-        apiService.signup(body)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        signUpCallback::forwardResponse,
-                        throwable -> signUpCallback.forwardError(ErrorFactory.createNetworkError(throwable))
-                );
-    }
-
-    public void getASZF(Map<String, Object> body, ConditionsCallback conditionsCallback) {
-        apiService.getASZF(body)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        conditionsCallback::forwardResponse,
-                        throwable -> conditionsCallback.forwardError(ErrorFactory.createNetworkError(throwable))
-                );
-    }
-
+    // Dates - add
     public void requestForDate(Map<String, Object> body, DateAddCallback dateAddCallback) {
         apiService.requestForDate(body)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -80,6 +66,7 @@ public class NetworkManager {
                 );
     }
 
+    // Dates - don't like
     public void dontLikeDate(Map<String, Object> body, DateDoNotLikeCallback dateDoNotLikeCallback) {
         apiService.dontLikeDate(body)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -89,6 +76,7 @@ public class NetworkManager {
                 );
     }
 
+    // Dates - list
     public void listDates(Map<String, Object> body, DateListCallback dateListCallback) {
         apiService.listDates(body)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -98,12 +86,17 @@ public class NetworkManager {
                 );
     }
 
-    public void listEvents(Map<String, Object> body, EventListCallback eventListCallback) {
-        apiService.listEvents(body)
+
+    // Events - Csatlakozott
+    // --- nincs kész ---
+
+    // Events - Join
+    public void joinToEvent(Map<String, Object> body, EventJoinCallback eventJoinCallback) {
+        apiService.joinToEvent(body)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        eventListCallback::forwardResponse,
-                        throwable -> eventListCallback.forwardError(ErrorFactory.createNetworkError(throwable))
+                        eventJoinCallback::forwardResponse,
+                        throwable -> eventJoinCallback.forwardError(ErrorFactory.createNetworkError(throwable))
                 );
     }
 
@@ -116,6 +109,7 @@ public class NetworkManager {
                 );
     }
 
+    // Events - joined by id
     public void listEventsById(Map<String, Object> body, EventJoinedByIdCallback eventJoinedByIdCallback) {
         apiService.listEventsById(body)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -125,24 +119,17 @@ public class NetworkManager {
                 );
     }
 
-    public void searchEvents(Map<String, Object> body, EventsSearchCallback eventsSearchCallback) {
-        apiService.searchEvents(body)
+    // Events - list
+    public void listEvents(Map<String, Object> body, EventListCallback eventListCallback) {
+        apiService.listEvents(body)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        eventsSearchCallback::forwardResponse,
-                        throwable -> eventsSearchCallback.forwardError(ErrorFactory.createNetworkError(throwable))
+                        eventListCallback::forwardResponse,
+                        throwable -> eventListCallback.forwardError(ErrorFactory.createNetworkError(throwable))
                 );
     }
 
-    public void searchGeneral(Map<String, Object> body, GeneralSearchCallback generalSearchCallback) {
-        apiService.searchGeneral(body)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        generalSearchCallback::forwardResponse,
-                        throwable -> generalSearchCallback.forwardError(ErrorFactory.createNetworkError(throwable))
-                );
-    }
-
+    // Explore - Lista
     public void exploreUsers(Map<String, Object> body, ExploreCallback exploreCallback) {
         apiService.exploreUsers(body)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -152,21 +139,82 @@ public class NetworkManager {
                 );
     }
 
-    public void joinToEvent(Map<String, Object> body, EventJoinCallback eventJoinCallback) {
-        apiService.joinToEvent(body)
+    // Friends - add
+    public void addAsFriend(Map<String, Object> body, FriendsAddCallback friendsAddCallback) {
+        apiService.addAsFriend(body)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        eventJoinCallback::forwardResponse,
-                        throwable -> eventJoinCallback.forwardError(ErrorFactory.createNetworkError(throwable))
+                        friendsAddCallback::forwardResponse,
+                        throwable -> friendsAddCallback.forwardError(ErrorFactory.createNetworkError(throwable))
                 );
     }
 
+    // Friends - list
+    public void listFriends(Map<String, Object> body, FriendsListCallback friendsListCallback) {
+        apiService.listFriends(body)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        friendsListCallback::forwardResponse,
+                        throwable -> friendsListCallback.forwardError(ErrorFactory.createNetworkError(throwable))
+                );
+    }
+
+    /// Interest types
+    // --- nincs kész ---
+
+    // Keresés - Általános
+    public void searchGeneral(Map<String, Object> body, GeneralSearchCallback generalSearchCallback) {
+        apiService.searchGeneral(body)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        generalSearchCallback::forwardResponse,
+                        throwable -> generalSearchCallback.forwardError(ErrorFactory.createNetworkError(throwable))
+                );
+    }
+
+    // Keresés - Events
+    public void searchEvents(Map<String, Object> body, EventsSearchCallback eventsSearchCallback) {
+        apiService.searchEvents(body)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        eventsSearchCallback::forwardResponse,
+                        throwable -> eventsSearchCallback.forwardError(ErrorFactory.createNetworkError(throwable))
+                );
+    }
+
+    // Keresés - Users
+    // http://dev.balaz98.hu/winq/api/search_users meghívására 404 hibát (nem található) kapok
+
+    // Profil - képek
     public void getProfileImages(Map<String, Object> body, ProfileImagesCallback profileImagesCallback) {
         apiService.getProfileImages(body)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         profileImagesCallback::forwardResponse,
                         throwable -> profileImagesCallback.forwardError(ErrorFactory.createNetworkError(throwable))
+                );
+    }
+
+    // Profil - képfeltöltés
+    // --- nincs kész ---
+
+    // Regisztráció
+    public void signup(Map<String, Object> body, SignUpCallback signUpCallback) {
+        apiService.signup(body)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        signUpCallback::forwardResponse,
+                        throwable -> signUpCallback.forwardError(ErrorFactory.createNetworkError(throwable))
+                );
+    }
+
+    // z - ÁSZF
+    public void getASZF(Map<String, Object> body, ConditionsCallback conditionsCallback) {
+        apiService.getASZF(body)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        conditionsCallback::forwardResponse,
+                        throwable -> conditionsCallback.forwardError(ErrorFactory.createNetworkError(throwable))
                 );
     }
 }

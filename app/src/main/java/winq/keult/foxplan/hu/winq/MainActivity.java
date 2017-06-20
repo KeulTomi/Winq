@@ -158,6 +158,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mainEventsButton.setOnClickListener(this);
         mainUpcEventFirstImg.setOnClickListener(this);
         mainUpcEventSecondImg.setOnClickListener(this);
+        findViewById(R.id.main_button_profile).setOnClickListener(this);
     }
 
     @Override
@@ -186,6 +187,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Intent openDetails2 = new Intent(this, EventDetailsActivity.class);
                 openDetails2.putExtra("eventNum", 1);
                 startActivity(openDetails2);
+                break;
+
+            case R.id.main_button_profile:
+                Intent intentProfile = new Intent(this, ProfileActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(getString(R.string.intent_key_profile_data), Winq.getCurrentUserProfileData());
+                intentProfile.putExtras(bundle);
+                startActivity(intentProfile);
                 break;
         }
     }

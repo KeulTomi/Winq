@@ -6,7 +6,7 @@ import java.util.List;
  * Created by tomi on 2017.06.13..
  */
 
-class EventsJoinedListResponseData {
+public class EventsJoinedListResponseData {
 
     private List<EventData> events;
 

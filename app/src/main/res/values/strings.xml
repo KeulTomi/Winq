@@ -1,11 +1,30 @@
 <resources>
+    <!-- Applikáció elnevezése -->
     <string name="app_name">Winq</string>
+
+    <!-- Api kulcsa -->
     <string name="apikey">a</string>
+
+    <!-- Sharedpreferences kulcsok -->
     <string name="user_prefs_key">user</string>
     <string name="saved_username_key">username</string>
     <string name="saved_password_key">password</string>
     <string name="saved_facebookid_key">facebookid</string>
     <string name="saved_userid_key">userid</string>
+
+    <!-- Mentett képek könyvtára -->
+    <string name="photo_album_name">Winq</string>
+
+    <!-- Feltöltendő képek típusválasztó dialóg ablak fejléce-->
+    <string name="pick_photo_type">Upload photo as...</string>
+
+
+    <!-- Profile activity
+    intent kulcsok és értékek -->
+
+    <!-- Betöltendő user -->
+    <string name="intent_key_profile_data">profile_data</string>
+
     <string name="add_as_friend">add as friend</string>
     <string name="write_message">write</string>
 </resources>
