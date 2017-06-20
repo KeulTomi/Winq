@@ -13,6 +13,7 @@ import com.example.keult.networking.callback.EventListCallback;
 import com.example.keult.networking.callback.EventsSearchCallback;
 import com.example.keult.networking.callback.ExploreCallback;
 import com.example.keult.networking.callback.GeneralSearchCallback;
+import com.example.keult.networking.callback.InterestTypesCallback;
 import com.example.keult.networking.callback.LoginCallback;
 import com.example.keult.networking.callback.ProfileImagesCallback;
 import com.example.keult.networking.callback.SignUpCallback;
@@ -26,6 +27,7 @@ import com.example.keult.networking.model.EventJoinedByIdResponse;
 import com.example.keult.networking.model.EventListResponse;
 import com.example.keult.networking.model.ExploreResponse;
 import com.example.keult.networking.model.GeneralSearchResponse;
+import com.example.keult.networking.model.InterestTypesResponse;
 import com.example.keult.networking.model.LoginResponse;
 import com.example.keult.networking.model.ProfileImagesResponse;
 import com.example.keult.networking.model.SignUpResponse;
@@ -293,7 +295,7 @@ class ApiTester {
             map.put("userid", "17");
         }
 
-        NetworkManager.getInstance().listEventsById(map, new EventJoinedByIdCallback() {
+        NetworkManager.getInstance().listJoinedEventsById(map, new EventJoinedByIdCallback() {
             @Override
             public void forwardResponse(EventJoinedByIdResponse eventJoinedByIdResponse) {
 
@@ -486,6 +488,35 @@ class ApiTester {
                             "FirstErrorText= " + profileImagesResponse.getError().get(0));
                 }
 
+            }
+
+            @Override
+            public void forwardError(NetworkError networkError) {
+
+            }
+        });
+    }
+
+    static void listInterstTypes(Map<String, Object> map) {
+
+        if (map == null) {
+            map = new HashMap<>();
+            map.put("apikey", "a");
+        }
+
+        NetworkManager.getInstance().listInterestTypes(map, new InterestTypesCallback() {
+            @Override
+            public void forwardResponse(InterestTypesResponse interestTypesResponse) {
+                if (interestTypesResponse.getSuccess() == 1) {
+                    // Válasz rendben
+                    Log.v("listIntrst_OK:",
+                            "Type1= "
+                                    + interestTypesResponse.getData().getInterestList().get(0).getName());
+                } else {
+                    // Válasz visszautasítva
+                    Log.w("listIntrst_Refused:",
+                            "FirstErrorText= " + interestTypesResponse.getError().get(0));
+                }
             }
 
             @Override

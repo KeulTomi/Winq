@@ -13,7 +13,7 @@ public class ApiConstants {
 
     // api
     public static final String EVENT_LIST = "events"; // Események listázása
-    public static final String EVENT_LIST_BY_ID = "events_joined_by_userid"; // Csatlakozott események UserId alapján
+    public static final String JOINED_EVENT_LIST_BY_ID = "events_joined_by_userid"; // Csatlakozott események UserId alapján
     public static final String EVENT_SEARCH = "search_events"; // Események keresése
     public static final String GENERAL_SEARCH = "search_eventsandusers"; // Általános keresés
 
@@ -26,6 +26,7 @@ public class ApiConstants {
     public static final String EVENT_JOIN = "profile/events_dojoin"; // Eseményhez csatlakozás
     public static final String EVENT_JOINED = "profile/events_joined"; // Csatlakozott eventek listázása
     public static final String GET_IMAGES = "profile/getimages"; // Profil és story képek letöltése
+    public static final String INTEREST_TYPE_LIST = "profile/profile_interest"; // Érdeklődési típusok listája
 
         // api/profile/dates
         public static final String DATE_ADD = "profile/dates/add"; // Randi hozzáadása

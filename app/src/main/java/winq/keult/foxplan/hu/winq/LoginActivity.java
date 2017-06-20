@@ -88,42 +88,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 userParams.put("facebookid", "no");
                 login(userParams);
 
-                // SignUp használata: Beteszel egy map-et, vagy null-t írsz, ekkor demo adatokkal küldi
-                //ApiTester.signup(null);
-
-                // getASZF használata: Beteszel egy map-et, vagy null-t írsz, ekkor demo adatokkal küldi
-                //ApiTester.getASZF(null);
-
-                // requestForDate használata: Beteszel egy map-et, vagy null-t írsz, ekkor demo adatokkal küldi
-                //ApiTester.requestForDate(null);
-
-                // dontLikeDate használata: Beteszel egy map-et, vagy null-t írsz, ekkor demo adatokkal küldi
-                //ApiTester.dontLikeDate(null);
-
-                // listDates használata: Beteszel egy map-et, vagy null-t írsz, ekkor demo adatokkal küldi
-                //ApiTester.listDates(null);
-
-                // listEvents használata: Beteszel egy map-et, vagy null-t írsz, ekkor demo adatokkal küldi
-                //ApiTester.listEvents(null);
-
-                // listEventsById használata: Beteszel egy map-et, vagy null-t írsz, ekkor demo adatokkal küldi
-                //ApiTester.listEventsById(null);
-
-                // searchEvents használata: Beteszel egy map-et, vagy null-t írsz, ekkor demo adatokkal küldi
-                //ApiTester.searchEvents(null);
-
-                // searchEvents használata: Beteszel egy map-et, vagy null-t írsz, ekkor demo adatokkal küldi
-                //ApiTester.searchGeneral(null);
-
-                // searchEvents használata: Beteszel egy map-et, vagy null-t írsz, ekkor demo adatokkal küldi
-                //ApiTester.exploreUsers(null);
-
-                // joinToEvent használata: Beteszel egy map-et, vagy null-t írsz, ekkor demo adatokkal küldi
-                //ApiTester.joinToEvent(null);
-
-                // getProfileImages használata: Beteszel egy map-et, vagy null-t írsz, ekkor demo adatokkal küldi
-                //ApiTester.getProfileImages(null);
-
                 break;
         }
     }
@@ -153,7 +117,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     Winq.saveCurrentUserProfileData(loginResponse.getData().getProfileData());
 
                     // Kezdő layout indítása
-                    Intent loginToMain = new Intent(mContext, ProfileActivity.class);
+                    Intent loginToMain = new Intent(mContext, MainActivity.class);
                     startActivity(loginToMain);
                 } else {
                     // Válasz visszautasítva

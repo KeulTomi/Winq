@@ -13,6 +13,7 @@ import com.example.keult.networking.callback.ExploreCallback;
 import com.example.keult.networking.callback.FriendsAddCallback;
 import com.example.keult.networking.callback.FriendsListCallback;
 import com.example.keult.networking.callback.GeneralSearchCallback;
+import com.example.keult.networking.callback.InterestTypesCallback;
 import com.example.keult.networking.callback.LoginCallback;
 import com.example.keult.networking.callback.ProfileImagesCallback;
 import com.example.keult.networking.callback.SignUpCallback;
@@ -88,7 +89,14 @@ public class NetworkManager {
 
 
     // Events - Csatlakozott
-    // --- nincs kész ---
+    public void listJoinedEvents(Map<String, Object> body, EventsJoinedCallback eventsJoinedCallback) {
+        apiService.listJoinedEvents(body)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        eventsJoinedCallback::forwardResponse,
+                        throwable -> eventsJoinedCallback.forwardError(ErrorFactory.createNetworkError(throwable))
+                );
+    }
 
     // Events - Join
     public void joinToEvent(Map<String, Object> body, EventJoinCallback eventJoinCallback) {
@@ -100,18 +108,9 @@ public class NetworkManager {
                 );
     }
 
-    public void listJoinedEvents(Map<String, Object> body, EventsJoinedCallback eventsJoinedCallback) {
-        apiService.listJoinedEvents(body)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        eventsJoinedCallback::forwardResponse,
-                        throwable -> eventsJoinedCallback.forwardError(ErrorFactory.createNetworkError(throwable))
-                );
-    }
-
     // Events - joined by id
-    public void listEventsById(Map<String, Object> body, EventJoinedByIdCallback eventJoinedByIdCallback) {
-        apiService.listEventsById(body)
+    public void listJoinedEventsById(Map<String, Object> body, EventJoinedByIdCallback eventJoinedByIdCallback) {
+        apiService.listJoinedEventsById(body)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         eventJoinedByIdCallback::forwardResponse,
@@ -159,8 +158,15 @@ public class NetworkManager {
                 );
     }
 
-    /// Interest types
-    // --- nincs kész ---
+    /// Interest types - list
+    public void listInterestTypes(Map<String, Object> body, InterestTypesCallback interestTypesCallback) {
+        apiService.listInterestTypes(body)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        interestTypesCallback::forwardResponse,
+                        throwable -> interestTypesCallback.forwardError(ErrorFactory.createNetworkError(throwable))
+                );
+    }
 
     // Keresés - Általános
     public void searchGeneral(Map<String, Object> body, GeneralSearchCallback generalSearchCallback) {
@@ -183,7 +189,8 @@ public class NetworkManager {
     }
 
     // Keresés - Users
-    // http://dev.balaz98.hu/winq/api/search_users meghívására 404 hibát (nem található) kapok
+    // TODO: http://dev.balaz98.hu/winq/api/search_users meghívására 404 hibát (nem található) kapok
+
 
     // Profil - képek
     public void getProfileImages(Map<String, Object> body, ProfileImagesCallback profileImagesCallback) {
@@ -196,7 +203,7 @@ public class NetworkManager {
     }
 
     // Profil - képfeltöltés
-    // --- nincs kész ---
+    // TODO: --- nincs kész, nem tudom hogy megy, hibás api key választ kapok ---
 
     // Regisztráció
     public void signup(Map<String, Object> body, SignUpCallback signUpCallback) {

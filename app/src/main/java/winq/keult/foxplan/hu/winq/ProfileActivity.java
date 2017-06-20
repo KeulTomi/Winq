@@ -44,13 +44,13 @@ import java.util.Locale;
 public class ProfileActivity extends AppCompatActivity
         implements View.OnClickListener, UploadSelectorDialog.UploadSelectorListener {
 
-    private static final int MSG_GET_STORY_IMAGES = 1;
-    private static final int MSG_PRELOAD_FIRST_STORY_IMAGE = 2;
-    private static final int MSG_SET_LAYOUT_IMAGES = 3;
+    private static final int MSG_SET_LAYOUT_IMAGES = 1;
+    private static final int MSG_GET_STORY_IMAGES = 2;
+    private static final int MSG_PRELOAD_FIRST_STORY_IMAGE = 3;
+
     private static final int CAMERA_REQUEST = 1001;
     private List<ImageData> mStoryImages;
     private Bitmap mFirstStoryImage;
-    private String mLastPhotoPath;
     private Uri fileUri;
     private ProfileData mProfileData;
     private boolean isItUsersProfile;
@@ -148,11 +148,10 @@ public class ProfileActivity extends AppCompatActivity
 
             case R.id.profile_image:
 
-                if (mStoryImages != null
-                        && mStoryImages.size() != 0
-                        && mFirstStoryImage != null) {
+                if (mFirstStoryImage != null) {
                     // Ha vannak story képek és van első kép a akkor StoryActivity indítása
                     Intent openStory = new Intent(this, StoryActivity.class);
+                    openStory.putExtra(getString(R.string.intent_key_story_viewer), mFirstStoryImage);
                     startActivity(openStory);
                     overridePendingTransition(R.anim.activity_slide_up, R.anim.activity_stay);
                 }
@@ -204,8 +203,13 @@ public class ProfileActivity extends AppCompatActivity
         map.put("story", "0");
         map.put("userid", "17");*/
 
-        // Elég annyit lekérdezni, ahány ImageView van a scrollozható layoutban
-        map.put("limit", 1 + ((ViewGroup) findViewById(R.id.profile_image_layout)).getChildCount());
+        // Lekérdezendő képek számának paraméterezése
+        if (getStoryImages)
+            // Story képekre nincs korlátozás, minden képet le kell kérdezni
+            map.put("limit", "0");
+        else
+            // Prfil képekből csak annyit éredemes lekérdezni, amennyinek van ehly a layouton
+            map.put("limit", 1 + ((ViewGroup) findViewById(R.id.profile_image_layout)).getChildCount());
 
         NetworkManager.getInstance().getProfileImages(map, new ProfileImagesCallback() {
 
@@ -218,13 +222,17 @@ public class ProfileActivity extends AppCompatActivity
                     Log.v("getImages_OK:",
                             "Success");
 
-                    // Képek betöltése
-                    mHandler.sendEmptyMessage(MSG_SET_LAYOUT_IMAGES);
-
-                    // Story képek lekérdezése ha még nem éppen azt kérdezi le
-                    if (!gettingStory)
-                        mHandler.sendEmptyMessage(MSG_GET_STORY_IMAGES);
-
+                    if (!gettingStory) {
+                        // Következő lépés: Üzenet layout imageView-k inicializálásához
+                        Message msg = new Message();
+                        msg.what = MSG_SET_LAYOUT_IMAGES;
+                        msg.obj = profileImagesResponse;
+                        mHandler.sendMessage(msg);
+                    } else {
+                        // Következő lépés: Első story kép előre töltése, hogy gyorsan meg tudjuk mutatni
+                        mStoryImages = profileImagesResponse.getData().getImageList();
+                        mHandler.sendEmptyMessage(MSG_PRELOAD_FIRST_STORY_IMAGE);
+                    }
                 } else {
                     // Válasz visszautasítva
                     Log.w("geImages_Refused:",
@@ -360,10 +368,17 @@ public class ProfileActivity extends AppCompatActivity
             }
         };
 
+        // TODO: Csak teszteléshez
         Glide.with(this)
-                .load(mStoryImages.get(0).getUrl())
+                .load("https://www.gstatic.com/webp/gallery3/1.png")
                 .asBitmap()
                 .into(target);
+
+        /*Glide.with(this)
+                .load(mStoryImages.get(0).getUrl())
+                .asBitmap()
+                .into(target);*/
+
     }
 
     /**
@@ -454,10 +469,24 @@ public class ProfileActivity extends AppCompatActivity
             super.handleMessage(msg);
 
             switch (msg.what) {
+                case MSG_SET_LAYOUT_IMAGES:
+
+                    // Layout imageView-k inicializálása
+                    initLayoutImages((ProfileImagesResponse) msg.obj);
+
+                    // Következő lépés: Üzenet küldése story képek url-jeinek letöltéséhez
+                    mHandler.sendEmptyMessage(MSG_GET_STORY_IMAGES);
+
+                    break;
                 case MSG_GET_STORY_IMAGES:
+
+                    // Story képek url-jeinek lekérdezése (true= story képeket kerdezi le)
                     requestForImages(mProfileData, true);
                     break;
+
                 case MSG_PRELOAD_FIRST_STORY_IMAGE:
+                    //if ( mStoryImages.size() > 0 )
+                    preloadFirstStoryImage();
                     break;
             }
 
