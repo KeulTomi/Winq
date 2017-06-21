@@ -1,7 +1,7 @@
 package com.example.keult.networking.model;
 
 /**
- * Kép adatmodel.
+ * Kép adatmodel
  */
 
 public class ImageData {
@@ -14,6 +14,18 @@ public class ImageData {
     private String order;
 
 
+    public ImageData(int pos) {
+
+        if (pos % 2 == 0) {
+            id = "0";
+            url = "https://www.gstatic.com/webp/gallery3/2.png";
+            userid = "17";
+        } else {
+            id = "1";
+            url = "https://www.gstatic.com/webp/gallery3/3.png";
+            userid = "17";
+        }
+    }
     public String getId() {
         return id;
     }

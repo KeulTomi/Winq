@@ -34,10 +34,10 @@ import com.example.keult.networking.model.ProfileImagesResponse;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 
 
@@ -49,7 +49,9 @@ public class ProfileActivity extends AppCompatActivity
     private static final int MSG_PRELOAD_FIRST_STORY_IMAGE = 3;
 
     private static final int CAMERA_REQUEST = 1001;
-    private List<ImageData> mStoryImages;
+    private static final int GALERY_REQUEST = 1002;
+
+    private ArrayList<ImageData> mStoryImages;
     private Bitmap mFirstStoryImage;
     private Uri fileUri;
     private ProfileData mProfileData;
@@ -151,7 +153,19 @@ public class ProfileActivity extends AppCompatActivity
                 if (mFirstStoryImage != null) {
                     // Ha vannak story képek és van első kép a akkor StoryActivity indítása
                     Intent openStory = new Intent(this, StoryActivity.class);
-                    openStory.putExtra(getString(R.string.intent_key_story_viewer), mFirstStoryImage);
+                    openStory.putExtra(getString(R.string.intent_key_story_bitmap), mFirstStoryImage);
+
+                    // TODO: Csak tesztelési célra: Story image lista feltöltése
+                    for (int i = 0; i < 6; i++) {
+                        ImageData imageData = new ImageData(i);
+                        mStoryImages.add(imageData);
+                    }
+
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable(getString(R.string.intent_key_story_images), mStoryImages);
+                    openStory.putExtras(bundle);
+
+                    //openStory.putExtra(getString(R.string.intent_key_story_images), mStoryImages);
                     startActivity(openStory);
                     overridePendingTransition(R.anim.activity_slide_up, R.anim.activity_stay);
                 }
@@ -177,6 +191,10 @@ public class ProfileActivity extends AppCompatActivity
                 break;
             case R.id.profile_take_photo_button:
                 takePhotoWithCamera();
+                break;
+
+            case R.id.profile_choose_from_gallery_button:
+                selectImageFromGalery();
                 break;
 
             case R.id.profile_back_points:
@@ -214,6 +232,7 @@ public class ProfileActivity extends AppCompatActivity
         NetworkManager.getInstance().getProfileImages(map, new ProfileImagesCallback() {
 
             final boolean gettingStory = getStoryImages;
+
             @Override
             public void forwardResponse(ProfileImagesResponse profileImagesResponse) {
 
@@ -222,16 +241,16 @@ public class ProfileActivity extends AppCompatActivity
                     Log.v("getImages_OK:",
                             "Success");
 
-                    if (!gettingStory) {
+                    if (gettingStory) {
+                        // Következő lépés: Első story kép előre töltése, hogy gyorsan meg tudjuk mutatni
+                        mStoryImages = (ArrayList) profileImagesResponse.getData().getImageList();
+                        mHandler.sendEmptyMessage(MSG_PRELOAD_FIRST_STORY_IMAGE);
+                    } else {
                         // Következő lépés: Üzenet layout imageView-k inicializálásához
                         Message msg = new Message();
                         msg.what = MSG_SET_LAYOUT_IMAGES;
                         msg.obj = profileImagesResponse;
                         mHandler.sendMessage(msg);
-                    } else {
-                        // Következő lépés: Első story kép előre töltése, hogy gyorsan meg tudjuk mutatni
-                        mStoryImages = profileImagesResponse.getData().getImageList();
-                        mHandler.sendEmptyMessage(MSG_PRELOAD_FIRST_STORY_IMAGE);
                     }
                 } else {
                     // Válasz visszautasítva
@@ -401,6 +420,15 @@ public class ProfileActivity extends AppCompatActivity
 
     }
 
+    private void selectImageFromGalery() {
+
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALERY_REQUEST);
+
+    }
+
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAMERA_REQUEST && resultCode == RESULT_OK) {
 
@@ -412,6 +440,11 @@ public class ProfileActivity extends AppCompatActivity
             DialogFragment uploadSelectorDialog = new UploadSelectorDialog();
             uploadSelectorDialog.show(getFragmentManager(), "UploadFilePicker");
 
+        }
+
+        if (requestCode == GALERY_REQUEST && resultCode == RESULT_OK) {
+            DialogFragment uploadSelectorDialog = new UploadSelectorDialog();
+            uploadSelectorDialog.show(getFragmentManager(), "UploadFilePicker");
         }
     }
 
