@@ -133,6 +133,7 @@ public class ExploreActivity extends AppCompatActivity implements View.OnClickLi
 
         if (currentUserProfile.get(numberOfUser).getId() == null) return;
 
+
         Map<String, Object> map = new HashMap<>();
         map.put("apikey", "a");
         map.put("username", Winq.username);
