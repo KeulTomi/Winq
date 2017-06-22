@@ -1,10 +1,12 @@
 package com.example.keult.networking.model;
 
+import java.io.Serializable;
+
 /**
  * Kép adatmodel
  */
 
-public class ImageData {
+public class ImageData implements Serializable {
 
     private String id;
     private String url;

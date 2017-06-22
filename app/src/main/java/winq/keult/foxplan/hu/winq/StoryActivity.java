@@ -1,6 +1,5 @@
 package winq.keult.foxplan.hu.winq;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,6 +11,9 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.keult.networking.model.ImageData;
 
 import java.util.ArrayList;
@@ -27,13 +29,18 @@ public class StoryActivity extends AppCompatActivity implements View.OnClickList
     private final static int IMAGE_DISPLAY_TIME = 5000; // Képváltás időköze (ezredmásodperc)
     private final static int PROGBAR_MAX_VAL = 1000; // Progressbar maximuma
     private final static int MSG_PROGBAR_UPDATE = 1;
-    private static Context context;
+    private static final int MSG_CHANGE_IMAGE = 2;
+    private final static int MSG_PRELOAD_IMAGE = 3;
+
+    private static AppCompatActivity activity;
     private static MessageHandler mHandler;
     private static float mProgbarDelta;
     private static int mCurrentImageNum;
-    private static int mCurrentStepCount;
-    private Bitmap imageView01;
-    private Bitmap imageView02;
+    private static int mCurrentStep;
+    private static ImageView mImageView01;
+    private static ImageView mImageView02;
+    private static boolean isRunning;
+    private static int mDeltaPerImage;
     private ArrayList<ImageData> mStoryImages;
 
     @Override
@@ -44,17 +51,13 @@ public class StoryActivity extends AppCompatActivity implements View.OnClickList
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_image_viewer);
 
-        context = this;
+        activity = this;
 
         // Progressbar max érték beállítása
         ((ProgressBar) findViewById(R.id.image_viewer_progbar)).setMax(PROGBAR_MAX_VAL);
 
-        //A Close-ra teszünk egy onClickListenert
-        //((ImageView) findViewById(R.id.close_button)).setOnClickListener(this);
-
-        // Első kép beállítása
-        imageView01 = getIntent().getParcelableExtra(getString(R.string.intent_key_story_bitmap));
-        ((ImageView) findViewById(R.id.popup_image_view_01)).setImageBitmap(imageView01);
+        //A Close-ra onClickListener
+        ((ImageView) findViewById(R.id.close_button)).setOnClickListener(this);
 
         // Képek url-jeit tartalmazó lista kicsomagolása
         Bundle bundle = getIntent().getExtras();
@@ -66,16 +69,34 @@ public class StoryActivity extends AppCompatActivity implements View.OnClickList
         mHandler = new MessageHandler();
 
         // ProgressBar léptetéshez használt változók inicializálása
-        mProgbarDelta = PROGBAR_MAX_VAL / ((mStoryImages.size() + 1) * IMAGE_DISPLAY_TIME / PROGBAR_REFRESH_TIME);
-        mCurrentImageNum = 1;
-        mCurrentStepCount = 0;
+        mDeltaPerImage = PROGBAR_MAX_VAL / mStoryImages.size(); // Ennyit megy feljebb a progbar képenként
+        float stepsPerImage = IMAGE_DISPLAY_TIME / PROGBAR_REFRESH_TIME; // Ennyiszer frissül a progbar egy kép alatt
+
+        // Ennyit megy feljebb a progbar frissítésenként
+        mProgbarDelta = mDeltaPerImage / stepsPerImage;
+
+        mCurrentImageNum = 1; // Aktuális kép sorszáma
+        mCurrentStep = 0; // Aktuális lépés sorszáma
 
         // Progressbar indításaa
         Message msg = new Message();
         msg.what = MSG_PROGBAR_UPDATE;
         msg.obj = findViewById(R.id.image_viewer_progbar);
-        msg.arg1 = (int) (mProgbarDelta * mCurrentStepCount * mCurrentImageNum);
+        msg.arg1 = (int) (mProgbarDelta * mCurrentStep * mCurrentImageNum);
         mHandler.sendMessage(msg);
+        isRunning = true;
+
+        // Első kép beállítása
+        mImageView01 = ((ImageView) findViewById(R.id.popup_image_view_01));
+        mImageView01.setImageBitmap((Bitmap) getIntent().getParcelableExtra(getString(R.string.intent_key_story_bitmap)));
+        mImageView01.setOnClickListener(this);
+        mImageView01.setVisibility(View.VISIBLE);
+
+        // Második kép előkészítése
+        mImageView02 = ((ImageView) findViewById(R.id.popup_image_view_02));
+        mImageView02.setOnClickListener(this);
+        mImageView02.setVisibility(View.GONE);
+        mHandler.sendEmptyMessage(MSG_PRELOAD_IMAGE);
     }
 
     @Override
@@ -84,40 +105,134 @@ public class StoryActivity extends AppCompatActivity implements View.OnClickList
         switch (v.getId()) {
 
             case R.id.close_button:
-                finish();
-                overridePendingTransition(R.anim.activity_stay, R.anim.activity_slide_down);
+                isRunning = false;
+                break;
+            case R.id.popup_image_view_01:
+            case R.id.popup_image_view_02:
+                mHandler.removeMessages(MSG_PROGBAR_UPDATE);
+                Message msgToSend = new Message();
+                msgToSend.what = MSG_PROGBAR_UPDATE;
+                msgToSend.obj = findViewById(R.id.image_viewer_progbar);
+                msgToSend.arg1 = (int) ((mCurrentImageNum) * mDeltaPerImage);
+                mHandler.sendMessage(msgToSend);
                 break;
         }
 
     }
 
-    private static class MessageHandler extends Handler {
+    private class MessageHandler extends Handler {
 
         @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
+        public void handleMessage(Message msgReceived) {
+            super.handleMessage(msgReceived);
 
-            switch (msg.what) {
+            if (!isRunning) {
+                stopActivity();
+                return;
+            }
+
+            int progbarVal;
+            Message msgToSend = new Message();
+
+            switch (msgReceived.what) {
                 case MSG_PROGBAR_UPDATE:
 
+                    progbarVal = msgReceived.arg1;
+
+                    if (progbarVal >= PROGBAR_MAX_VAL) {
+                        // Elérte a progbar végét, nem kell frissíteni, kilépés az activity-ből
+                        stopActivity();
+                        return;
+                    }
+
                     // Progressbar frissítése
-                    ProgressBar progressBar = (ProgressBar) msg.obj;
-                    progressBar.setProgress(msg.arg1);
+                    ProgressBar progressBar = (ProgressBar) msgReceived.obj;
+                    progressBar.setProgress(progbarVal);
 
-                    mCurrentStepCount++;
-                    msg.arg1 = (int) (mProgbarDelta * mCurrentStepCount * mCurrentImageNum);
+                    // Képváltás vizsgálata
+                    if (progbarVal >= (mDeltaPerImage * mCurrentImageNum)) {
 
-                    if (msg.arg1 < PROGBAR_MAX_VAL) {
-                        msg.what = MSG_PROGBAR_UPDATE;
-                        msg.obj = progressBar;
-                        mHandler.sendMessageDelayed(msg, PROGBAR_REFRESH_TIME);
-                    } else
-                        ((AppCompatActivity) context).finish();
+                        // Progbar elérte a következő kép értékét
 
+                        if (mCurrentImageNum == mStoryImages.size()) {
+                            // Utolsó kép, mégsincs képváltás, kilépés az activity-ből
+                            stopActivity();
+                            return;
+                        }
+
+                        // Képváltás
+                        mCurrentImageNum++;
+                        mCurrentStep = 1;
+                        mHandler.sendEmptyMessage(MSG_CHANGE_IMAGE);
+
+                        // Következő kép lekérése a szerverről
+                        mHandler.sendEmptyMessage(MSG_PRELOAD_IMAGE);
+                    } else {
+                        // Nincs képváltás, csak a progbar növekszik
+                        mCurrentStep++;
+                    }
+
+
+                    // Következő frissítés időzítése
+                    msgToSend.what = MSG_PROGBAR_UPDATE;
+                    msgToSend.obj = progressBar;
+                    msgToSend.arg1 = (int) (mProgbarDelta * mCurrentStep + (mCurrentImageNum - 1) * mDeltaPerImage);
+                    mHandler.sendMessageDelayed(msgToSend, PROGBAR_REFRESH_TIME);
+
+                    break;
+
+                case MSG_CHANGE_IMAGE:
+
+                    if (mCurrentImageNum % 2 == 1) {
+                        // Páratlan képet kell aktívvá tenni
+                        mImageView01.setVisibility(View.VISIBLE);
+                        mImageView02.setVisibility(View.GONE);
+                    } else {
+                        // Páros képet kell aktívvá tenni
+                        mImageView02.setVisibility(View.VISIBLE);
+                        mImageView01.setVisibility(View.GONE);
+                    }
+
+                    // Váltás megtörtént, következő kép lekérdezése
+                    mHandler.sendEmptyMessage(MSG_PRELOAD_IMAGE);
+
+                    break;
+                case MSG_PRELOAD_IMAGE:
+                    requestForImage(mCurrentImageNum % 2);
                     break;
             }
 
         }
-    }
 
+        private void stopActivity() {
+            isRunning = false;
+            activity.finish();
+            activity.overridePendingTransition(R.anim.activity_stay, R.anim.activity_slide_down);
+        }
+
+        private void requestForImage(final int loadTo) {
+
+            SimpleTarget target = new SimpleTarget() {
+
+                @Override
+                public void onResourceReady(Object receivedBmp, GlideAnimation glideAnimation) {
+
+                    switch (loadTo) {
+                        case 0:
+                            mImageView01.setImageBitmap((Bitmap) receivedBmp);
+                            break;
+                        case 1:
+                            mImageView02.setImageBitmap((Bitmap) receivedBmp);
+                            break;
+                    }
+                }
+            };
+
+            Glide.with(activity)
+                    .load(mStoryImages.get(mCurrentImageNum - 1).getUrl())
+                    .asBitmap()
+                    .into(target);
+
+        }
+    }
 }

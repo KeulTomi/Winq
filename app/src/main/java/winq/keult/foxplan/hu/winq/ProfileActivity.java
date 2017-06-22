@@ -152,22 +152,20 @@ public class ProfileActivity extends AppCompatActivity
 
                 if (mFirstStoryImage != null) {
                     // Ha vannak story képek és van első kép a akkor StoryActivity indítása
-                    Intent openStory = new Intent(this, StoryActivity.class);
-                    openStory.putExtra(getString(R.string.intent_key_story_bitmap), mFirstStoryImage);
 
                     // TODO: Csak tesztelési célra: Story image lista feltöltése
-                    for (int i = 0; i < 6; i++) {
+                    for (int i = 0; i < 2; i++) {
                         ImageData imageData = new ImageData(i);
                         mStoryImages.add(imageData);
                     }
 
+                    Intent openStory = new Intent(this, StoryActivity.class);
+                    openStory.putExtra(getString(R.string.intent_key_story_bitmap), mFirstStoryImage);
+
                     Bundle bundle = new Bundle();
                     bundle.putSerializable(getString(R.string.intent_key_story_images), mStoryImages);
                     openStory.putExtras(bundle);
-
-                    //openStory.putExtra(getString(R.string.intent_key_story_images), mStoryImages);
-                    //startActivity(openStory);
-                    //overridePendingTransition(R.anim.activity_slide_up, R.anim.activity_stay);
+                    startActivity(openStory);
                 }
 
                 break;
@@ -384,6 +382,7 @@ public class ProfileActivity extends AppCompatActivity
     }
 
     private void preloadFirstStoryImage() {
+
 
         SimpleTarget target = new SimpleTarget() {
 
