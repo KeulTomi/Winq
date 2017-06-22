@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -19,7 +20,7 @@ import java.util.ArrayList;
  * Story képeket sorban, időzítve megjelenítő activity
  */
 
-public class StoryActivity extends AppCompatActivity {
+public class StoryActivity extends AppCompatActivity implements View.OnClickListener {
 
 
     private final static int PROGBAR_REFRESH_TIME = 500; // Progressbar frissítési időköze (ezredmásodperc)
@@ -48,6 +49,9 @@ public class StoryActivity extends AppCompatActivity {
         // Progressbar max érték beállítása
         ((ProgressBar) findViewById(R.id.image_viewer_progbar)).setMax(PROGBAR_MAX_VAL);
 
+        //A Close-ra teszünk egy onClickListenert
+        //((ImageView) findViewById(R.id.close_button)).setOnClickListener(this);
+
         // Első kép beállítása
         imageView01 = getIntent().getParcelableExtra(getString(R.string.intent_key_story_bitmap));
         ((ImageView) findViewById(R.id.popup_image_view_01)).setImageBitmap(imageView01);
@@ -72,6 +76,19 @@ public class StoryActivity extends AppCompatActivity {
         msg.obj = findViewById(R.id.image_viewer_progbar);
         msg.arg1 = (int) (mProgbarDelta * mCurrentStepCount * mCurrentImageNum);
         mHandler.sendMessage(msg);
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        switch (v.getId()) {
+
+            case R.id.close_button:
+                finish();
+                overridePendingTransition(R.anim.activity_stay, R.anim.activity_slide_down);
+                break;
+        }
+
     }
 
     private static class MessageHandler extends Handler {

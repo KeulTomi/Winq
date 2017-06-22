@@ -159,6 +159,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mainUpcEventFirstImg.setOnClickListener(this);
         mainUpcEventSecondImg.setOnClickListener(this);
         findViewById(R.id.main_button_profile).setOnClickListener(this);
+        findViewById(R.id.main_button_connect).setOnClickListener(this);
     }
 
     @Override
@@ -177,6 +178,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 overridePendingTransition(R.anim.activity_slide_up, R.anim.activity_stay);
                 break;
 
+            case R.id.main_button_connect:
+                Intent openConnect = new Intent(this, ConnectActivity.class);
+                startActivity(openConnect);
+                overridePendingTransition(R.anim.activity_slide_up, R.anim.activity_stay);
+                break;
+
             case R.id.main_first_upcoming_event:
                 Intent openDetails1 = new Intent(this, EventDetailsActivity.class);
                 openDetails1.putExtra("eventNum", 0);
@@ -184,9 +191,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.main_second_upcoming_event:
-                Intent openDetails2 = new Intent(this, EventDetailsActivity.class);
-                openDetails2.putExtra("eventNum", 1);
-                startActivity(openDetails2);
+                if (Winq.homepageEventDatas.size() > 1) {
+                    Intent openDetails2 = new Intent(this, EventDetailsActivity.class);
+                    openDetails2.putExtra("eventNum", 1);
+                    startActivity(openDetails2);
+                }
                 break;
 
             case R.id.main_button_profile:
@@ -195,6 +204,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 bundle.putSerializable(getString(R.string.intent_key_profile_data), Winq.getCurrentUserProfileData());
                 intentProfile.putExtras(bundle);
                 startActivity(intentProfile);
+                overridePendingTransition(R.anim.activity_slide_up, R.anim.activity_stay);
                 break;
         }
     }

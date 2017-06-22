@@ -10,7 +10,9 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.keult.networking.NetworkManager;
 import com.example.keult.networking.callback.EventJoinCallback;
 import com.example.keult.networking.error.NetworkError;
@@ -62,6 +64,7 @@ public class EventDetailsActivity extends AppCompatActivity implements View.OnCl
         //Setterek
         backToMainMenu.setOnClickListener(this);
         eventJoinButton.setOnClickListener(this);
+        eventShareOpinion.setOnClickListener(this);
         eventDescription.setMovementMethod(new ScrollingMovementMethod());
 
         //A headerre kiírjuk a valós dátumot
@@ -88,6 +91,14 @@ public class EventDetailsActivity extends AppCompatActivity implements View.OnCl
 
         eventData = (HashMap<String, EventData>) Winq.eventsEventData;
 
+        if (eventData.get("eventData").getImage() != "") {
+            //Ha van képe az eventnek akkor betöltjük
+            Glide.with(this)
+                    .load(eventData.get("eventData").getImage())
+                    .asBitmap()
+                    .into((ImageView) findViewById(R.id.details_event_image));
+        }
+
         //Kiíratjuk az adatokat
         eventTitle.setText(eventData.get("eventData").getTitle());
 
@@ -105,11 +116,20 @@ public class EventDetailsActivity extends AppCompatActivity implements View.OnCl
 
     private void setHomepageInfos(int eventNum) {
 
+        if (Winq.homepageEventDatas.get(eventNum).getImage() != "") {
+            //Ha van képe az eventnek akkor betöltjük
+            Glide.with(this)
+                    .load(Winq.homepageEventDatas.get(eventNum).getImage())
+                    .asBitmap()
+                    .into((ImageView) findViewById(R.id.details_event_image));
+        }
+
+
         eventTitle.setText(Winq.homepageEventDatas.get(eventNum).getTitle());
 
         //Ha hosszabb a location mint 12 betű akkor utána már csak ...-ot irunk
-        if (Winq.homepageEventDatas.get(0).getLocation().length() > 19) {
-            String cuttedText = Winq.homepageEventDatas.get(0).getLocation().substring(0, 19);
+        if (Winq.homepageEventDatas.get(eventNum).getLocation().length() > 19) {
+            String cuttedText = Winq.homepageEventDatas.get(eventNum).getLocation().substring(0, 19);
             eventPlace.setText(cuttedText + "...");
         }
         else {
@@ -132,6 +152,10 @@ public class EventDetailsActivity extends AppCompatActivity implements View.OnCl
                 EventDetailsActivity activity = new EventDetailsActivity();
                 activity.joinToEvent();
                 break;
+
+            case R.id.details_event_opinion:
+                ShareOpinionDialog cdd = new ShareOpinionDialog(this);
+                cdd.show();
         }
     }
 
@@ -167,13 +191,13 @@ public class EventDetailsActivity extends AppCompatActivity implements View.OnCl
                 if (eventJoinResponse.getSuccess() == 1) {
                     // Válasz rendben
                     Log.v("joinToEvent", "siker");
-                    //Toast.makeText(context, "Sikeresen csatlakoztál az eseményhez", Toast.LENGTH_LONG).show();
+                    //toastMaker("You joined succesfuly to this Event");
                 } else {
                     // Válasz visszautasítva
                     Log.w("joinToEvent_Refused:",
                             "FirstErrorText= " + eventJoinResponse.getError().get(0));
 
-                    // Toast.makeText(context, eventJoinResponse.getError().get(0), Toast.LENGTH_LONG).show();
+                    //toastMaker(eventJoinResponse.getError().get(0));
                 }
 
             }
@@ -181,8 +205,12 @@ public class EventDetailsActivity extends AppCompatActivity implements View.OnCl
             @Override
             public void forwardError(NetworkError networkError) {
                 Log.e("exploreUsers_Error:", networkError.getThrowable().getLocalizedMessage());
-                // Toast.makeText(context, "Nincs internethozzáférés", Toast.LENGTH_LONG).show();
+                //toastMaker("No internet connection");
             }
         });
+    }
+
+    public void toastMaker(String toastText) {
+        Toast.makeText(getApplicationContext(), toastText, Toast.LENGTH_LONG).show();
     }
 }

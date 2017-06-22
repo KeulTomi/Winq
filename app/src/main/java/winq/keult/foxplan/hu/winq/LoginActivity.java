@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -11,6 +12,7 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.keult.networking.NetworkManager;
 import com.example.keult.networking.callback.LoginCallback;
@@ -77,6 +79,24 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.GO_button:
 
+                if (loginEmail.getText().toString() == "000000000" || loginPassword.getText().toString() == "000000000") {
+                    Toast.makeText(this, "Empty fields", Toast.LENGTH_LONG).show();
+                }
+
+                String strUserName = loginEmail.getText().toString();
+                String strPassword = loginPassword.getText().toString();
+
+                if (TextUtils.isEmpty(strUserName)) {
+                    loginEmail.setError("Email field cannot be empty");
+                    return;
+                }
+
+                if (TextUtils.isEmpty(strPassword)) {
+                    loginPassword.setError("Password field cannot be empty");
+                    return;
+                }
+
+
                 // Login használata: Beteszel egy map-et, vagy null-t írsz, ekkor demo adatokkal küldi
                 goButton.setText("");
                 goButtonProgress.setVisibility(View.VISIBLE);
@@ -131,7 +151,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void forwardError(NetworkError networkError) {
                 Log.e("Login_Error:", networkError.getThrowable().getLocalizedMessage());
-                goButton.setVisibility(View.VISIBLE);
+
+                Toast.makeText(getApplicationContext(), "No internet connection", Toast.LENGTH_LONG).show();
+                goButton.setText("GO");
                 goButtonProgress.setVisibility(View.INVISIBLE);
             }
         });

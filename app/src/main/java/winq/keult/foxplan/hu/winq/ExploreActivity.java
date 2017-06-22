@@ -10,7 +10,9 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.keult.networking.NetworkManager;
 import com.example.keult.networking.callback.DateAddCallback;
 import com.example.keult.networking.callback.DateDoNotLikeCallback;
@@ -21,6 +23,7 @@ import com.example.keult.networking.model.DateDoNotLikeResponse;
 import com.example.keult.networking.model.ExploreResponse;
 import com.example.keult.networking.model.ProfileData;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +45,7 @@ public class ExploreActivity extends AppCompatActivity implements View.OnClickLi
     private static ImageView like;
     Handler mUiHandler = new Handler();
 
-    static void exploreUsers() {
+    public void exploreUsers() {
 
         Map<String, Object> map;
 
@@ -80,13 +83,15 @@ public class ExploreActivity extends AppCompatActivity implements View.OnClickLi
         });
     }
 
-    static void dontLikeDate() {
+    public void dontLikeDate() {
 
         if (numberOfUser == 5) {
             numberOfUser = 0;
             exploreUsers();
             return;
         }
+
+        if (currentUserProfile.get(numberOfUser).getId() == null) return;
 
         Map<String, Object> map = new HashMap<>();
         map.put("apikey", "a");
@@ -118,13 +123,15 @@ public class ExploreActivity extends AppCompatActivity implements View.OnClickLi
         });
     }
 
-    static void requestForDate() {
+    public void requestForDate() {
 
         if (numberOfUser == 5) {
             numberOfUser = 0;
             exploreUsers();
             return;
         }
+
+        if (currentUserProfile.get(numberOfUser).getId() == null) return;
 
         Map<String, Object> map = new HashMap<>();
         map.put("apikey", "a");
@@ -145,6 +152,8 @@ public class ExploreActivity extends AppCompatActivity implements View.OnClickLi
                     // Válasz visszautasítva
                     Log.w("addDate_Refused:",
                             "FirstErrorText= " + dateAddResponse.getError().get(0));
+                    Toast.makeText(getApplicationContext(), dateAddResponse.getError().get(0), Toast.LENGTH_LONG).show();
+
                     setTheCurrentInfos(currentUserProfile, numberOfUser);
                     numberOfUser++;
 
@@ -158,12 +167,24 @@ public class ExploreActivity extends AppCompatActivity implements View.OnClickLi
         });
     }
 
-    public static void setTheCurrentInfos(List<ProfileData> profileData, int listNumber) {
+    public void setTheCurrentInfos(List<ProfileData> profileData, int listNumber) {
 //        // Kép aszinkron betöltése
 //        ImageLoader imageLoader = new ImageLoader(getActivity());
 //        imageLoader.DisplayImage(profileData.get(listNumber).getImage(), currentUserImage, mUiHandler);
 
-        //currentUserAge.setText(profileData.get(listNumber));
+        //Kiszámítjuk a user életkorát (mert ezt nem kapjuk meg  aszerverről)
+        int userBornYear = Integer.parseInt(profileData.get(listNumber).getUserborn().substring(0, 4));
+        Calendar c = Calendar.getInstance();
+        int currentYear = c.get(Calendar.YEAR);
+
+        if (profileData.get(listNumber).getImage() != "") {
+            Glide.with(this)
+                    .load(profileData.get(listNumber).getImage())
+                    .asBitmap()
+                    .into(currentUserImage);
+        }
+
+        currentUserAge.setText(String.valueOf(currentYear - userBornYear));
         currentUserCountry.setText(profileData.get(listNumber).getUserCountryShort());
         currentUserFullname.setText(profileData.get(listNumber).getFullName());
         currentUserIntrest.setText(profileData.get(listNumber).getUserInterestText());

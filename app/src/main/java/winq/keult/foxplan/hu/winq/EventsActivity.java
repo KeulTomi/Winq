@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -46,6 +47,7 @@ public class EventsActivity extends AppCompatActivity implements AdapterView.OnI
     private static EventsActivity activity = new EventsActivity();
     private TextView headerDateYear;
     private TextView headerDateMonthAndDay;
+    private ProgressBar eventsListProgress;
 
     public static void eventsTabBar(String tabName) {
 
@@ -116,8 +118,11 @@ public class EventsActivity extends AppCompatActivity implements AdapterView.OnI
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_events);
 
-        //A kezdő tab a joined ezért betöltjük azt
+        //A kezdő tab a joined ezért betöltjük azt (és a szükséges innitek)
         eventsList = (ListView) findViewById(R.id.events_list);
+        eventsListProgress = (ProgressBar) findViewById(R.id.events_list_progress);
+
+        eventsListProgress.setVisibility(View.VISIBLE);
         joinedEvents();
 
         //Inicializálások
@@ -174,8 +179,10 @@ public class EventsActivity extends AppCompatActivity implements AdapterView.OnI
             case R.id.evetns_joined:
                 //A tabbaron színváltás történik
                 eventsTabBar("joined");
+
                 //Adatlekérdezés
                 currentEventList.clear();
+                eventsListProgress.setVisibility(View.VISIBLE);
                 joinedEvents();
 
                 break;
@@ -183,8 +190,10 @@ public class EventsActivity extends AppCompatActivity implements AdapterView.OnI
             case R.id.events_upcoming:
                 //A tabbaron színváltás történik
                 eventsTabBar("upcoming");
+
                 //Adatlekérdezés
                 currentEventList.clear();
+                eventsListProgress.setVisibility(View.VISIBLE);
                 upcomingEvents();
 
                 break;
@@ -315,16 +324,19 @@ public class EventsActivity extends AppCompatActivity implements AdapterView.OnI
             case "joined":
                 joinedAdapter = new EventsJoinedAdapter(this, currentEventList);
                 eventsList.setAdapter(joinedAdapter);
+                eventsListProgress.setVisibility(View.GONE);
                 break;
 
             case "upcoming":
                 upcomingAdapter = new EventsUpcomingAdapter(this, currentEventList);
                 eventsList.setAdapter(upcomingAdapter);
+                eventsListProgress.setVisibility(View.GONE);
                 break;
 
             case "search":
                 searchAdapter = new EventsSearchAdapter(this, currentEventList);
                 eventsList.setAdapter(searchAdapter);
+                eventsListProgress.setVisibility(View.GONE);
                 break;
         }
 
@@ -337,6 +349,7 @@ public class EventsActivity extends AppCompatActivity implements AdapterView.OnI
 
             if (keyCode == KeyEvent.KEYCODE_ENTER) {
                 //Akkor indítjuk a keresést amikot lenyomta az Entert
+                eventsListProgress.setVisibility(View.VISIBLE);
                 searchEvents();
             }
         }

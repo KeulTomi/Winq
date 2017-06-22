@@ -3,11 +3,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ProgressBar
+        android:id="@+id/image_viewer_progbar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:max="100"
+        android:progress="100"
+        android:progressTint="@color/colorPrimary" />
+
     <ImageView
         android:id="@+id/popup_image_view_02"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
+        android:layout_below="@id/image_viewer_progbar"
         android:layout_centerInParent="true"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
@@ -18,32 +27,18 @@
         android:id="@+id/popup_image_view_01"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
+        android:layout_below="@id/image_viewer_progbar"
         android:layout_centerInParent="true"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
         android:src="@drawable/wink_face" />
 
-    <ProgressBar
-        android:id="@+id/image_viewer_progbar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:max="100"
-        android:progress="100"
-        android:progressTint="@color/colorPrimary" />
-
-    <TextView
+    <ImageView
         android:id="@+id/close_button"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerInParent="true"
-        android:background="@color/colorPrimary"
-        android:gravity="center"
-        android:text="close"
-        android:textAllCaps="true"
-        android:textColor="@android:color/white"
-        android:textSize="18sp" />
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/image_viewer_progbar"
+        android:src="@drawable/ic_close" />
 
 </RelativeLayout>

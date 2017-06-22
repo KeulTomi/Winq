@@ -10,6 +10,7 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.keult.networking.NetworkManager;
 import com.example.keult.networking.callback.SignUpCallback;
@@ -71,6 +72,7 @@ public class SignUpActivity2 extends AppCompatActivity implements View.OnClickLi
                 overridePendingTransition(R.anim.activity_slide_left2, R.anim.activity_slide_right2);
                 break;
             case R.id.finish_sign_up:
+
                 Intent finishSignUp = new Intent(this, LoginActivity.class);
 
                 userParams.put("description", signUpDescription.getText().toString());
@@ -120,8 +122,8 @@ public class SignUpActivity2 extends AppCompatActivity implements View.OnClickLi
         map.put("facebookid", "no");
         map.put("email", userParams.get("email"));
         map.put("fullname", userParams.get("fullname"));
-        map.put("fiulany", userParams.get("sextype"));
-        map.put("user_born", userParams.get("birthDay" + "." + userParams.get("birthMonth") + "." + userParams.get("birthYear")));
+        map.put("fiulany", userParams.get("sexType"));
+        map.put("user_born", userParams.get("birthDay") + "." + userParams.get("birthMonth") + "." + userParams.get("birthYear"));
         map.put("user_country_short", userParams.get("country"));
         map.put("user_interest", "1");
         map.put("user_behavior", userParams.get("intrest"));
@@ -136,11 +138,14 @@ public class SignUpActivity2 extends AppCompatActivity implements View.OnClickLi
             public void forwardResponse(SignUpResponse signUpResponse) {
                 if ( signUpResponse.getSuccess() == 1 )
                     Log.v("Registration:", "User successfully signed up");
+
+                Toast.makeText(getApplicationContext(), "Succesful sign up", Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void forwardError(NetworkError networkError) {
 
+                Toast.makeText(getApplicationContext(), networkError.getThrowable().getMessage(), Toast.LENGTH_LONG).show();
             }
         });
 

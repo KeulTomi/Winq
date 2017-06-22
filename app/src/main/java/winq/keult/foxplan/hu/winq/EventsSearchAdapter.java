@@ -6,8 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.keult.networking.model.EventData;
 
 import java.util.ArrayList;
@@ -39,6 +41,14 @@ public class EventsSearchAdapter extends ArrayAdapter<EventData> {
 
         EventData currentItem = getItem(position);
 
+        if (currentItem.getImage() != "") {
+            //Ha van képe az eventnek akkor betöltjük
+            Glide.with(getContext())
+                    .load(currentItem.getImage())
+                    .asBitmap()
+                    .into((ImageView) listItemView.findViewById(R.id.events_item_image));
+        }
+
         TextView nameTextView = (TextView) listItemView.findViewById(R.id.events_item_name);
         //Ha hosszabb a title mint 19 betű akkor utána már csak ...-ot irunk
         if (currentItem.getTitle().length() > 11) {
@@ -58,13 +68,11 @@ public class EventsSearchAdapter extends ArrayAdapter<EventData> {
         }
 
         TextView timeTextView = (TextView) listItemView.findViewById(R.id.events_eventstime);
-        //Ha hosszabb a date mint 19 betű akkor utána már csak ...-ot irunk
-        if (currentItem.getDate().length() > 19) {
-            String cuttedText = currentItem.getDate().substring(0, 19);
-            timeTextView.setText(cuttedText + "...");
-        } else {
-            timeTextView.setText(currentItem.getDate());
-        }
+        String eventsDateYear = currentItem.getDate().substring(0, 4);
+        String eventsDateMonth = currentItem.getDate().substring(5, 7);
+        String eventsDateDay = currentItem.getDate().substring(8, 10);
+
+        timeTextView.setText(eventsDateYear + eventsDateMonth + "." + eventsDateDay);
 
         return listItemView;
     }

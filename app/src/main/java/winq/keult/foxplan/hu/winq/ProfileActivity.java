@@ -166,8 +166,8 @@ public class ProfileActivity extends AppCompatActivity
                     openStory.putExtras(bundle);
 
                     //openStory.putExtra(getString(R.string.intent_key_story_images), mStoryImages);
-                    startActivity(openStory);
-                    overridePendingTransition(R.anim.activity_slide_up, R.anim.activity_stay);
+                    //startActivity(openStory);
+                    //overridePendingTransition(R.anim.activity_slide_up, R.anim.activity_stay);
                 }
 
                 break;
@@ -199,7 +199,13 @@ public class ProfileActivity extends AppCompatActivity
 
             case R.id.profile_back_points:
                 finish();
+                overridePendingTransition(R.anim.activity_stay, R.anim.activity_slide_down);
                 break;
+
+            case R.id.profile_logout_button:
+                //TODO: Törölni kell a felhasználó adatait
+                Intent openLogIn = new Intent(this, LoginActivity.class);
+                startActivity(openLogIn);
         }
     }
 

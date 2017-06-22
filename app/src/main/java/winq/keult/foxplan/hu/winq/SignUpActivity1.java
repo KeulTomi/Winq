@@ -1,18 +1,31 @@
 package winq.keult.foxplan.hu.winq;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.example.keult.networking.NetworkManager;
+import com.example.keult.networking.callback.InterestTypesCallback;
+import com.example.keult.networking.error.NetworkError;
+import com.example.keult.networking.model.InterestData;
+import com.example.keult.networking.model.InterestTypesResponse;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class SignUpActivity1 extends AppCompatActivity implements View.OnClickListener {
 
@@ -22,6 +35,8 @@ public class SignUpActivity1 extends AppCompatActivity implements View.OnClickLi
     private TextView sexTypeMan;
     private DatePicker signUpBirthDate;
     private Spinner signUpIntrests;
+    private ArrayList<String> interestTypeList;
+    private ArrayList<String> interestIdList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +46,8 @@ public class SignUpActivity1 extends AppCompatActivity implements View.OnClickLi
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_sign_up1);
+
+        setInterestSpinner();
 
         backToFirstPartBtn = (ImageView) findViewById(R.id.back_to_signup_first_part);
         nextTo3PartBtn = (TextView) findViewById(R.id.next_to_3_part_btn);
@@ -57,7 +74,6 @@ public class SignUpActivity1 extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.next_to_3_part_btn:
                 Intent start2Part = new Intent(this, SignUpActivity2.class);
-                startActivity(start2Part);
 
                 Bundle bundleSecondPart = getIntent().getBundleExtra("signUpBundle");
                 HashMap<String, Object> userParams = (HashMap<String, Object>) bundleSecondPart.get("messageBody");
@@ -73,15 +89,23 @@ public class SignUpActivity1 extends AppCompatActivity implements View.OnClickLi
                 int month = signUpBirthDate.getMonth() + 1;
                 int year = signUpBirthDate.getYear();
 
-                userParams.put("birthDay", day);
-                userParams.put("birthMonth", month);
-                userParams.put("birthYear", year);
+                if (month < 10) {
+                    userParams.put("birthDay", "0" + String.valueOf(day));
+                } else {
+                    userParams.put("birthDay", String.valueOf(day));
+                }
 
-                userParams.put("intrest", signUpIntrests.getSelectedItem().toString());
+                userParams.put("birthMonth", String.valueOf(month));
+                userParams.put("birthYear", String.valueOf(year));
+
+                interestTypeList.get(signUpIntrests.getSelectedItemPosition());
+
+                userParams.put("intrest", interestIdList.get(signUpIntrests.getSelectedItemPosition()));
 
                 bundleSecondPart.putSerializable("messageBody", userParams);
                 start2Part.putExtra("signUpBundle", bundleSecondPart);
 
+                startActivity(start2Part);
                 overridePendingTransition(R.anim.activity_slide_left, R.anim.activity_slide_right);
                 break;
             case R.id.sex_type_woman:
@@ -103,5 +127,74 @@ public class SignUpActivity1 extends AppCompatActivity implements View.OnClickLi
                 sexTypeMan.setTextColor(Color.WHITE);
                 break;
         }
+    }
+
+    public void setInterestSpinner() {
+
+        interestTypeList = new ArrayList<>();
+        interestIdList = new ArrayList<>();
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("apikey", "a");
+
+        NetworkManager.getInstance().listInterestTypes(map, new InterestTypesCallback() {
+            @Override
+            public void forwardResponse(InterestTypesResponse interestTypesResponse) {
+                if (interestTypesResponse.getSuccess() == 1) {
+                    //Válasz rendben
+                    // Az érdeklődési körök kilistázása egy ArrayListbe amit majd az adapterre kötünk rá
+                    for (InterestData list : interestTypesResponse.getData().getInterestList()) {
+                        interestTypeList.add(list.getName());
+
+                        try {
+                            interestIdList.add(list.getId());
+                        } catch (NumberFormatException e) {
+
+                        }
+                    }
+
+                    ArrayAdapter<String> typeSpinnerAdapter = new CustomArrayAdapter<String>(getApplicationContext(), interestTypeList);
+                    typeSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    signUpIntrests.setAdapter(typeSpinnerAdapter);
+
+                } else {
+                    // Válasz visszautasítva
+                    Log.w("listEvents_Refused:",
+                            "FirstErrorText= " + interestTypesResponse.getError().get(0));
+
+                }
+            }
+
+            @Override
+            public void forwardError(NetworkError networkError) {
+
+            }
+        });
+    }
+
+    static class CustomArrayAdapter<T> extends ArrayAdapter<T> {
+        public CustomArrayAdapter(Context ctx, ArrayList<String> objects) {
+            super(ctx, android.R.layout.simple_spinner_item, (List<T>) objects);
+        }
+
+        //other constructors
+
+        @Override
+        public View getDropDownView(int position, View convertView, ViewGroup parent) {
+            View view = super.getView(position, convertView, parent);
+
+            //we know that simple_spinner_item has android.R.id.text1 TextView:
+
+        /* if(isDroidX) {*/
+            TextView text = (TextView) view.findViewById(android.R.id.text1);
+            text.setTextColor(Color.BLACK);//choose your color :)
+            text.setTextSize(16f);
+        /*}*/
+
+            return view;
+
+        }
+
+
     }
 }

@@ -1,56 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="winq.keult.foxplan.hu.winq.SignUpActivity1">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="215dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:background="@color/colorPrimaryDark" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
-        android:layout_marginTop="35dp">
+        android:layout_marginTop="35dp"
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="SEX:"
-            android:textSize="15sp"
-            android:textColor="@android:color/black"/>
+            android:textColor="@android:color/black"
+            android:textSize="15sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
             android:background="@drawable/sex_type_border"
-            android:layout_marginTop="10dp">
+            android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/sex_type_woman"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:id="@+id/sex_type_woman"
-                android:text="woman"
-                android:textColor="@android:color/white"
-                android:textAllCaps="true"
-                android:textAlignment="center"
                 android:layout_gravity="center_vertical"
-                android:gravity="center_vertical"
+                android:layout_weight="1"
                 android:background="@color/colorPrimaryDark"
+                android:gravity="center_vertical"
+                android:text="woman"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                android:textColor="@android:color/white"
                 />
             <TextView
+                android:id="@+id/sex_type_man"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:id="@+id/sex_type_man"
-                android:text="man"
-                android:textColor="@color/colorPrimaryDark"
-                android:textAllCaps="true"
-                android:textAlignment="center"
                 android:gravity="center_vertical"
+                android:text="man"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                android:textColor="@color/colorPrimaryDark"
                 />
 
         </LinearLayout>
@@ -58,62 +66,63 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
             android:text="BORN:"
-            android:textSize="15sp"
             android:textColor="@android:color/black"
-            android:layout_marginTop="40dp"/>
+            android:textSize="15sp" />
 
         <DatePicker
+            android:id="@+id/birth_date"
             android:layout_width="wrap_content"
             android:layout_height="150dp"
-            android:id="@+id/birth_date"
-            android:datePickerMode="spinner"
-            android:calendarViewShown="false"
+            android:layout_gravity="center"
             android:layout_marginTop="10dp"
-            android:layout_gravity="center"/>
+            android:calendarViewShown="false"
+            android:datePickerMode="spinner" />
 
         <TextView
+            android:id="@+id/sign_up_interest_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="INTERSTS:"
-            android:textSize="15sp"
+            android:layout_marginTop="40dp"
+            android:text="INTERESTS:"
             android:textColor="@android:color/black"
-            android:layout_marginTop="40dp"/>
+            android:textSize="15sp" />
 
         <Spinner
+            android:id="@+id/interests_spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/interests_spinner"
             android:layout_gravity="center"
-            android:spinnerMode="dialog"
+            android:layout_marginTop="15dp"
             android:overScrollMode="always"
-            android:layout_marginTop="15dp"/>
+            android:spinnerMode="dialog" />
 
     </LinearLayout>
 
     <TextView
+        android:id="@+id/next_to_3_part_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/next_to_3_part_btn"
-        android:text="Next"
-        android:textAllCaps="true"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        android:textColor="@android:color/white"
-        android:background="@color/colorPrimaryDark"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:background="@color/colorPrimaryDark"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:text="Next"
+        android:textAlignment="center"
+        android:textAllCaps="true"
+        android:textColor="@android:color/white"
+        android:textSize="20sp" />
 
     <ImageView
+        android:id="@+id/back_to_signup_first_part"
         android:layout_width="45dp"
         android:layout_height="45dp"
-        android:id="@+id/back_to_signup_first_part"
-        android:src="@drawable/ic_navigate_back"
         android:layout_alignParentBottom="true"
-        android:tint="@android:color/white"
-        android:paddingLeft="10dp"/>
+        android:paddingLeft="10dp"
+        android:src="@drawable/ic_navigate_back"
+        android:tint="@android:color/white" />
 
 </RelativeLayout>

@@ -6,7 +6,7 @@ import java.util.List;
  * Friend list válasz adatmodell
  */
 
-class FriendsListResponseData {
+public class FriendsListResponseData {
 
     private List<FriendsData> profile_friends;
 

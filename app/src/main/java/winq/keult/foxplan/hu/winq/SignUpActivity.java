@@ -3,6 +3,7 @@ package winq.keult.foxplan.hu.winq;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -50,6 +51,32 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 overridePendingTransition(R.anim.activity_stay, R.anim.activity_slide_down);
                 break;
             case R.id.next_to_2_part_btn:
+
+                String strUserName = signUpEmail.getText().toString();
+                String strPassword = signUpPassword.getText().toString();
+                String strCountry = signUpCountry.getText().toString();
+                String strFullName = signUpCountry.getText().toString();
+
+                if (TextUtils.isEmpty(strUserName)) {
+                    signUpEmail.setError("Email field cannot be empty");
+                    return;
+                }
+
+                if (TextUtils.isEmpty(strPassword)) {
+                    signUpPassword.setError("Password field cannot be empty");
+                    return;
+                }
+
+                if (TextUtils.isEmpty(strCountry)) {
+                    signUpCountry.setError("Country field cannot be empty");
+                    return;
+                }
+
+                if (TextUtils.isEmpty(strFullName)) {
+                    signUpFullName.setError("Name field cannot be empty");
+                    return;
+                }
+
                 Intent start2Part = new Intent(this, SignUpActivity1.class);
                 Bundle bundleSendParamsToNextStage = new Bundle();
                 HashMap<String, Object> userParams = new HashMap<>();
