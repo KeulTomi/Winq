@@ -152,7 +152,8 @@
         android:layout_width="330dp"
         android:layout_height="match_parent"
         android:layout_below="@+id/events_tab_bar"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:scrollbars="none" />
 
     <ProgressBar
         android:id="@+id/events_list_progress"

@@ -6,21 +6,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.keult.networking.model.FriendsData;
+import com.bumptech.glide.Glide;
+import com.example.keult.networking.model.DateData;
 
 import java.util.ArrayList;
 
 /**
- * Created by tomi on 2017.06.20..
+ * Created by tomi on 2017.06.21..
  */
 
-public class ConnectWinqsAdapter extends ArrayAdapter<FriendsData> {
+public class ConnectWinqsAdapter extends ArrayAdapter<DateData> {
 
 
-    public ConnectWinqsAdapter(@NonNull Context context, ArrayList<FriendsData> friendsDatas) {
-        super(context, 0, friendsDatas);
+    public ConnectWinqsAdapter(@NonNull Context context, ArrayList<DateData> dateDatas) {
+        super(context, 0, dateDatas);
     }
 
     @NonNull
@@ -37,13 +39,21 @@ public class ConnectWinqsAdapter extends ArrayAdapter<FriendsData> {
 
         }
 
-        FriendsData currentItem = getItem(position);
+        DateData currentItem = getItem(position);
+
+        if (currentItem.getImage() != "") {
+            //Ha van képe a felhasználónak akkor betöltjük
+            Glide.with(getContext())
+                    .load(currentItem.getImage())
+                    .asBitmap()
+                    .into((ImageView) listItemView.findViewById(R.id.connect_item_image));
+        }
 
         TextView userName = (TextView) listItemView.findViewById(R.id.connect_item_fullname_of_current_user);
-        userName.setText(currentItem.getFullname());
+        userName.setText(currentItem.getFullName());
 
         TextView countryShortName = (TextView) listItemView.findViewById(R.id.connect_item_country);
-        countryShortName.setText(currentItem.getUserCountryShort());
+        countryShortName.setText("HUN");
 
         return listItemView;
     }

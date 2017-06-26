@@ -1,6 +1,8 @@
 package winq.keult.foxplan.hu.winq;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -10,20 +12,22 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.keult.networking.NetworkManager;
 import com.example.keult.networking.callback.EventJoinCallback;
+import com.example.keult.networking.callback.EventRateCallback;
 import com.example.keult.networking.error.NetworkError;
 import com.example.keult.networking.model.EventData;
 import com.example.keult.networking.model.EventJoinResponse;
+import com.example.keult.networking.model.EventRateResponse;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class EventDetailsActivity extends AppCompatActivity implements View.OnClickListener {
 
+    public static int rate = 0;
     private static TextView headerDateMonthAndDay;
     private static TextView headerDateYear;
     private static ImageView eventImage;
@@ -35,7 +39,6 @@ public class EventDetailsActivity extends AppCompatActivity implements View.OnCl
     private static TextView eventJoinButton;
     private static LinearLayout eventShareOpinion;
     private static LinearLayout backToMainMenu;
-
     private static int eventNumber;
     private static HashMap<String, EventData> eventData;
 
@@ -191,11 +194,12 @@ public class EventDetailsActivity extends AppCompatActivity implements View.OnCl
                 if (eventJoinResponse.getSuccess() == 1) {
                     // Válasz rendben
                     Log.v("joinToEvent", "siker");
-                    //toastMaker("You joined succesfuly to this Event");
+                    //dialogMaker("Succesful join");
                 } else {
                     // Válasz visszautasítva
                     Log.w("joinToEvent_Refused:",
                             "FirstErrorText= " + eventJoinResponse.getError().get(0));
+                    //dialogMaker(eventJoinResponse.getError().get(0));
 
                     //toastMaker(eventJoinResponse.getError().get(0));
                 }
@@ -205,12 +209,71 @@ public class EventDetailsActivity extends AppCompatActivity implements View.OnCl
             @Override
             public void forwardError(NetworkError networkError) {
                 Log.e("exploreUsers_Error:", networkError.getThrowable().getLocalizedMessage());
-                //toastMaker("No internet connection");
+                //dialogMaker(networkError.getThrowable().getMessage());
             }
         });
     }
 
-    public void toastMaker(String toastText) {
-        Toast.makeText(getApplicationContext(), toastText, Toast.LENGTH_LONG).show();
+    public void rateEvent() {
+        Map<String, Object> map = new HashMap<>();
+
+        if (eventNumber == 2) {
+
+
+            map.put("apikey", "a");
+            map.put("username", Winq.username);
+            map.put("password", Winq.password);
+            map.put("facebookid", "no");
+            map.put("eventid", eventData.get("eventData").getId());
+            map.put("rate", String.valueOf(rate));
+            // Csak egyszer lehet egy event-hez csatlakozni, a számot változtatni kell
+        } else {
+            map.put("apikey", "a");
+            map.put("username", Winq.username);
+            map.put("password", Winq.password);
+            map.put("facebookid", "no");
+            map.put("eventid", Winq.homepageEventDatas.get(eventNumber).getId());
+            map.put("rate", String.valueOf(rate));
+            // Csak egyszer lehet egy event-hez csatlakozni, a számot változtatni kell
+        }
+
+        NetworkManager.getInstance().rateEvent(map, new EventRateCallback() {
+            @Override
+            public void forwardResponse(EventRateResponse eventRateResponse) {
+
+                if (eventRateResponse.getSuccess() == 1) {
+                    // Válasz rendben
+                    Log.v("joinToEvent", "siker");
+                    //dialogMaker("Thank you:)");
+                } else {
+                    // Válasz visszautasítva
+                    Log.w("joinToEvent_Refused:",
+                            "FirstErrorText= " + eventRateResponse.getError().get(0));
+
+                    //dialogMaker(eventRateResponse.getError().get(0));
+                }
+
+            }
+
+            @Override
+            public void forwardError(NetworkError networkError) {
+
+                //dialogMaker(networkError.getThrowable().getMessage());
+            }
+        });
+
+    }
+
+    public void dialogMaker(String dialogText) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(dialogText)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        //do things
+                        dialog.dismiss();
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 }

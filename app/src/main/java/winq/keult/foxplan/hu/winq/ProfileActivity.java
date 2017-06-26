@@ -209,7 +209,9 @@ public class ProfileActivity extends AppCompatActivity
             case R.id.profile_images_12:
                 String url = (String) v.getTag(v.getId());
 
-                // TODO: Popup ablakot megjeleníteni a kép részletes nézetével
+
+                ProfilePhotosDialog cdd = new ProfilePhotosDialog(this, url);
+                cdd.show();
 
                 break;
             case R.id.profile_take_photo_button:

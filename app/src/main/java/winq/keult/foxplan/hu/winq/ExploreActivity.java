@@ -91,7 +91,9 @@ public class ExploreActivity extends AppCompatActivity implements View.OnClickLi
             return;
         }
 
-        if (currentUserProfile.get(numberOfUser).getId() == null) return;
+        if (currentUserProfile == null) {
+            return;
+        }
 
         Map<String, Object> map = new HashMap<>();
         map.put("apikey", "a");
@@ -131,7 +133,9 @@ public class ExploreActivity extends AppCompatActivity implements View.OnClickLi
             return;
         }
 
-        if (currentUserProfile.get(numberOfUser).getId() == null) return;
+        if (currentUserProfile == null) {
+            return;
+        }
 
 
         Map<String, Object> map = new HashMap<>();

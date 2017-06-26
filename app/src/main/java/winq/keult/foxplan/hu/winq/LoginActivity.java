@@ -66,6 +66,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         goButton.setOnClickListener(this);
         signUpButton.setOnClickListener(this);
+
+        if (getIntent().getStringExtra("freshSignUpPassword") != null) {
+
+            loginEmail.setText(getIntent().getStringExtra("freshSignUpEmail"));
+            loginPassword.setText(getIntent().getStringExtra("freshSignUpPassword"));
+        }
     }
 
     @Override

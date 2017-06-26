@@ -1,5 +1,6 @@
 package winq.keult.foxplan.hu.winq;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +9,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -18,8 +20,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.keult.networking.NetworkManager;
+import com.example.keult.networking.callback.DateListCallback;
 import com.example.keult.networking.callback.FriendsListCallback;
 import com.example.keult.networking.error.NetworkError;
+import com.example.keult.networking.model.DateData;
+import com.example.keult.networking.model.DateListResponse;
 import com.example.keult.networking.model.FriendsData;
 import com.example.keult.networking.model.FriendsListResponse;
 
@@ -34,10 +39,11 @@ public class ConnectActivity extends AppCompatActivity implements View.OnClickLi
     static TextView searchTab;
     static GridView friendsList;
     private static ArrayList<FriendsData> currentFriendList = new ArrayList<>();
-    private static ConnectWinqsAdapter winqsAdapter;
+    private static ArrayList<DateData> dateList = new ArrayList<>();
+    private static ConnectMyFriendsAdapter myFriendsAdapter;
 
     //TODO Nincs még a myFriend-re és a Search-re api hívás, ezért az adapter classok is teéljesen üresek
-    private static ConnectMyFriendsAdapter myFriendsAdapter;
+    private static ConnectWinqsAdapter winqsAdapter;
     private static ConnectSearchAdapter searchAdapter;
 
     private static RelativeLayout connectHeader;
@@ -48,7 +54,14 @@ public class ConnectActivity extends AppCompatActivity implements View.OnClickLi
     private TextView headerDateMonthAndDay;
     private ProgressBar connectListProgress;
 
-    public static void eventsTabBar(String tabName) {
+    public void eventsTabBar(String tabName) {
+
+        // Check if no view has focus:
+        View v = this.getCurrentFocus();
+        if (v != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+        }
 
         switch (tabName) {
 
@@ -122,7 +135,7 @@ public class ConnectActivity extends AppCompatActivity implements View.OnClickLi
         connectListProgress = (ProgressBar) findViewById(R.id.connect_list_progress);
 
         connectListProgress.setVisibility(View.VISIBLE);
-        myFriendsEvents();
+        myFriendsList();
 
         //Inicializálások
         myFriendsTab = (TextView) findViewById(R.id.connect_joined);
@@ -151,11 +164,38 @@ public class ConnectActivity extends AppCompatActivity implements View.OnClickLi
         Winq.setTheRealTime(headerDateYear, headerDateMonthAndDay);
     }
 
-    private void myFriendsEvents() {
+    private void winqsList() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("apikey", "a");
+        map.put("username", Winq.username);
+        map.put("password", Winq.password);
+        map.put("facebookid", "no");
 
-        //Nem csinálunk semmit amíg nem lesz kész az api hívás
-        connectListProgress.setVisibility(View.GONE);
-        return;
+        NetworkManager.getInstance().listDates(map, new DateListCallback() {
+            @Override
+            public void forwardResponse(DateListResponse dateListResponse) {
+
+                if (dateListResponse.getSuccess() == 1) {
+                    // Válasz rendben
+                    dateList = (ArrayList<DateData>) dateListResponse.getData().getDateList();
+                    setAdapters("upcoming");
+
+                } else {
+                    // Válasz visszautasítva
+                    Log.w("listEvents_Refused:",
+                            "FirstErrorText= " + dateListResponse.getError().get(0));
+
+                }
+
+            }
+
+            @Override
+            public void forwardError(NetworkError networkError) {
+
+            }
+        });
+
+
     }
 
     @Override
@@ -188,7 +228,7 @@ public class ConnectActivity extends AppCompatActivity implements View.OnClickLi
                 //Adatlekérdezés
                 currentFriendList.clear();
                 connectListProgress.setVisibility(View.VISIBLE);
-                myFriendsEvents();
+                myFriendsList();
 
                 break;
 
@@ -199,7 +239,7 @@ public class ConnectActivity extends AppCompatActivity implements View.OnClickLi
                 //Adatlekérdezés
                 currentFriendList.clear();
                 connectListProgress.setVisibility(View.VISIBLE);
-                winqsEvents();
+                winqsList();
 
                 break;
 
@@ -208,6 +248,8 @@ public class ConnectActivity extends AppCompatActivity implements View.OnClickLi
                 eventsTabBar("search");
                 //Adatok törlése és várakozás az Enter gombra, hogy kereshessen
                 currentFriendList.clear();
+                connectListProgress.setVisibility(View.VISIBLE);
+                searchFriendsList();
 
                 break;
 
@@ -219,7 +261,12 @@ public class ConnectActivity extends AppCompatActivity implements View.OnClickLi
 
     }
 
-    private void winqsEvents() {
+    private void searchFriendsList() {
+        //Amíg nem jó az api hívás addig csak ezt adjuk bele
+        setAdapters("search");
+    }
+
+    private void myFriendsList() {
         Map<String, Object> map = new HashMap<>();
         map.put("apikey", "a");
         map.put("username", Winq.username);
@@ -233,7 +280,7 @@ public class ConnectActivity extends AppCompatActivity implements View.OnClickLi
                 if (friendsListResponse.getSuccess() == 1) {
                     // Válasz rendben
                     currentFriendList = (ArrayList<FriendsData>) friendsListResponse.getData().getFriendsList();
-                    setAdapters("upcoming");
+                    setAdapters("joined");
 
                 } else {
                     // Válasz visszautasítva
@@ -262,7 +309,7 @@ public class ConnectActivity extends AppCompatActivity implements View.OnClickLi
                 break;
 
             case "upcoming":
-                winqsAdapter = new ConnectWinqsAdapter(this, currentFriendList);
+                winqsAdapter = new ConnectWinqsAdapter(this, dateList);
                 friendsList.setAdapter(winqsAdapter);
                 connectListProgress.setVisibility(View.GONE);
                 break;
@@ -278,6 +325,12 @@ public class ConnectActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public boolean onKey(View v, int keyCode, KeyEvent event) {
+        // Check if no view has focus:
+        View view = this.getCurrentFocus();
+        if (v != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
         return false;
     }
 }

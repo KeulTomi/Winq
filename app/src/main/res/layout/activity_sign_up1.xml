@@ -78,7 +78,9 @@
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
             android:calendarViewShown="false"
-            android:datePickerMode="spinner" />
+            android:datePickerMode="spinner"
+            android:maxDate="2000"
+            android:minDate="1900" />
 
         <TextView
             android:id="@+id/sign_up_interest_text"

@@ -38,6 +38,14 @@ public class ConnectSearchAdapter extends ArrayAdapter<FriendsData> {
 
         FriendsData currentItem = getItem(position);
 
+        /*if (currentItem.getImage() != "") {
+            //Ha van képe a felhasználónak akkor betöltjük
+            Glide.with(getContext())
+                    .load(currentItem.getImage())
+                    .asBitmap()
+                    .into((ImageView) listItemView.findViewById(R.id.connect_item_image));
+        }*/
+
         //TextView userName = (TextView) listItemView.findViewById(R.id.connect_item_fullname_of_current_user);
         //userName.setText(currentItem.getFullName());
 

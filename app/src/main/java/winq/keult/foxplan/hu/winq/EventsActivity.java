@@ -1,5 +1,6 @@
 package winq.keult.foxplan.hu.winq;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -49,7 +51,14 @@ public class EventsActivity extends AppCompatActivity implements AdapterView.OnI
     private TextView headerDateMonthAndDay;
     private ProgressBar eventsListProgress;
 
-    public static void eventsTabBar(String tabName) {
+    public void eventsTabBar(String tabName) {
+
+        // Check if no view has focus:
+        View v = this.getCurrentFocus();
+        if (v != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+        }
 
         switch (tabName) {
 
@@ -350,6 +359,14 @@ public class EventsActivity extends AppCompatActivity implements AdapterView.OnI
             if (keyCode == KeyEvent.KEYCODE_ENTER) {
                 //Akkor indítjuk a keresést amikot lenyomta az Entert
                 eventsListProgress.setVisibility(View.VISIBLE);
+
+                // Check if no view has focus:
+                View view = this.getCurrentFocus();
+                if (v != null) {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
+
                 searchEvents();
             }
         }

@@ -1,12 +1,15 @@
 package winq.keult.foxplan.hu.winq;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -61,11 +64,22 @@ public class SignUpActivity2 extends AppCompatActivity implements View.OnClickLi
         addButton.setOnClickListener(this);
         backToSecondPartBtn.setOnClickListener(this);
         finishSignUp.setOnClickListener(this);
+        findViewById(R.id.main_layout).setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
+
         switch (view.getId()) {
+
+            case R.id.main_layout:
+                // Check if no view has focus:
+                View v = this.getCurrentFocus();
+                if (v != null) {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
+                break;
 
             case R.id.back_to_signup_second_part:
                 finish();
@@ -73,18 +87,22 @@ public class SignUpActivity2 extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.finish_sign_up:
 
-                Intent finishSignUp = new Intent(this, LoginActivity.class);
-
                 userParams.put("description", signUpDescription.getText().toString());
                 userParams.put("activities", signUpAllActivities.getText().toString());
 
                 sendSignUpData();
 
-                startActivity(finishSignUp);
+
                 break;
             case R.id.sign_up_add:
                 //Hozzá adjuk a begépelt hashtaget a többihez
                 String addedHashtag = signUpActivities.getText().toString();
+
+                //Üres hashtaget nem lehet hozzáadni
+                if (TextUtils.isEmpty(addedHashtag)) {
+                    return;
+                }
+
                 String currentHashtags = signUpAllActivities.getText().toString();
                 signUpAllActivities.setText(currentHashtags + "  #" + addedHashtag);
                 signUpActivities.setText("");
@@ -116,6 +134,19 @@ public class SignUpActivity2 extends AppCompatActivity implements View.OnClickLi
         // TODO: Csak a kötelező mezőket tettem ide, de Dani kéri, hogy minden mezőt tegyünk be
         // TODO: ha nincs adat, adjunk üres String-et
 
+        /*String finalHashtags = "";
+
+        if (hashtagList.size() != 0){
+            int i = 0;
+
+            while (i == (hashtagList.size() - 1)){
+                if (i == 0){
+                    finalHashtags = finalHashtags + "#" + hashtagList.get(i);
+                }
+                finalHashtags = finalHashtags + ",#" + hashtagList.get(i);
+            }
+        }*/
+
         map.put("apikey", "a");
         map.put("username", userParams.get("email"));
         map.put("password", userParams.get("password"));
@@ -128,7 +159,7 @@ public class SignUpActivity2 extends AppCompatActivity implements View.OnClickLi
         map.put("user_interest", "1");
         map.put("user_behavior", userParams.get("intrest"));
         map.put("user_activity", userParams.get("activities"));
-        map.put("user_activity", userParams.get("description"));
+        map.put("user_description", userParams.get("description"));
         map.put("user_looking", "Egyfejű lányt");
         map.put("mobileid", "no");
         map.put("user_type", "{\"123\",\"532\"}");
@@ -136,10 +167,20 @@ public class SignUpActivity2 extends AppCompatActivity implements View.OnClickLi
         NetworkManager.getInstance().signup(map, new SignUpCallback() {
             @Override
             public void forwardResponse(SignUpResponse signUpResponse) {
-                if ( signUpResponse.getSuccess() == 1 )
+                if (signUpResponse.getSuccess() == 1) {
                     Log.v("Registration:", "User successfully signed up");
 
-                Toast.makeText(getApplicationContext(), "Succesful sign up", Toast.LENGTH_LONG).show();
+                    Intent finishSignUp = new Intent(getApplicationContext(), LoginActivity.class);
+
+                    Toast.makeText(getApplicationContext(), "Succesful sign up", Toast.LENGTH_LONG).show();
+
+                    finishSignUp.putExtra("freshSignUpPassword", userParams.get("password").toString());
+                    finishSignUp.putExtra("freshSignUpEmail", userParams.get("email").toString());
+                    startActivity(finishSignUp);
+                } else {
+                    Toast.makeText(getApplicationContext(), signUpResponse.getError().get(0), Toast.LENGTH_LONG).show();
+
+                }
             }
 
             @Override

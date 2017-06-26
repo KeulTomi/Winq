@@ -6,13 +6,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.keult.networking.model.FriendsData;
 
 import java.util.ArrayList;
 
 /**
- * Created by tomi on 2017.06.21..
+ * Created by tomi on 2017.06.20..
  */
 
 public class ConnectMyFriendsAdapter extends ArrayAdapter<FriendsData> {
@@ -38,11 +41,20 @@ public class ConnectMyFriendsAdapter extends ArrayAdapter<FriendsData> {
 
         FriendsData currentItem = getItem(position);
 
-        //TextView userName = (TextView) listItemView.findViewById(R.id.connect_item_fullname_of_current_user);
-        //userName.setText(currentItem.getFullName());
+        if (currentItem.getImage() != "") {
+            //Ha van képe a felhasználónak akkor betöltjük
+            Glide.with(getContext())
+                    .load(currentItem.getImage())
+                    .asBitmap()
+                    .into((ImageView) listItemView.findViewById(R.id.connect_item_image));
+        }
 
-        //TextView countryShortName = (TextView) listItemView.findViewById(R.id.connect_item_country);
-        //countryShortName.setText(currentItem.getFullName());
+        TextView userName = (TextView) listItemView.findViewById(R.id.connect_item_fullname_of_current_user);
+        userName.setText(currentItem.getFullname());
+
+        TextView countryShortName = (TextView) listItemView.findViewById(R.id.connect_item_country);
+        //TODO: Rosszul adja vissza a countryShortot a szerver
+        countryShortName.setText("HUN");
 
         return listItemView;
     }

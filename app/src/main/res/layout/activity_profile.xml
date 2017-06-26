@@ -156,7 +156,8 @@
         android:id="@+id/profile_image_scroll_layout"
         android:layout_width="wrap_content"
         android:layout_height="45dp"
-        android:layout_below="@id/profile_image_layout_header_1">
+        android:layout_below="@id/profile_image_layout_header_1"
+        android:scrollbars="none">
 
         <LinearLayout
             android:id="@+id/profile_image_layout"

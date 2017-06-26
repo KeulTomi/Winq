@@ -56,6 +56,9 @@ public class SignUpActivity1 extends AppCompatActivity implements View.OnClickLi
         signUpBirthDate = (DatePicker) findViewById(R.id.birth_date);
         signUpIntrests = (Spinner) findViewById(R.id.interests_spinner);
 
+        //2000-nél később születettek nem regisztrálhatnak
+
+
         sexTypeWoman.setOnClickListener(this);
         sexTypeMan.setOnClickListener(this);
         backToFirstPartBtn.setOnClickListener(this);
@@ -98,9 +101,11 @@ public class SignUpActivity1 extends AppCompatActivity implements View.OnClickLi
                 userParams.put("birthMonth", String.valueOf(month));
                 userParams.put("birthYear", String.valueOf(year));
 
-                interestTypeList.get(signUpIntrests.getSelectedItemPosition());
-
-                userParams.put("intrest", interestIdList.get(signUpIntrests.getSelectedItemPosition()));
+                if (signUpIntrests.getSelectedItem() == null) {
+                    userParams.put("intrest", "0");
+                } else {
+                    userParams.put("intrest", interestIdList.get(signUpIntrests.getSelectedItemPosition()));
+                }
 
                 bundleSecondPart.putSerializable("messageBody", userParams);
                 start2Part.putExtra("signUpBundle", bundleSecondPart);
