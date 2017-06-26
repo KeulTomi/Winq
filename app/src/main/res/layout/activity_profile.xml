@@ -280,6 +280,7 @@
         android:scrollbars="none"
         android:visibility="gone">
 
+
         <LinearLayout
             android:id="@+id/connect_extra_images_layout"
             android:layout_width="wrap_content"
