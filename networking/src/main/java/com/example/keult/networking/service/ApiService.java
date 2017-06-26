@@ -7,11 +7,13 @@ import com.example.keult.networking.model.DateListResponse;
 import com.example.keult.networking.model.EventJoinResponse;
 import com.example.keult.networking.model.EventJoinedByIdResponse;
 import com.example.keult.networking.model.EventListResponse;
+import com.example.keult.networking.model.EventRateResponse;
 import com.example.keult.networking.model.EventsJoinedResponse;
 import com.example.keult.networking.model.ExploreResponse;
 import com.example.keult.networking.model.FriendAddResponse;
 import com.example.keult.networking.model.FriendsListResponse;
 import com.example.keult.networking.model.GeneralSearchResponse;
+import com.example.keult.networking.model.ImageUploadResponse;
 import com.example.keult.networking.model.InterestTypesResponse;
 import com.example.keult.networking.model.LoginResponse;
 import com.example.keult.networking.model.ProfileImagesResponse;
@@ -19,9 +21,14 @@ import com.example.keult.networking.model.SignUpResponse;
 
 import java.util.Map;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
+import retrofit2.http.PartMap;
 import rx.Observable;
 
 import static com.example.keult.networking.constant.ApiConstants.CONDITIONS;
@@ -31,12 +38,14 @@ import static com.example.keult.networking.constant.ApiConstants.DATE_LIST;
 import static com.example.keult.networking.constant.ApiConstants.EVENT_JOIN;
 import static com.example.keult.networking.constant.ApiConstants.EVENT_JOINED;
 import static com.example.keult.networking.constant.ApiConstants.EVENT_LIST;
+import static com.example.keult.networking.constant.ApiConstants.EVENT_RATE;
 import static com.example.keult.networking.constant.ApiConstants.EVENT_SEARCH;
 import static com.example.keult.networking.constant.ApiConstants.EXPLORE;
 import static com.example.keult.networking.constant.ApiConstants.FRIEND_ADD;
 import static com.example.keult.networking.constant.ApiConstants.FRIEND_LIST;
 import static com.example.keult.networking.constant.ApiConstants.GENERAL_SEARCH;
 import static com.example.keult.networking.constant.ApiConstants.GET_IMAGES;
+import static com.example.keult.networking.constant.ApiConstants.IMAGE_UPLOAD;
 import static com.example.keult.networking.constant.ApiConstants.INTEREST_TYPE_LIST;
 import static com.example.keult.networking.constant.ApiConstants.JOINED_EVENT_LIST_BY_ID;
 import static com.example.keult.networking.constant.ApiConstants.LOG_IN;
@@ -115,4 +124,12 @@ public interface ApiService {
     @FormUrlEncoded
     @POST(INTEREST_TYPE_LIST)
     Observable<InterestTypesResponse> listInterestTypes(@FieldMap Map<String, Object> body);
+
+    @FormUrlEncoded
+    @POST(EVENT_RATE)
+    Observable<EventRateResponse> rateEvent(@FieldMap Map<String, Object> body);
+
+    @Multipart
+    @POST(IMAGE_UPLOAD)
+    Observable<ImageUploadResponse> uploadImage(@PartMap Map<String, RequestBody> body, @Part MultipartBody.Part filePart);
 }

@@ -7,12 +7,14 @@ import com.example.keult.networking.callback.DateListCallback;
 import com.example.keult.networking.callback.EventJoinCallback;
 import com.example.keult.networking.callback.EventJoinedByIdCallback;
 import com.example.keult.networking.callback.EventListCallback;
+import com.example.keult.networking.callback.EventRateCallback;
 import com.example.keult.networking.callback.EventsJoinedCallback;
 import com.example.keult.networking.callback.EventsSearchCallback;
 import com.example.keult.networking.callback.ExploreCallback;
 import com.example.keult.networking.callback.FriendsAddCallback;
 import com.example.keult.networking.callback.FriendsListCallback;
 import com.example.keult.networking.callback.GeneralSearchCallback;
+import com.example.keult.networking.callback.ImageUploadCallback;
 import com.example.keult.networking.callback.InterestTypesCallback;
 import com.example.keult.networking.callback.LoginCallback;
 import com.example.keult.networking.callback.ProfileImagesCallback;
@@ -23,6 +25,8 @@ import com.example.keult.networking.service.ApiService;
 
 import java.util.Map;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -128,6 +132,16 @@ public class NetworkManager {
                 );
     }
 
+    // Events - rate
+    public void rateEvent(Map<String, Object> body, EventRateCallback eventRateCallback) {
+        apiService.rateEvent(body)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        eventRateCallback::forwardResponse,
+                        throwable -> eventRateCallback.forwardError(ErrorFactory.createNetworkError(throwable))
+                );
+    }
+
     // Explore - Lista
     public void exploreUsers(Map<String, Object> body, ExploreCallback exploreCallback) {
         apiService.exploreUsers(body)
@@ -203,7 +217,14 @@ public class NetworkManager {
     }
 
     // Profil - képfeltöltés
-    // TODO: --- nincs kész, nem tudom hogy megy, hibás api key választ kapok ---
+    public void uploadImage(Map<String, RequestBody> body, MultipartBody.Part filePart, ImageUploadCallback imageUploadCallback) {
+        apiService.uploadImage(body, filePart)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        imageUploadCallback::forwardResponse,
+                        throwable -> imageUploadCallback.forwardError(ErrorFactory.createNetworkError(throwable))
+                );
+    }
 
     // Regisztráció
     public void signup(Map<String, Object> body, SignUpCallback signUpCallback) {

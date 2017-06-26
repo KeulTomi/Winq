@@ -25,8 +25,10 @@ public class ApiConstants {
     public static final String FRIEND_LIST = "profile/friends"; // Barátok lista
     public static final String EVENT_JOIN = "profile/events_dojoin"; // Eseményhez csatlakozás
     public static final String EVENT_JOINED = "profile/events_joined"; // Csatlakozott eventek listázása
+    public static final String EVENT_RATE = "profile/events_rate"; // Event értékelése
     public static final String GET_IMAGES = "profile/getimages"; // Profil és story képek letöltése
     public static final String INTEREST_TYPE_LIST = "profile/profile_interest"; // Érdeklődési típusok listája
+    public static final String IMAGE_UPLOAD = "profile/imageupload"; // Kép feltöltése
 
         // api/profile/dates
         public static final String DATE_ADD = "profile/dates/add"; // Randi hozzáadása

@@ -13,6 +13,7 @@ import com.example.keult.networking.callback.EventListCallback;
 import com.example.keult.networking.callback.EventsSearchCallback;
 import com.example.keult.networking.callback.ExploreCallback;
 import com.example.keult.networking.callback.GeneralSearchCallback;
+import com.example.keult.networking.callback.ImageUploadCallback;
 import com.example.keult.networking.callback.InterestTypesCallback;
 import com.example.keult.networking.callback.LoginCallback;
 import com.example.keult.networking.callback.ProfileImagesCallback;
@@ -27,6 +28,7 @@ import com.example.keult.networking.model.EventJoinedByIdResponse;
 import com.example.keult.networking.model.EventListResponse;
 import com.example.keult.networking.model.ExploreResponse;
 import com.example.keult.networking.model.GeneralSearchResponse;
+import com.example.keult.networking.model.ImageUploadResponse;
 import com.example.keult.networking.model.InterestTypesResponse;
 import com.example.keult.networking.model.LoginResponse;
 import com.example.keult.networking.model.ProfileImagesResponse;
@@ -34,6 +36,10 @@ import com.example.keult.networking.model.SignUpResponse;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 
 /**
  *  Az API teszteléséhez kívülről egyszerűen hívható metódusok
@@ -516,6 +522,49 @@ class ApiTester {
                     // Válasz visszautasítva
                     Log.w("listIntrst_Refused:",
                             "FirstErrorText= " + interestTypesResponse.getError().get(0));
+                }
+            }
+
+            @Override
+            public void forwardError(NetworkError networkError) {
+
+            }
+        });
+    }
+
+    static void imageUpload(Map<String, RequestBody> mapRequest, MultipartBody.Part filePart) {
+
+        if (mapRequest == null) {
+
+            mapRequest = new HashMap<>();
+            mapRequest.put("apikey", RequestBody.create(MediaType.parse("text/plain"), "a"));
+            mapRequest.put("username", RequestBody.create(MediaType.parse("text/plain"), "ios@test.com"));
+            mapRequest.put("password", RequestBody.create(MediaType.parse("text/plain"), "test"));
+            mapRequest.put("facebookid", RequestBody.create(MediaType.parse("text/plain"), "no"));
+            mapRequest.put("comment", RequestBody.create(MediaType.parse("text/plain"), "that's sooo cool!!"));
+            mapRequest.put("main", RequestBody.create(MediaType.parse("text/plain"), "profile"));
+
+            /*map = new HashMap<>();
+            map.put("apikey", "a");
+            map.put("username", "ios@test.com");
+            map.put("password", "test");
+            map.put("facebookid", "no");
+            map.put("comment", "uploaded from android");
+            map.put("main", "profile");*/
+        }
+
+        NetworkManager.getInstance().uploadImage(mapRequest, filePart, new ImageUploadCallback() {
+            @Override
+            public void forwardResponse(ImageUploadResponse imageUploadResponse) {
+                if (imageUploadResponse.getSuccess() == 1) {
+                    // Válasz rendben
+                    Log.v("Upload_OK:",
+                            "Type1= "
+                                    + imageUploadResponse.getData()[0]);
+                } else {
+                    // Válasz visszautasítva
+                    Log.w("Upload_Refused:",
+                            "FirstErrorText= " + imageUploadResponse.getData()[0]);
                 }
             }
 

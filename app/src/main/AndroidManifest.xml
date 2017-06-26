@@ -25,7 +25,10 @@
         <activity android:name=".MainActivity" />
         <activity android:name=".ExploreActivity" />
         <activity android:name=".EventDetailsActivity" />
-        <activity android:name=".ProfileActivity" />
+        <activity
+            android:name=".ProfileActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait" />
         <activity android:name=".StoryActivity" />
         <activity android:name=".EventsActivity"></activity>
         <activity android:name=".ConnectActivity"></activity>

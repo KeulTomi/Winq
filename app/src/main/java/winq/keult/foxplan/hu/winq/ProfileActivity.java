@@ -1,7 +1,9 @@
 package winq.keult.foxplan.hu.winq;
 
 import android.app.DialogFragment;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -26,9 +28,11 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.keult.networking.NetworkManager;
+import com.example.keult.networking.callback.ImageUploadCallback;
 import com.example.keult.networking.callback.ProfileImagesCallback;
 import com.example.keult.networking.error.NetworkError;
 import com.example.keult.networking.model.ImageData;
+import com.example.keult.networking.model.ImageUploadResponse;
 import com.example.keult.networking.model.ProfileData;
 import com.example.keult.networking.model.ProfileImagesResponse;
 
@@ -39,6 +43,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 
 
 public class ProfileActivity extends AppCompatActivity
@@ -51,6 +60,11 @@ public class ProfileActivity extends AppCompatActivity
     private static final int CAMERA_REQUEST = 1001;
     private static final int GALERY_REQUEST = 1002;
 
+
+    private final int PROFILE_PIC_UPLOAD = 1;
+    private final int IMAGE_PIC_UPLOAD = 2;
+    private final int STORY_PIC_UPLOAD = 3;
+
     private ArrayList<ImageData> mStoryImages;
     private Bitmap mFirstStoryImage;
     private Uri fileUri;
@@ -58,6 +72,17 @@ public class ProfileActivity extends AppCompatActivity
     private boolean isItUsersProfile;
 
     private Handler mHandler;
+
+    private static String getPath(Context ctx, Uri uri) {
+        String[] projection = {MediaStore.Images.Media.DATA};
+        Cursor cursor = ctx.getContentResolver().query(uri, projection, null, null, null);
+        if (cursor == null) return null;
+        int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        String s = cursor.getString(columnIndex);
+        cursor.close();
+        return s;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -405,8 +430,12 @@ public class ProfileActivity extends AppCompatActivity
 
     }
 
+    /*
+    * Fotó választása galériából
+    */
+
     /**
-     * Fénykép készítés kezelése
+     * Fénykép készítése
      */
     private void takePhotoWithCamera() {
 
@@ -435,19 +464,27 @@ public class ProfileActivity extends AppCompatActivity
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+
+        // Fotó készült
         if (requestCode == CAMERA_REQUEST && resultCode == RESULT_OK) {
 
             // Jelezni kell a galéria számára, hogy új fájl jött létre (különben sokáig nem látszik)
             if (fileUri != null)
                 sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, fileUri));
 
-
             DialogFragment uploadSelectorDialog = new UploadSelectorDialog();
             uploadSelectorDialog.show(getFragmentManager(), "UploadFilePicker");
 
         }
 
+        // Galériából választott
         if (requestCode == GALERY_REQUEST && resultCode == RESULT_OK) {
+
+            // Kiválasztott fájl uri tárolása
+            fileUri = data.getData();
+
+            // Feltöltendő kép típusának kiválasztása
             DialogFragment uploadSelectorDialog = new UploadSelectorDialog();
             uploadSelectorDialog.show(getFragmentManager(), "UploadFilePicker");
         }
@@ -460,8 +497,7 @@ public class ProfileActivity extends AppCompatActivity
 
         // Nyilvános fénykép könyvtár megnyitása
         File mediaStorageDir = new File(
-                Environment
-                        .getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),
                 getString(R.string.photo_album_name));
 
         // Album (könyvtár) létrehozása ha még nem létezik
@@ -487,17 +523,87 @@ public class ProfileActivity extends AppCompatActivity
 
     @Override
     public void onProfileUploadSelected(DialogFragment dialogFragment) {
-
+        uploadFile(PROFILE_PIC_UPLOAD);
     }
 
     @Override
     public void onImageUploadSelected(DialogFragment dialogFragment) {
-
+        uploadFile(IMAGE_PIC_UPLOAD);
     }
 
     @Override
     public void onStoryUploadSelected(DialogFragment dialogFragment) {
+        uploadFile(STORY_PIC_UPLOAD);
+    }
 
+    private void uploadFile(int uploadType) {
+
+        // Kulcs-érték pár összeállítása
+        Map<String, RequestBody> mapRequest = new HashMap<>();
+        mapRequest.put("apikey",
+                RequestBody.create(MediaType.parse("text/plain"), "a"));
+        mapRequest.put("username",
+                RequestBody.create(MediaType.parse("text/plain"),
+                        Winq.getCurrentUserProfileData().getUsername()));
+        mapRequest.put("password",
+                RequestBody.create(MediaType.parse("text/plain"),
+                        Winq.getCurrentUserProfileData().getPassword()));
+        mapRequest.put("facebookid",
+                RequestBody.create(MediaType.parse("text/plain"),
+                        Winq.getCurrentUserProfileData().getFacebookid()));
+        mapRequest.put("comment",
+                RequestBody.create(MediaType.parse("text/plain"), "uploaded from android"));
+
+        switch (uploadType) {
+            case PROFILE_PIC_UPLOAD:
+                mapRequest.put("main",
+                        RequestBody.create(MediaType.parse("text/plain"), "profile"));
+                break;
+            case IMAGE_PIC_UPLOAD:
+                mapRequest.put("main",
+                        RequestBody.create(MediaType.parse("text/plain"), "image"));
+                break;
+            case STORY_PIC_UPLOAD:
+                mapRequest.put("main",
+                        RequestBody.create(MediaType.parse("text/plain"), "story"));
+                break;
+        }
+
+        Context ctxt = getApplicationContext();
+
+        // Fájl body összeállítása
+        File imageFile = new File(fileUri.getPath());
+
+        MediaType mediaType = MediaType.parse(imageFile.getAbsolutePath());
+        // getContentResolver().getType(fileUri)
+        RequestBody requestFile = RequestBody.create(mediaType, imageFile);
+
+        MultipartBody.Part fileBody =
+                MultipartBody.Part.createFormData("userfile", imageFile.getName(), requestFile);
+
+        NetworkManager.getInstance().uploadImage(mapRequest, fileBody, new ImageUploadCallback() {
+            @Override
+            public void forwardResponse(ImageUploadResponse imageUploadResponse) {
+
+                if (imageUploadResponse.getSuccess() == 1) {
+                    // Válasz rendben
+                    Log.v("Upload_OK:",
+                            "Type1= "
+                                    + imageUploadResponse.getData()[0]);
+                } else {
+                    // Válasz visszautasítva
+                    Log.w("Upload_Refused:",
+                            "FirstErrorText= " + imageUploadResponse.getData()[0]);
+                }
+            }
+
+            @Override
+            public void forwardError(NetworkError networkError) {
+
+            }
+        });
+
+        // ApiTester.imageUpload(null, fileBody);
     }
 
     private class MessageHandler extends Handler {

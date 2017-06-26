@@ -29,4 +29,5 @@
     <string name="write_message">write</string>
     <string name="intent_key_story_bitmap">intent_story_1st_bitmap</string>
     <string name="intent_key_story_images">intent_key_story_images</string>
+    <string name="usr_msg_upload_success">Upload success</string>
 </resources>
