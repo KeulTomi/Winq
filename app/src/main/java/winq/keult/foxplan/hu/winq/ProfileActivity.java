@@ -28,9 +28,11 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.keult.networking.NetworkManager;
+import com.example.keult.networking.callback.EventJoinedByIdCallback;
 import com.example.keult.networking.callback.ImageUploadCallback;
 import com.example.keult.networking.callback.ProfileImagesCallback;
 import com.example.keult.networking.error.NetworkError;
+import com.example.keult.networking.model.EventJoinedByIdResponse;
 import com.example.keult.networking.model.ImageData;
 import com.example.keult.networking.model.ImageUploadResponse;
 import com.example.keult.networking.model.ProfileData;
@@ -68,6 +70,7 @@ public class ProfileActivity extends AppCompatActivity
     private ArrayList<ImageData> mStoryImages;
     private Bitmap mFirstStoryImage;
     private Uri fileUri;
+    private String mUploadFilePath;
     private ProfileData mProfileData;
     private boolean isItUsersProfile;
 
@@ -164,9 +167,14 @@ public class ProfileActivity extends AppCompatActivity
         // Profil és további képek lékérése (második paraméter: false)
         requestForImages(mProfileData, false);
 
+        // Ha idegen profilt jelenít meg, event-ek lekérése
+        /*if ( !isItUsersProfile )
+            requestForUserEvents(mProfileData);*/
+
         // Wissza gomb onClickListenerek beállítása
         findViewById(R.id.profile_back_points).setOnClickListener(this);
     }
+
 
     @Override
     public void onClick(View v) {
@@ -228,7 +236,7 @@ public class ProfileActivity extends AppCompatActivity
                 break;
 
             case R.id.profile_logout_button:
-                //TODO: Törölni kell a felhasználó adatait
+                Winq.clearCurrentUserProfileData(Winq.getCurrentUserProfileData());
                 Intent openLogIn = new Intent(this, LoginActivity.class);
                 startActivity(openLogIn);
         }
@@ -237,10 +245,10 @@ public class ProfileActivity extends AppCompatActivity
     private void requestForImages(ProfileData profileData, final boolean getStoryImages) {
 
         HashMap<String, Object> map = new HashMap<>();
-        map.put("username", profileData.getEmail());
-        map.put("password", profileData.getPassword());
+        map.put("username", Winq.getCurrentUserProfileData().getUsername());
+        map.put("password", Winq.getCurrentUserProfileData().getPassword());
         map.put("apikey", getResources().getString(R.string.apikey));
-        map.put("facebookid", profileData.getFacebookid());
+        map.put("facebookid", Winq.getCurrentUserProfileData().getFacebookid());
         map.put("story", (getStoryImages ? "1" : "0"));
         map.put("userid", profileData.getId());
 
@@ -296,6 +304,28 @@ public class ProfileActivity extends AppCompatActivity
             }
         });
 
+    }
+
+    private void requestForUserEvents(ProfileData profileData) {
+
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("username", Winq.getCurrentUserProfileData().getUsername());
+        map.put("password", Winq.getCurrentUserProfileData().getPassword());
+        map.put("apikey", getResources().getString(R.string.apikey));
+        map.put("facebookid", Winq.getCurrentUserProfileData().getFacebookid());
+        map.put("userid", profileData.getId());
+
+        NetworkManager.getInstance().listJoinedEventsById(map, new EventJoinedByIdCallback() {
+            @Override
+            public void forwardResponse(EventJoinedByIdResponse eventJoinedByIdResponse) {
+
+            }
+
+            @Override
+            public void forwardError(NetworkError networkError) {
+
+            }
+        });
     }
 
     private void initLayoutTexts(ProfileData profileData) {
@@ -448,6 +478,7 @@ public class ProfileActivity extends AppCompatActivity
 
             // Fájl és könyvtár előkészítése és Intent-ben tárolása
             fileUri = getPhotoFileUri();
+
             cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
 
             // Kamera activity hívása
@@ -497,7 +528,7 @@ public class ProfileActivity extends AppCompatActivity
      */
     public Uri getPhotoFileUri() {
 
-        // Nyilvános fénykép könyvtár megnyitása
+        // Könyvtár megnyitása vagy létrehozása
         File mediaStorageDir = new File(
                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),
                 getString(R.string.photo_album_name));
@@ -511,7 +542,7 @@ public class ProfileActivity extends AppCompatActivity
             }
         }
 
-        // Fotó fájl létrehozása
+        // Fájl létrehozása
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
                 Locale.getDefault()).format(new Date());
 
@@ -571,13 +602,41 @@ public class ProfileActivity extends AppCompatActivity
                 break;
         }
 
-        Context ctxt = getApplicationContext();
-
         // Fájl body összeállítása
-        File imageFile = new File(fileUri.getPath());
 
-        MediaType mediaType = MediaType.parse(imageFile.getAbsolutePath());
-        // getContentResolver().getType(fileUri)
+        // Ha a file-t a galériából jött akkor le kell kérdezni a típusát
+        String mimeType = getContentResolver().getType(fileUri);
+        MediaType mediaType;
+        File imageFile;
+
+        if (mimeType != null) {
+            // Galériából jött a fájl
+            //
+
+            // Fájltípus lekérdezése
+            mediaType = MediaType.parse(mimeType);
+
+            // Elérési utat konvertálni kell a galéria miatt (Content Provider adja)
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+
+            Cursor cursor = getContentResolver().query(
+                    fileUri, filePathColumn, null, null, null);
+            cursor.moveToFirst();
+
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String filePath = cursor.getString(columnIndex);
+            cursor.close();
+
+            // Fájl előállítása a path alapján
+            imageFile = new File(filePath);
+        } else {
+            // Fotó készült, a típust nem kell lekérdezni, csak be kell állítani
+            mediaType = MediaType.parse("image/jpeg; charset=utf-8");
+
+            // Fájl előállítása az uri path alapján
+            imageFile = new File(fileUri.getPath());
+        }
+
         RequestBody requestFile = RequestBody.create(mediaType, imageFile);
 
         MultipartBody.Part fileBody =
@@ -592,6 +651,8 @@ public class ProfileActivity extends AppCompatActivity
                     Log.v("Upload_OK:",
                             "Type1= "
                                     + imageUploadResponse.getData()[0]);
+                    mHandler.sendEmptyMessage(MSG_SET_LAYOUT_IMAGES);
+
                 } else {
                     // Válasz visszautasítva
                     Log.w("Upload_Refused:",

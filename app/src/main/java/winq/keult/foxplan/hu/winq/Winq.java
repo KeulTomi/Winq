@@ -5,8 +5,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.widget.TextView;
 
+import com.example.keult.networking.model.DateData;
 import com.example.keult.networking.model.EventData;
-import com.example.keult.networking.model.FriendsData;
 import com.example.keult.networking.model.ProfileData;
 
 import java.util.Calendar;
@@ -24,7 +24,7 @@ public class Winq extends Application {
     public static String facebookid;
     public static List<EventData> homepageEventDatas;
     public static HashMap<String, EventData> eventsEventData = new HashMap<>();
-    public static HashMap<String, FriendsData> connectData = new HashMap<>();
+    public static HashMap<String, DateData> connectData = new HashMap<>();
     private static ProfileData mCurrentUserProfileData;
     private static Context mContext;
 

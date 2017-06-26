@@ -1,6 +1,7 @@
 package winq.keult.foxplan.hu.winq;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -27,6 +28,7 @@ import com.example.keult.networking.model.DateData;
 import com.example.keult.networking.model.DateListResponse;
 import com.example.keult.networking.model.FriendsData;
 import com.example.keult.networking.model.FriendsListResponse;
+import com.example.keult.networking.model.ProfileData;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -206,7 +208,16 @@ public class ConnectActivity extends AppCompatActivity implements View.OnClickLi
         //TODO: Ha készen áll a ProfilActivity akkor itt kell átadni neki az adatokat
 
         //Telerakjuk az adott Event adataival egy Bundle-t
-        Winq.connectData.put("friendData", (FriendsData) parent.getItemAtPosition(position));
+        DateData dateData = (DateData) parent.getItemAtPosition(position);
+        Winq.connectData.put("datedData", dateData);
+
+        ProfileData profileData = (ProfileData) dateData;
+
+        Intent intentProfile = new Intent(this, ProfileActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(getString(R.string.intent_key_profile_data), profileData);
+        intentProfile.putExtras(bundle);
+        startActivity(intentProfile);
 
         //Elküldjük az EventDetailsActivity-nek
         ////Intent openEventDatails = new Intent(this, EventDetailsActivity.class);
