@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide;
 import com.example.keult.networking.model.DateData;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * Created by tomi on 2017.06.21..
@@ -54,6 +55,13 @@ public class ConnectWinqsAdapter extends ArrayAdapter<DateData> {
 
         TextView countryShortName = (TextView) listItemView.findViewById(R.id.connect_item_country);
         countryShortName.setText("HUN");
+
+        TextView ageOfUser = (TextView) listItemView.findViewById(R.id.connect_item_age_of_current_user);
+        int userBornYear = Integer.parseInt(currentItem.getUserborn().substring(0, 4));
+        Calendar c = Calendar.getInstance();
+        int currentYear = c.get(Calendar.YEAR);
+
+        ageOfUser.setText(String.valueOf(currentYear - userBornYear));
 
         return listItemView;
     }

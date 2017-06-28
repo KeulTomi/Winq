@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide;
 import com.example.keult.networking.model.FriendsData;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * Created by tomi on 2017.06.20..
@@ -55,6 +56,13 @@ public class ConnectMyFriendsAdapter extends ArrayAdapter<FriendsData> {
         TextView countryShortName = (TextView) listItemView.findViewById(R.id.connect_item_country);
         //TODO: Rosszul adja vissza a countryShortot a szerver
         countryShortName.setText("HUN");
+
+        TextView ageOfUser = (TextView) listItemView.findViewById(R.id.connect_item_age_of_current_user);
+        int userBornYear = Integer.parseInt(currentItem.getUserBorn().substring(0, 4));
+        Calendar c = Calendar.getInstance();
+        int currentYear = c.get(Calendar.YEAR);
+
+        ageOfUser.setText(String.valueOf(currentYear - userBornYear));
 
         return listItemView;
     }

@@ -14,7 +14,8 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Created by Tomi on 2017. 05. 30..
+ *  Mielőtt bármi elindulna, ez a class példányosítódik,
+ *  itt vannak tárolva a glogális változók
  */
 
 public class Winq extends Application {

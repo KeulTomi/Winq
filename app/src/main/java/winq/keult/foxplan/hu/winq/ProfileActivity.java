@@ -1,7 +1,6 @@
 package winq.keult.foxplan.hu.winq;
 
 import android.app.DialogFragment;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -22,6 +21,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
@@ -58,9 +58,11 @@ public class ProfileActivity extends AppCompatActivity
     private static final int MSG_SET_LAYOUT_IMAGES = 1;
     private static final int MSG_GET_STORY_IMAGES = 2;
     private static final int MSG_PRELOAD_FIRST_STORY_IMAGE = 3;
+    private static final int MSG_SET_LAYOUT_EVENTS = 4;
 
     private static final int CAMERA_REQUEST = 1001;
     private static final int GALERY_REQUEST = 1002;
+
 
 
     private final int PROFILE_PIC_UPLOAD = 1;
@@ -70,22 +72,9 @@ public class ProfileActivity extends AppCompatActivity
     private ArrayList<ImageData> mStoryImages;
     private Bitmap mFirstStoryImage;
     private Uri fileUri;
-    private String mUploadFilePath;
     private ProfileData mProfileData;
-    private boolean isItUsersProfile;
 
     private Handler mHandler;
-
-    private static String getPath(Context ctx, Uri uri) {
-        String[] projection = {MediaStore.Images.Media.DATA};
-        Cursor cursor = ctx.getContentResolver().query(uri, projection, null, null, null);
-        if (cursor == null) return null;
-        int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToFirst();
-        String s = cursor.getString(columnIndex);
-        cursor.close();
-        return s;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,9 +93,9 @@ public class ProfileActivity extends AppCompatActivity
             mProfileData = (ProfileData) bundle.getSerializable(getString(R.string.intent_key_profile_data));
         }
 
-        mHandler = new MessageHandler();
+        mHandler = new MessageHandler(this);
 
-        isItUsersProfile = false;
+        boolean isItUsersProfile = false;
 
         // Saját vs. idegen profil eldöntése
         if (mProfileData != null) {
@@ -168,8 +157,8 @@ public class ProfileActivity extends AppCompatActivity
         requestForImages(mProfileData, false);
 
         // Ha idegen profilt jelenít meg, event-ek lekérése
-        /*if ( !isItUsersProfile )
-            requestForUserEvents(mProfileData);*/
+        if (!isItUsersProfile)
+            requestForUserEvents(mProfileData);
 
         // Wissza gomb onClickListenerek beállítása
         findViewById(R.id.profile_back_points).setOnClickListener(this);
@@ -222,6 +211,22 @@ public class ProfileActivity extends AppCompatActivity
                 cdd.show();
 
                 break;
+            case R.id.connect_extra_images_01:
+            case R.id.connect_extra_images_02:
+            case R.id.connect_extra_images_03:
+            case R.id.connect_extra_images_04:
+            case R.id.connect_extra_images_05:
+            case R.id.connect_extra_images_06:
+            case R.id.connect_extra_images_07:
+            case R.id.connect_extra_images_08:
+
+                String urlEvents = (String) v.getTag(v.getId());
+
+                ProfilePhotosDialog eventsDialog = new ProfilePhotosDialog(this, urlEvents);
+                eventsDialog.show();
+
+                break;
+
             case R.id.profile_take_photo_button:
                 takePhotoWithCamera();
                 break;
@@ -318,9 +323,23 @@ public class ProfileActivity extends AppCompatActivity
         NetworkManager.getInstance().listJoinedEventsById(map, new EventJoinedByIdCallback() {
             @Override
             public void forwardResponse(EventJoinedByIdResponse eventJoinedByIdResponse) {
+                if (eventJoinedByIdResponse.getSuccess() == 1) {
+                    // Válasz rendben
+                    Log.v("getImages_OK:",
+                            "Success");
 
+                    // Üzenet layout event imageView-k inicializálásához
+                    Message msg = new Message();
+                    msg.what = MSG_SET_LAYOUT_EVENTS;
+                    msg.obj = eventJoinedByIdResponse;
+                    mHandler.sendMessage(msg);
+
+                } else {
+                    // Válasz visszautasítva
+                    Log.w("geImages_Refused:",
+                            "FirstErrorText= " + eventJoinedByIdResponse.getError().get(0));
+                }
             }
-
             @Override
             public void forwardError(NetworkError networkError) {
 
@@ -416,6 +435,41 @@ public class ProfileActivity extends AppCompatActivity
         for (int i = 0; i < imagesToLoad; i++) {
 
             String url = profileImagesResponse.getData().getImageList().get(i + 1).getUrl();
+            final ImageView imageView = (ImageView) imagesContainerView.getChildAt(i);
+
+            // Url mentése az View Tag-jébe, hogy tudjuk honnan jött a kép ha meg kell nyitni
+            imageView.setTag(imageView.getId(), url);
+
+            Glide.with(this).load(url).asBitmap().placeholder(R.drawable.round_for_images).centerCrop()
+                    .into(new BitmapImageViewTarget(imageView) {
+                        @Override
+                        protected void setResource(Bitmap resource) {
+                            RoundedBitmapDrawable circularBitmapDrawable =
+                                    RoundedBitmapDrawableFactory.create(getResources(), resource);
+                            circularBitmapDrawable.setCircular(true);
+                            imageView.setImageDrawable(circularBitmapDrawable);
+                        }
+                    });
+
+            // A részletes képnézethez be kell állítani az onClick listenert
+            imageView.setOnClickListener(this);
+
+        }
+    }
+
+    private void initLayoutEvents(EventJoinedByIdResponse eventJoinedByIdResponse) {
+
+        ViewGroup imagesContainerView = ((ViewGroup) findViewById(R.id.connect_extra_images_layout));
+        int imageCount = eventJoinedByIdResponse.getData().getEventJoinedList().size();
+
+        int imagesToLoad = Math.min(
+                imagesContainerView.getChildCount(),
+                imageCount);
+
+        // Képek egymás után betöltése
+        for (int i = 0; i < imagesToLoad; i++) {
+
+            String url = eventJoinedByIdResponse.getData().getEventJoinedList().get(i).getImage();
             final ImageView imageView = (ImageView) imagesContainerView.getChildAt(i);
 
             // Url mentése az View Tag-jébe, hogy tudjuk honnan jött a kép ha meg kell nyitni
@@ -604,7 +658,7 @@ public class ProfileActivity extends AppCompatActivity
 
         // Fájl body összeállítása
 
-        // Ha a file-t a galériából jött akkor le kell kérdezni a típusát
+        // Content Type és fájlhivatkozás beállítása
         String mimeType = getContentResolver().getType(fileUri);
         MediaType mediaType;
         File imageFile;
@@ -671,6 +725,12 @@ public class ProfileActivity extends AppCompatActivity
 
     private class MessageHandler extends Handler {
 
+        AppCompatActivity activity;
+
+        MessageHandler(AppCompatActivity callingActivity) {
+
+        }
+
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -694,6 +754,10 @@ public class ProfileActivity extends AppCompatActivity
                 case MSG_PRELOAD_FIRST_STORY_IMAGE:
                     //if ( mStoryImages.size() > 0 )
                     preloadFirstStoryImage();
+                    break;
+                case MSG_SET_LAYOUT_EVENTS:
+                    Toast.makeText(activity, getString(R.string.usr_msg_upload_success), Toast.LENGTH_LONG).show();
+                    initLayoutEvents((EventJoinedByIdResponse) msg.obj);
                     break;
             }
 

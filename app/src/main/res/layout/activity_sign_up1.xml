@@ -5,16 +5,8 @@
     android:layout_height="match_parent"
     tools:context="winq.keult.foxplan.hu.winq.SignUpActivity1">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="215dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"
-        android:background="@color/colorPrimaryDark" />
-
     <LinearLayout
+        android:id="@+id/root_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="25dp"
@@ -91,16 +83,28 @@
             android:textColor="@android:color/black"
             android:textSize="15sp" />
 
-        <Spinner
-            android:id="@+id/interests_spinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="15dp"
-            android:overScrollMode="always"
-            android:spinnerMode="dialog" />
-
     </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:layout_below="@+id/root_layout"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="17dp"
+        android:background="@color/colorPrimaryDark" />
+
+    <Spinner
+        android:id="@+id/interests_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/root_layout"
+        android:layout_gravity="center"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="15dp"
+        android:overScrollMode="always"
+        android:spinnerMode="dialog" />
 
     <TextView
         android:id="@+id/next_to_3_part_btn"

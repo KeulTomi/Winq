@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="150dp"
-    android:layout_height="130dp">
+    android:layout_width="157dp"
+    android:layout_height="125dp">
 
     <ImageView
         android:id="@+id/connect_item_image"
-        android:layout_width="match_parent"
-        android:layout_height="110dp"
+        android:layout_width="150dp"
+        android:layout_height="100dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="5dp"
+        android:background="#5e5e5e"
         android:paddingLeft="10dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/upcoming_event" />
+        android:scaleType="centerCrop" />
 
     <TextView
         android:id="@+id/list_item_bottom_margin"
@@ -18,18 +21,21 @@
         android:layout_alignParentBottom="true" />
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignParentRight="true"
         android:src="@drawable/messeges_picto_small"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
     <TextView
         android:id="@+id/connect_item_country"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_margin="1dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="1dp"
+        android:layout_marginTop="6dp"
         android:background="#d0262626"
         android:gravity="center_vertical"
+        android:padding="3dp"
         android:text="hun"
         android:textAlignment="center"
         android:textAllCaps="true"
@@ -38,7 +44,7 @@
 
     <LinearLayout
         android:id="@+id/information_bar"
-        android:layout_width="match_parent"
+        android:layout_width="146dp"
         android:layout_height="25dp"
         android:layout_above="@+id/list_item_bottom_margin"
         android:layout_marginBottom="2dp"
@@ -50,12 +56,11 @@
 
         <TextView
             android:id="@+id/connect_item_fullname_of_current_user"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginRight="15dp"
-            android:gravity="center_horizontal"
+            android:layout_width="110dp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
             android:text="Erdos Mate"
+            android:textAlignment="center"
             android:textColor="@android:color/black"
             android:textSize="13sp" />
 
@@ -67,12 +72,12 @@
             android:background="@android:color/black" />
 
         <TextView
-            android:id="@+id/connect_age_of_current_user"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="15dp"
+            android:id="@+id/connect_item_age_of_current_user"
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
             android:text="19"
+            android:textAlignment="center"
             android:textAllCaps="true"
             android:textColor="@android:color/black"
             android:textSize="13sp" />
