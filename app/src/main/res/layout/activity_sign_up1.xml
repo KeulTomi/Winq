@@ -97,7 +97,7 @@
     <Spinner
         android:id="@+id/interests_spinner"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="25dp"
         android:layout_below="@+id/root_layout"
         android:layout_gravity="center"
         android:layout_marginLeft="25dp"

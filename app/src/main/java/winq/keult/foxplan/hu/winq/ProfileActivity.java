@@ -1,6 +1,7 @@
 package winq.keult.foxplan.hu.winq;
 
 import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -21,7 +22,6 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
@@ -33,6 +33,7 @@ import com.example.keult.networking.callback.ImageUploadCallback;
 import com.example.keult.networking.callback.ProfileImagesCallback;
 import com.example.keult.networking.error.NetworkError;
 import com.example.keult.networking.model.EventJoinedByIdResponse;
+import com.example.keult.networking.model.EventsJoinedData;
 import com.example.keult.networking.model.ImageData;
 import com.example.keult.networking.model.ImageUploadResponse;
 import com.example.keult.networking.model.ProfileData;
@@ -62,19 +63,18 @@ public class ProfileActivity extends AppCompatActivity
 
     private static final int CAMERA_REQUEST = 1001;
     private static final int GALERY_REQUEST = 1002;
-
-
-
+    public static boolean writeMessage = false;
+    public static String connectWroteMessage;
+    private static ArrayList<EventsJoinedData> currentUserEvents;
     private final int PROFILE_PIC_UPLOAD = 1;
     private final int IMAGE_PIC_UPLOAD = 2;
     private final int STORY_PIC_UPLOAD = 3;
-
     private ArrayList<ImageData> mStoryImages;
     private Bitmap mFirstStoryImage;
     private Uri fileUri;
     private ProfileData mProfileData;
-
     private Handler mHandler;
+    private String gotMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -220,11 +220,30 @@ public class ProfileActivity extends AppCompatActivity
             case R.id.connect_extra_images_07:
             case R.id.connect_extra_images_08:
 
-                String urlEvents = (String) v.getTag(v.getId());
+                Winq.connectEventData.put("eventData", currentUserEvents.get((int) v.getTag(v.getId())));
+                Intent openDetails = new Intent(this, EventDetailsActivity.class);
+                openDetails.putExtra("eventNum", 2);
+                startActivity(openDetails);
 
-                ProfilePhotosDialog eventsDialog = new ProfilePhotosDialog(this, urlEvents);
-                eventsDialog.show();
+                break;
 
+            case R.id.connect_write_message:
+                SendMessageDialog sendMessageDialog = new SendMessageDialog(this);
+                sendMessageDialog.show();
+                sendMessageDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        if (writeMessage) {
+                            sendWroteMessage(connectWroteMessage);
+                        }
+                    }
+                });
+                break;
+
+            case R.id.connect_get_message:
+                getMessage();
+                GetMessageDialog getMessageDialog = new GetMessageDialog(this, "Something about me..."); //gotMessage
+                getMessageDialog.show();
                 break;
 
             case R.id.profile_take_photo_button:
@@ -245,6 +264,10 @@ public class ProfileActivity extends AppCompatActivity
                 Intent openLogIn = new Intent(this, LoginActivity.class);
                 startActivity(openLogIn);
         }
+    }
+
+    private void sendWroteMessage(String connectWroteMessage) {
+        //TODO: Ide jön az a lekérdezés amivel elküldöm az üzenetet
     }
 
     private void requestForImages(ProfileData profileData, final boolean getStoryImages) {
@@ -333,6 +356,7 @@ public class ProfileActivity extends AppCompatActivity
                     msg.what = MSG_SET_LAYOUT_EVENTS;
                     msg.obj = eventJoinedByIdResponse;
                     mHandler.sendMessage(msg);
+                    currentUserEvents = (ArrayList<EventsJoinedData>) eventJoinedByIdResponse.getData().getEventJoinedList();
 
                 } else {
                     // Válasz visszautasítva
@@ -472,8 +496,10 @@ public class ProfileActivity extends AppCompatActivity
             String url = eventJoinedByIdResponse.getData().getEventJoinedList().get(i).getImage();
             final ImageView imageView = (ImageView) imagesContainerView.getChildAt(i);
 
+            int eventsNumber = i;
+
             // Url mentése az View Tag-jébe, hogy tudjuk honnan jött a kép ha meg kell nyitni
-            imageView.setTag(imageView.getId(), url);
+            imageView.setTag(imageView.getId(), eventsNumber);
 
             Glide.with(this).load(url).asBitmap().placeholder(R.drawable.round_for_images).centerCrop()
                     .into(new BitmapImageViewTarget(imageView) {
@@ -723,6 +749,10 @@ public class ProfileActivity extends AppCompatActivity
         // ApiTester.imageUpload(null, fileBody);
     }
 
+    public void getMessage() {
+        //TODO: Ide jön a kapott üzeneteknek a lekérdezése
+    }
+
     private class MessageHandler extends Handler {
 
         AppCompatActivity activity;
@@ -756,7 +786,7 @@ public class ProfileActivity extends AppCompatActivity
                     preloadFirstStoryImage();
                     break;
                 case MSG_SET_LAYOUT_EVENTS:
-                    Toast.makeText(activity, getString(R.string.usr_msg_upload_success), Toast.LENGTH_LONG).show();
+                    //Toast.makeText(activity, getString(R.string.usr_msg_upload_success), Toast.LENGTH_LONG).show();
                     initLayoutEvents((EventJoinedByIdResponse) msg.obj);
                     break;
             }

@@ -47,22 +47,22 @@ public class ShareOpinionDialog extends Dialog implements
     @Override
     public void onClick(View v) {
 
-        EventDetailsActivity details = new EventDetailsActivity();
+        //EventDetailsActivity details = new EventDetailsActivity();
 
         switch (v.getId()) {
             case R.id.opinion_bad:
                 EventDetailsActivity.rate = 1;
-                details.rateEvent();
+                //details.rateEvent();
                 dismiss();
                 break;
             case R.id.opinion_medium:
                 EventDetailsActivity.rate = 2;
-                details.rateEvent();
+                //details.rateEvent();
                 dismiss();
                 break;
             case R.id.opinion_great:
                 EventDetailsActivity.rate = 3;
-                details.rateEvent();
+                //details.rateEvent();
                 dismiss();
                 break;
         }
