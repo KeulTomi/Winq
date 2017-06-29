@@ -30,12 +30,14 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.keult.networking.NetworkManager;
 import com.example.keult.networking.callback.EventJoinedByIdCallback;
 import com.example.keult.networking.callback.ImageUploadCallback;
+import com.example.keult.networking.callback.NewMessageCallback;
 import com.example.keult.networking.callback.ProfileImagesCallback;
 import com.example.keult.networking.error.NetworkError;
 import com.example.keult.networking.model.EventJoinedByIdResponse;
 import com.example.keult.networking.model.EventsJoinedData;
 import com.example.keult.networking.model.ImageData;
 import com.example.keult.networking.model.ImageUploadResponse;
+import com.example.keult.networking.model.NewMessageResponse;
 import com.example.keult.networking.model.ProfileData;
 import com.example.keult.networking.model.ProfileImagesResponse;
 
@@ -204,9 +206,8 @@ public class ProfileActivity extends AppCompatActivity
             case R.id.profile_images_10:
             case R.id.profile_images_11:
             case R.id.profile_images_12:
+
                 String url = (String) v.getTag(v.getId());
-
-
                 ProfilePhotosDialog cdd = new ProfilePhotosDialog(this, url);
                 cdd.show();
 
@@ -267,7 +268,41 @@ public class ProfileActivity extends AppCompatActivity
     }
 
     private void sendWroteMessage(String connectWroteMessage) {
-        //TODO: Ide jön az a lekérdezés amivel elküldöm az üzenetet
+
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("username", Winq.getCurrentUserProfileData().getUsername());
+        map.put("password", Winq.getCurrentUserProfileData().getPassword());
+        map.put("apikey", getResources().getString(R.string.apikey));
+        map.put("facebookid", Winq.getCurrentUserProfileData().getFacebookid());
+
+        //TODO: Át kell venni a címzett userId-ját a metódusnak
+        map.put("touser", "1");
+
+        if (connectWroteMessage != null)
+            map.put("message", connectWroteMessage);
+        else
+            map.put("message", "-");
+
+        NetworkManager.getInstance().newMessage(map, new NewMessageCallback() {
+            @Override
+            public void forwardResponse(NewMessageResponse newMessageResponse) {
+
+                if (newMessageResponse.getSuccess() == 1) {
+                    // Válasz rendben
+                    Log.v("sendMsg_OK:",
+                            "Success");
+                } else {
+                    Log.w("sendMsg_Refused:",
+                            "FirstErrorText= " + newMessageResponse.getError().get(0));
+                }
+            }
+
+            @Override
+            public void forwardError(NetworkError networkError) {
+                Log.w("sendMsg_Error:", networkError.getThrowable());
+            }
+        });
+
     }
 
     private void requestForImages(ProfileData profileData, final boolean getStoryImages) {

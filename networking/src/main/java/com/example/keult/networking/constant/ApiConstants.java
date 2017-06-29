@@ -30,12 +30,15 @@ public class ApiConstants {
     public static final String INTEREST_TYPE_LIST = "profile/profile_interest"; // Érdeklődési típusok listája
     public static final String IMAGE_UPLOAD = "profile/imageupload"; // Kép feltöltése
 
-        // api/profile/dates
+    // ../dates
         public static final String DATE_ADD = "profile/dates/add"; // Randi hozzáadása
         public static final String DATE_DONT_LIKE = "profile/dates/dont_like"; // Randi don't like
 
-    // api/profile/friends
+    // ../friends
     public static final String FRIEND_ADD = "profile/friends/add"; // Barát hozzáadás
+
+    // ../messages/newmessage
+    public static final String MESSAGE_NEW = "profile/messages/newmessage"; // Üzenet küldése
 
     // api/pages
     public static final String CONDITIONS = "pages/aszf"; // ASZF

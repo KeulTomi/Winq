@@ -16,6 +16,7 @@ import com.example.keult.networking.model.GeneralSearchResponse;
 import com.example.keult.networking.model.ImageUploadResponse;
 import com.example.keult.networking.model.InterestTypesResponse;
 import com.example.keult.networking.model.LoginResponse;
+import com.example.keult.networking.model.NewMessageResponse;
 import com.example.keult.networking.model.ProfileImagesResponse;
 import com.example.keult.networking.model.SignUpResponse;
 
@@ -49,6 +50,7 @@ import static com.example.keult.networking.constant.ApiConstants.IMAGE_UPLOAD;
 import static com.example.keult.networking.constant.ApiConstants.INTEREST_TYPE_LIST;
 import static com.example.keult.networking.constant.ApiConstants.JOINED_EVENT_LIST_BY_ID;
 import static com.example.keult.networking.constant.ApiConstants.LOG_IN;
+import static com.example.keult.networking.constant.ApiConstants.MESSAGE_NEW;
 import static com.example.keult.networking.constant.ApiConstants.SIGN_UP;
 
 /**
@@ -128,6 +130,10 @@ public interface ApiService {
     @FormUrlEncoded
     @POST(EVENT_RATE)
     Observable<EventRateResponse> rateEvent(@FieldMap Map<String, Object> body);
+
+    @FormUrlEncoded
+    @POST(MESSAGE_NEW)
+    Observable<NewMessageResponse> newMessage(@FieldMap Map<String, Object> body);
 
     @Multipart
     @POST(IMAGE_UPLOAD)

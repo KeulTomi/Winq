@@ -17,6 +17,7 @@ import com.example.keult.networking.callback.GeneralSearchCallback;
 import com.example.keult.networking.callback.ImageUploadCallback;
 import com.example.keult.networking.callback.InterestTypesCallback;
 import com.example.keult.networking.callback.LoginCallback;
+import com.example.keult.networking.callback.NewMessageCallback;
 import com.example.keult.networking.callback.ProfileImagesCallback;
 import com.example.keult.networking.callback.SignUpCallback;
 import com.example.keult.networking.di.component.DaggerNetworkComponent;
@@ -243,6 +244,16 @@ public class NetworkManager {
                 .subscribe(
                         conditionsCallback::forwardResponse,
                         throwable -> conditionsCallback.forwardError(ErrorFactory.createNetworkError(throwable))
+                );
+    }
+
+    // message - új üzenet
+    public void newMessage(Map<String, Object> body, NewMessageCallback newMessageCallback) {
+        apiService.newMessage(body)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        newMessageCallback::forwardResponse,
+                        throwable -> newMessageCallback.forwardError(ErrorFactory.createNetworkError(throwable))
                 );
     }
 }
