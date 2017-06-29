@@ -36,6 +36,7 @@ public class SignUpActivity2 extends AppCompatActivity implements View.OnClickLi
     private ArrayList hashtagList;
     private Bundle bundleThirdPart;
     private HashMap<String, Object> userParams;
+    private TextView aszfText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +60,13 @@ public class SignUpActivity2 extends AppCompatActivity implements View.OnClickLi
         bundleThirdPart = getIntent().getBundleExtra("signUpBundle");
         userParams = (HashMap<String, Object>) bundleThirdPart.get("messageBody");
 
+        aszfText = (TextView) findViewById(R.id.aszf_check_text);
+
+        aszfText.setOnClickListener(this);
+
+        //Aláhúzás az ászf text alá
+
+
 
         undoButton.setOnClickListener(this);
         addButton.setOnClickListener(this);
@@ -71,6 +79,12 @@ public class SignUpActivity2 extends AppCompatActivity implements View.OnClickLi
     public void onClick(View view) {
 
         switch (view.getId()) {
+
+            case R.id.aszf_check_text:
+                Intent openAszf = new Intent(this, AszfActivity.class);
+                startActivity(openAszf);
+                overridePendingTransition(R.anim.activity_slide_up, R.anim.activity_stay);
+                break;
 
             case R.id.main_layout:
                 // Check if no view has focus:
@@ -86,6 +100,10 @@ public class SignUpActivity2 extends AppCompatActivity implements View.OnClickLi
                 overridePendingTransition(R.anim.activity_slide_left2, R.anim.activity_slide_right2);
                 break;
             case R.id.finish_sign_up:
+
+                if (findViewById(R.id.aszf_check_box).isActivated() == false) {
+                    Toast.makeText(this, "El kell fogadnod az ÁSZF-et!", Toast.LENGTH_LONG).show();
+                }
 
                 userParams.put("description", signUpDescription.getText().toString());
                 userParams.put("activities", signUpAllActivities.getText().toString());

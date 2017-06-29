@@ -21,6 +21,8 @@ public class ShareOpinionDialog extends Dialog implements
     public LinearLayout bad;
     public LinearLayout medium;
     public LinearLayout great;
+    public LinearLayout greatPlus;
+    public LinearLayout greatPlusPlus;
 
     public ShareOpinionDialog(Activity a) {
         super(a);
@@ -34,13 +36,17 @@ public class ShareOpinionDialog extends Dialog implements
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.share_opinion_dialog);
 
-        bad = (LinearLayout) findViewById(R.id.opinion_bad);
-        medium = (LinearLayout) findViewById(R.id.opinion_medium);
-        great = (LinearLayout) findViewById(R.id.opinion_great);
+        bad = (LinearLayout) findViewById(R.id.opinion_one);
+        medium = (LinearLayout) findViewById(R.id.opinion_two);
+        great = (LinearLayout) findViewById(R.id.opinion_three);
+        greatPlus = (LinearLayout) findViewById(R.id.opinion_four);
+        greatPlusPlus = (LinearLayout) findViewById(R.id.opinion_five);
 
         bad.setOnClickListener(this);
         medium.setOnClickListener(this);
         great.setOnClickListener(this);
+        greatPlus.setOnClickListener(this);
+        greatPlusPlus.setOnClickListener(this);
 
     }
 
@@ -50,18 +56,30 @@ public class ShareOpinionDialog extends Dialog implements
         //EventDetailsActivity details = new EventDetailsActivity();
 
         switch (v.getId()) {
-            case R.id.opinion_bad:
+            case R.id.opinion_one:
                 EventDetailsActivity.rate = 1;
                 //details.rateEvent();
                 dismiss();
                 break;
-            case R.id.opinion_medium:
+            case R.id.opinion_two:
                 EventDetailsActivity.rate = 2;
                 //details.rateEvent();
                 dismiss();
                 break;
-            case R.id.opinion_great:
+            case R.id.opinion_three:
                 EventDetailsActivity.rate = 3;
+                //details.rateEvent();
+                dismiss();
+                break;
+
+            case R.id.opinion_four:
+                EventDetailsActivity.rate = 4;
+                //details.rateEvent();
+                dismiss();
+                break;
+
+            case R.id.opinion_five:
+                EventDetailsActivity.rate = 5;
                 //details.rateEvent();
                 dismiss();
                 break;

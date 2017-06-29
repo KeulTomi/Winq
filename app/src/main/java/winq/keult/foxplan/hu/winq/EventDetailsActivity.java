@@ -3,7 +3,6 @@ package winq.keult.foxplan.hu.winq;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -204,20 +203,7 @@ public class EventDetailsActivity extends AppCompatActivity implements View.OnCl
                 cdd.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
-                        switch (rate) {
-
-                            case 1:
-                                rateEvent();
-                                break;
-
-                            case 2:
-                                rateEvent();
-                                break;
-
-                            case 3:
-                                rateEvent();
-                                break;
-                        }
+                        rateEvent();
                     }
                 });
         }
@@ -371,18 +357,5 @@ public class EventDetailsActivity extends AppCompatActivity implements View.OnCl
             }
         });
 
-    }
-
-    public void dialogMaker(String dialogText) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(dialogText)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        //do things
-                        dialog.dismiss();
-                    }
-                });
-        AlertDialog alert = builder.create();
-        alert.show();
     }
 }

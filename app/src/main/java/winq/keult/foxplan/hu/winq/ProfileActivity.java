@@ -1,6 +1,7 @@
 package winq.keult.foxplan.hu.winq;
 
 import android.app.DialogFragment;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -14,14 +15,18 @@ import android.provider.MediaStore;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
+import android.text.method.KeyListener;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
@@ -29,12 +34,14 @@ import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.keult.networking.NetworkManager;
 import com.example.keult.networking.callback.EventJoinedByIdCallback;
+import com.example.keult.networking.callback.FriendsAddCallback;
 import com.example.keult.networking.callback.ImageUploadCallback;
 import com.example.keult.networking.callback.NewMessageCallback;
 import com.example.keult.networking.callback.ProfileImagesCallback;
 import com.example.keult.networking.error.NetworkError;
 import com.example.keult.networking.model.EventJoinedByIdResponse;
 import com.example.keult.networking.model.EventsJoinedData;
+import com.example.keult.networking.model.FriendAddResponse;
 import com.example.keult.networking.model.ImageData;
 import com.example.keult.networking.model.ImageUploadResponse;
 import com.example.keult.networking.model.NewMessageResponse;
@@ -124,6 +131,8 @@ public class ProfileActivity extends AppCompatActivity
             findViewById(R.id.profile_choose_from_gallery_button).setOnClickListener(this);
             findViewById(R.id.profile_settings_button).setOnClickListener(this);
             findViewById(R.id.profile_logout_button).setOnClickListener(this);
+            findViewById(R.id.settings_cancel_btn).setOnClickListener(this);
+            findViewById(R.id.profile_main_layout).setOnClickListener(this);
 
         } else {
             // Idegen profil layout elemeinek engedélyezése
@@ -170,7 +179,69 @@ public class ProfileActivity extends AppCompatActivity
     @Override
     public void onClick(View v) {
 
+        //Editelhető textek innitje
+        EditText country = (EditText) findViewById(R.id.profile_country_of_current_user);
+        EditText fullname = (EditText) findViewById(R.id.profile_fullname_of_current_user);
+        EditText description = (EditText) findViewById(R.id.profile_description);
+        EditText age = (EditText) findViewById(R.id.profile_age_of_current_user);
+        ImageView cancelSettings = (ImageView) findViewById(R.id.settings_cancel_btn);
+
+        View view = this.getCurrentFocus();
         switch (v.getId()) {
+
+            case R.id.connect_add_as_friend:
+                requestForAddAsFriend();
+                break;
+
+            case R.id.profile_settings_button:
+
+                cancelSettings.setVisibility(View.VISIBLE);
+
+
+                country.setKeyListener((KeyListener) country.getTag());
+
+                fullname.setKeyListener((KeyListener) fullname.getTag());
+
+                description.setKeyListener((KeyListener) description.getTag());
+
+                age.setKeyListener((KeyListener) age.getTag());
+
+                Toast.makeText(this, "Now you can edit your profile", Toast.LENGTH_LONG).show();
+                break;
+
+            case R.id.settings_cancel_btn:
+
+                cancelSettings.setVisibility(View.GONE);
+
+                country.setTag(country.getKeyListener());
+                country.setKeyListener(null);
+
+
+                fullname.setTag(fullname.getKeyListener());
+                fullname.setKeyListener(null);
+
+
+                description.setTag(description.getKeyListener());
+                description.setKeyListener(null);
+
+                age.setTag(age.getKeyListener());
+                age.setKeyListener(null);
+
+
+                if (view != null) {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
+                break;
+
+            case R.id.profile_main_layout:
+                // Check if no view has focus:
+                if (view != null) {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
+                break;
+
 
             case R.id.profile_image:
 
@@ -242,8 +313,7 @@ public class ProfileActivity extends AppCompatActivity
                 break;
 
             case R.id.connect_get_message:
-                getMessage();
-                GetMessageDialog getMessageDialog = new GetMessageDialog(this, "Something about me..."); //gotMessage
+                GetMessageDialog getMessageDialog = new GetMessageDialog(this, gotMessage);
                 getMessageDialog.show();
                 break;
 
@@ -289,18 +359,59 @@ public class ProfileActivity extends AppCompatActivity
                     // Válasz rendben
                     Log.v("sendMsg_OK:",
                             "Success");
+
+                    Toast.makeText(getApplicationContext(), "Üzenet elküldve", Toast.LENGTH_LONG).show();
                 } else {
                     Log.w("sendMsg_Refused:",
                             "FirstErrorText= " + newMessageResponse.getError().get(0));
+                    Toast.makeText(getApplicationContext(), newMessageResponse.getError().get(0), Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void forwardError(NetworkError networkError) {
                 Log.w("sendMsg_Error:", networkError.getThrowable());
+
+                Toast.makeText(getApplicationContext(), networkError.getThrowable().getMessage(), Toast.LENGTH_LONG).show();
             }
         });
 
+    }
+
+    private void requestForAddAsFriend() {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("username", Winq.getCurrentUserProfileData().getUsername());
+        map.put("password", Winq.getCurrentUserProfileData().getPassword());
+        map.put("apikey", getResources().getString(R.string.apikey));
+        map.put("facebookid", Winq.getCurrentUserProfileData().getFacebookid());
+        map.put("to_user", mProfileData.getId());
+
+        NetworkManager.getInstance().addAsFriend(map, new FriendsAddCallback() {
+            @Override
+            public void forwardResponse(FriendAddResponse friendAddResponse) {
+                if (friendAddResponse.getSuccess() == 1) {
+                    // Válasz rendben
+                    Log.v("getImages_OK:",
+                            "Success");
+
+                    Toast.makeText(getApplicationContext(), "You are now friends", Toast.LENGTH_LONG).show();
+                } else {
+                    // Válasz visszautasítva
+                    Log.w("geImages_Refused:",
+                            "FirstErrorText= " + friendAddResponse.getError().get(0));
+
+                    Toast.makeText(getApplicationContext(), friendAddResponse.getError().get(0), Toast.LENGTH_LONG).show();
+                }
+
+            }
+
+            @Override
+            public void forwardError(NetworkError networkError) {
+
+                Toast.makeText(getApplicationContext(), networkError.getThrowable().getMessage(), Toast.LENGTH_LONG).show();
+
+            }
+        });
     }
 
     private void requestForImages(ProfileData profileData, final boolean getStoryImages) {
@@ -409,21 +520,37 @@ public class ProfileActivity extends AppCompatActivity
         if (profileData != null) {
 
             // Országkód beállítása
-            ((TextView) findViewById(R.id.profile_country_of_current_user))
+            ((EditText) findViewById(R.id.profile_country_of_current_user))
                     .setText(profileData.getUserCountryShort());
 
+            EditText country = (EditText) findViewById(R.id.profile_country_of_current_user);
+            country.setTag(country.getKeyListener());
+            country.setKeyListener(null);
+
             // Név beállítása
-            ((TextView) findViewById(R.id.profile_fullname_of_current_user))
+            ((EditText) findViewById(R.id.profile_fullname_of_current_user))
                     .setText(profileData.getFullName());
 
+            EditText fullname = (EditText) findViewById(R.id.profile_fullname_of_current_user);
+            fullname.setTag(fullname.getKeyListener());
+            fullname.setKeyListener(null);
+
             // Leírás mező beállítása
-            ((TextView) findViewById(R.id.profile_description))
+            ((EditText) findViewById(R.id.profile_description))
                     .setText(profileData.getUserDescription());
+
+            EditText description = (EditText) findViewById(R.id.profile_description);
+            description.setTag(description.getKeyListener());
+            description.setKeyListener(null);
 
             // Életkor mező beállítása
             int userAge = Calendar.getInstance().get(Calendar.YEAR) - Integer.parseInt(profileData.getUserborn().substring(0, 4));
-            ((TextView) findViewById(R.id.profile_age_of_current_user))
+            ((EditText) findViewById(R.id.profile_age_of_current_user))
                     .setText(String.valueOf(userAge));
+
+            EditText age = (EditText) findViewById(R.id.profile_age_of_current_user);
+            age.setTag(age.getKeyListener());
+            age.setKeyListener(null);
 
         }
     }
