@@ -274,9 +274,7 @@ public class ProfileActivity extends AppCompatActivity
         map.put("password", Winq.getCurrentUserProfileData().getPassword());
         map.put("apikey", getResources().getString(R.string.apikey));
         map.put("facebookid", Winq.getCurrentUserProfileData().getFacebookid());
-
-        //TODO: Át kell venni a címzett userId-ját a metódusnak
-        map.put("touser", "1");
+        map.put("touser", mProfileData.getId());
 
         if (connectWroteMessage != null)
             map.put("message", connectWroteMessage);
