@@ -51,14 +51,14 @@ public class ConnectMyFriendsAdapter extends ArrayAdapter<FriendsData> {
         }
 
         TextView userName = (TextView) listItemView.findViewById(R.id.connect_item_fullname_of_current_user);
-        userName.setText(currentItem.getFullname());
+        userName.setText(currentItem.getFullName());
 
         TextView countryShortName = (TextView) listItemView.findViewById(R.id.connect_item_country);
         //TODO: Rosszul adja vissza a countryShortot a szerver
         countryShortName.setText("HUN");
 
         TextView ageOfUser = (TextView) listItemView.findViewById(R.id.connect_item_age_of_current_user);
-        int userBornYear = Integer.parseInt(currentItem.getUserBorn().substring(0, 4));
+        int userBornYear = Integer.parseInt(currentItem.getUserborn().substring(0, 4));
         Calendar c = Calendar.getInstance();
         int currentYear = c.get(Calendar.YEAR);
 

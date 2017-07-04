@@ -23,11 +23,13 @@ import android.widget.Toast;
 import com.example.keult.networking.NetworkManager;
 import com.example.keult.networking.callback.DateListCallback;
 import com.example.keult.networking.callback.FriendsListCallback;
+import com.example.keult.networking.callback.GeneralSearchCallback;
 import com.example.keult.networking.error.NetworkError;
 import com.example.keult.networking.model.DateData;
 import com.example.keult.networking.model.DateListResponse;
 import com.example.keult.networking.model.FriendsData;
 import com.example.keult.networking.model.FriendsListResponse;
+import com.example.keult.networking.model.GeneralSearchResponse;
 import com.example.keult.networking.model.ProfileData;
 
 import java.util.ArrayList;
@@ -41,6 +43,7 @@ public class ConnectActivity extends AppCompatActivity implements View.OnClickLi
     static TextView searchTab;
     static GridView friendsList;
     private static ArrayList<FriendsData> currentFriendList = new ArrayList<>();
+    private static ArrayList<ProfileData> currentSearchResultList = new ArrayList<>();
     private static ArrayList<DateData> dateList = new ArrayList<>();
     private static ConnectMyFriendsAdapter myFriendsAdapter;
 
@@ -55,6 +58,7 @@ public class ConnectActivity extends AppCompatActivity implements View.OnClickLi
     private TextView headerDateYear;
     private TextView headerDateMonthAndDay;
     private ProgressBar connectListProgress;
+    private ProgressBar searchListProgress;
 
     public void eventsTabBar(String tabName) {
 
@@ -149,6 +153,7 @@ public class ConnectActivity extends AppCompatActivity implements View.OnClickLi
         searchEditText = (EditText) findViewById(R.id.connect_search_edittext);
         headerDateYear = (TextView) findViewById(R.id.connect_headertime_year);
         headerDateMonthAndDay = (TextView) findViewById(R.id.connect_headertime_month_day);
+        searchListProgress = (ProgressBar) findViewById(R.id.connect_list_progress);
 
         //Listenerek
         myFriendsTab.setOnClickListener(this);
@@ -205,25 +210,14 @@ public class ConnectActivity extends AppCompatActivity implements View.OnClickLi
 
         Bundle bundleDetails = new Bundle();
 
-        //TODO: Ha készen áll a ProfilActivity akkor itt kell átadni neki az adatokat
-
-        //Telerakjuk az adott Event adataival egy Bundle-t
-        DateData dateData = (DateData) parent.getItemAtPosition(position);
-        Winq.connectData.put("datedData", dateData);
-
-        ProfileData profileData = (ProfileData) dateData;
+        //Az Item adataiból ProfileData készítése, amit egy Bundle-ben kell átadni a ProfileActivity-nek
+        ProfileData profileData = (ProfileData) parent.getItemAtPosition(position);
 
         Intent intentProfile = new Intent(this, ProfileActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable(getString(R.string.intent_key_profile_data), profileData);
         intentProfile.putExtras(bundle);
         startActivity(intentProfile);
-
-        //Elküldjük az EventDetailsActivity-nek
-        ////Intent openEventDatails = new Intent(this, EventDetailsActivity.class);
-
-
-        ////startActivity(openEventDatails);
 
     }
 
@@ -336,6 +330,27 @@ public class ConnectActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public boolean onKey(View v, int keyCode, KeyEvent event) {
+
+
+        if (event.getAction() != event.ACTION_DOWN) {
+
+            if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                //Akkor indítjuk a keresést amikot lenyomta az Entert
+                searchListProgress.setVisibility(View.VISIBLE);
+
+                // Check if no view has focus:
+                View view = this.getCurrentFocus();
+                if (v != null) {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
+
+                searchUsers();
+            }
+        }
+
+
+
         // Check if no view has focus:
         View view = this.getCurrentFocus();
         if (v != null) {
@@ -343,5 +358,38 @@ public class ConnectActivity extends AppCompatActivity implements View.OnClickLi
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
         return false;
+    }
+
+    private void searchUsers() {
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("apikey", "a");
+        map.put("username", Winq.username);
+        map.put("password", Winq.password);
+        map.put("facebookid", "no");
+        map.put("searchinput", searchEditText.getText().toString());
+        map.put("page", "0");
+        map.put("homepage", "0");
+
+        NetworkManager.getInstance().searchGeneral(map, new GeneralSearchCallback() {
+            @Override
+            public void forwardResponse(GeneralSearchResponse generalSearchResponse) {
+                if (generalSearchResponse.getSuccess() == 1) {
+                    // Válasz rendben
+                    currentSearchResultList = (ArrayList<ProfileData>) generalSearchResponse.getData().getUserList();
+                    setAdapters("search");
+                } else {
+                    // Válasz visszautasítva
+                    Log.w("search_Refused:",
+                            "FirstErrorText= " + generalSearchResponse.getError().get(0));
+
+                }
+            }
+
+            @Override
+            public void forwardError(NetworkError networkError) {
+                Log.e("search_Error:", networkError.getThrowable().getLocalizedMessage());
+            }
+        });
     }
 }
