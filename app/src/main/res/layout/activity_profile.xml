@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/profile_main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
@@ -85,7 +86,7 @@
         android:background="@color/colorPrimaryDark"
         android:orientation="horizontal">
 
-        <TextView
+        <EditText
             android:id="@+id/profile_age_of_current_user"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -93,6 +94,7 @@
             android:layout_marginLeft="40dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="5dp"
+            android:background="@null"
             android:text="19"
             android:textColor="@android:color/white"
             android:textSize="18sp" />
@@ -104,13 +106,14 @@
             android:layout_marginTop="5dp"
             android:background="@android:color/white" />
 
-        <TextView
+        <EditText
             android:id="@+id/profile_country_of_current_user"
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="5dp"
+            android:background="@null"
             android:text="hun"
             android:textAllCaps="true"
             android:textColor="@android:color/white"
@@ -123,16 +126,27 @@
             android:layout_marginTop="5dp"
             android:background="@android:color/white" />
 
-        <TextView
+        <EditText
             android:id="@+id/profile_fullname_of_current_user"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="5dp"
+            android:background="@null"
             android:text="Erdos Mate"
             android:textColor="@android:color/white"
             android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/settings_cancel_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="right"
+            android:layout_marginLeft="80dp"
+            android:src="@drawable/ic_settings_cancel"
+            android:tint="#ff0000"
+            android:visibility="gone" />
 
     </LinearLayout>
 
@@ -365,15 +379,17 @@
         android:background="@color/colorAccent"
         android:visibility="gone" />
 
-    <TextView
+    <EditText
         android:id="@+id/profile_description"
         android:layout_width="match_parent"
-        android:layout_height="205dp"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/profile_kamera_buttons_layout"
         android:layout_below="@id/profile_image_layout_header_2"
+        android:background="@null"
         android:paddingBottom="30dp"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:paddingTop="30dp"
+        android:paddingTop="10dp"
         android:scrollbars="vertical"
         android:text="iDÉJdkjKDkdk..DKdkfjJKDFKGJKDFkj.dbK.hdbADH,JADG,jhagdhdHAGJAGH,A"
         android:textColor="@android:color/black"

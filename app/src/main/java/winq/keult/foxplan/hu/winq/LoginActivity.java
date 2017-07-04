@@ -30,6 +30,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private TextView goButton;
     private TextView signUpButton;
     private ProgressBar goButtonProgress;
+    private TextView aszfText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,6 +116,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 login(userParams);
 
                 break;
+
+            case R.id.aszf_check_text:
+                Intent openAszf = new Intent(this, AszfActivity.class);
+                startActivity(openAszf);
+                overridePendingTransition(R.anim.activity_slide_up, R.anim.activity_stay);
         }
     }
 
