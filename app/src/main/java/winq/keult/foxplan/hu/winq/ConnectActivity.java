@@ -365,6 +365,7 @@ public class ConnectActivity extends AppCompatActivity implements View.OnClickLi
 
             case "search":
                 searchAdapter = new ConnectSearchAdapter(this, currentFriendList);
+                friendsList.setEmptyView(findViewById(R.id.no_result_layout));
                 friendsList.setAdapter(searchAdapter);
                 connectListProgress.setVisibility(View.GONE);
                 break;

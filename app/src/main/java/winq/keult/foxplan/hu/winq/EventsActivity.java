@@ -337,18 +337,23 @@ public class EventsActivity extends AppCompatActivity implements AdapterView.OnI
 
             case "joined":
                 joinedAdapter = new EventsJoinedAdapter(this, currentEventList);
+                View empty = getLayoutInflater().inflate(R.layout.no_result_layout, null, false);
+                addContentView(empty, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                eventsList.setEmptyView(empty);
                 eventsList.setAdapter(joinedAdapter);
                 eventsListProgress.setVisibility(View.GONE);
                 break;
 
             case "upcoming":
                 upcomingAdapter = new EventsUpcomingAdapter(this, currentEventList);
+                eventsList.setEmptyView(findViewById(R.id.no_result_text));
                 eventsList.setAdapter(upcomingAdapter);
                 eventsListProgress.setVisibility(View.GONE);
                 break;
 
             case "search":
                 searchAdapter = new EventsSearchAdapter(this, currentEventList);
+                eventsList.setEmptyView(findViewById(R.id.no_result_text));
                 eventsList.setAdapter(searchAdapter);
                 eventsListProgress.setVisibility(View.GONE);
                 break;

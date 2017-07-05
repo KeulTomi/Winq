@@ -159,6 +159,7 @@ public class SignUpActivity1 extends AppCompatActivity implements View.OnClickLi
                     }
 
                     ArrayAdapter<String> typeSpinnerAdapter = new CustomArrayAdapter<String>(getApplicationContext(), interestTypeList);
+                    //ArrayAdapter<String> typeSpinnerAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, interestTypeList);
                     typeSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     signUpIntrests.setAdapter(typeSpinnerAdapter);
 
@@ -193,7 +194,8 @@ public class SignUpActivity1 extends AppCompatActivity implements View.OnClickLi
         /* if(isDroidX) {*/
             TextView text = (TextView) view.findViewById(android.R.id.text1);
             text.setTextColor(Color.BLACK);//choose your color :)
-            text.setTextSize(16f);
+            text.setPadding(0, 10, 0, 10);
+            text.setTextSize(18f);
         /*}*/
 
             return view;
