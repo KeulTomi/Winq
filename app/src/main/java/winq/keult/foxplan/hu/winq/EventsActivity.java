@@ -3,6 +3,8 @@ package winq.keult.foxplan.hu.winq;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -189,27 +191,30 @@ public class EventsActivity extends AppCompatActivity implements AdapterView.OnI
                 //A tabbaron színváltás történik
                 eventsTabBar("joined");
 
-                //Adatlekérdezés
-                currentEventList.clear();
-                eventsListProgress.setVisibility(View.VISIBLE);
-                joinedEvents();
-
+                if (checkOutTheInternetConnection()) {
+                    //Adatlekérdezés
+                    currentEventList.clear();
+                    eventsListProgress.setVisibility(View.VISIBLE);
+                    joinedEvents();
+                } else return;
                 break;
 
             case R.id.events_upcoming:
                 //A tabbaron színváltás történik
                 eventsTabBar("upcoming");
 
-                //Adatlekérdezés
-                currentEventList.clear();
-                eventsListProgress.setVisibility(View.VISIBLE);
-                upcomingEvents();
-
+                if (checkOutTheInternetConnection()) {
+                    //Adatlekérdezés
+                    currentEventList.clear();
+                    eventsListProgress.setVisibility(View.VISIBLE);
+                    upcomingEvents();
+                } else return;
                 break;
 
             case R.id.events_search:
                 //A tabbaron színváltás történik
                 eventsTabBar("search");
+
                 //Adatok törlése és várakozás az Enter gombra, hogy kereshessen
                 currentEventList.clear();
 
@@ -367,10 +372,37 @@ public class EventsActivity extends AppCompatActivity implements AdapterView.OnI
                     imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 }
 
-                searchEvents();
+                if (checkOutTheInternetConnection()) {
+                    //Adatlekérdezés
+                    searchEvents();
+                }
             }
         }
 
         return false;
+    }
+
+    private boolean checkOutTheInternetConnection() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+
+        boolean hasWIFI = true;
+
+        if (activeNetwork != null) {
+            // connected to the internet
+            if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
+                // connected to wifi
+
+            } else if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
+                // connected to the mobile network
+            }
+        } else {
+            // not connected to the internet
+            hasWIFI = false;
+            InternetProblemDialog dialog = new InternetProblemDialog(this);
+            dialog.show();
+        }
+
+        return hasWIFI;
     }
 }

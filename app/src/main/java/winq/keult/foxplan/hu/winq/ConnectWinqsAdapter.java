@@ -63,6 +63,7 @@ public class ConnectWinqsAdapter extends ArrayAdapter<DateData> {
 
         ageOfUser.setText(String.valueOf(currentYear - userBornYear));
 
+
         return listItemView;
     }
 }

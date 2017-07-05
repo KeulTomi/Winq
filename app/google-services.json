@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "249491332162",
+    "firebase_url": "https://winq-9be10.firebaseio.com",
+    "project_id": "winq-9be10",
+    "storage_bucket": "winq-9be10.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:249491332162:android:32cb5234232ffc9f",
+        "android_client_info": {
+          "package_name": "winq.keult.foxplan.hu.winq"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "249491332162-g33m2q7il29lb1sfsqe3ugtqe5s1fjo4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "winq.keult.foxplan.hu.winq",
+            "certificate_hash": "09beabc830e89aaa6fb2a4836d398cac45a903bc"
+          }
+        },
+        {
+          "client_id": "249491332162-0mvaa9sv3nmp4uinlatje88d120oln73.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyASH5pRpbFY80zYh3qu1W8oumNPjny1jAQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "249491332162-0mvaa9sv3nmp4uinlatje88d120oln73.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

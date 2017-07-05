@@ -39,6 +39,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         // Applikáció inicializálása
         Winq.initApp(getApplicationContext());
 
+
         if (Winq.savedDataExist()) {
 
             HashMap<String, Object> userParams = new HashMap<>();
@@ -58,12 +59,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_login);
 
 
-        signUpButton = (TextView) findViewById(R.id.sign_up_button);
-        goButton = (TextView) findViewById(R.id.GO_button);
-        goButtonProgress = (ProgressBar) findViewById(R.id.GO_button_progress);
-
         loginEmail = (EditText) findViewById(R.id.email_edittext);
         loginPassword = (EditText) findViewById(R.id.password_edittext);
+
+
+        signUpButton = (TextView) findViewById(R.id.sign_up_button);
+        goButton = (TextView) findViewById(R.id.GO_button);
+
+        goButtonProgress = (ProgressBar) findViewById(R.id.GO_button_progress);
 
         goButton.setOnClickListener(this);
         signUpButton.setOnClickListener(this);
@@ -85,10 +88,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 overridePendingTransition(R.anim.activity_slide_up, R.anim.activity_stay);
                 break;
             case R.id.GO_button:
-
-                if (loginEmail.getText().toString() == "000000000" || loginPassword.getText().toString() == "000000000") {
-                    Toast.makeText(this, "Empty fields", Toast.LENGTH_LONG).show();
-                }
 
                 String strUserName = loginEmail.getText().toString();
                 String strPassword = loginPassword.getText().toString();
@@ -113,6 +112,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 userParams.put("password", loginPassword.getText().toString());
                 userParams.put("apikey", getResources().getString(R.string.apikey));
                 userParams.put("facebookid", "no");
+                //userParams.put("mobileid", FirebaseInstanceId.getInstance().getToken());
+
                 login(userParams);
 
                 break;

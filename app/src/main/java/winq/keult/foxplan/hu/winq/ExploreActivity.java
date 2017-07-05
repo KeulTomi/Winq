@@ -1,5 +1,8 @@
 package winq.keult.foxplan.hu.winq;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -85,7 +88,7 @@ public class ExploreActivity extends AppCompatActivity implements View.OnClickLi
 
     public void dontLikeDate() {
 
-        if (numberOfUser == 5) {
+        if (numberOfUser == 4) {
             numberOfUser = 0;
             exploreUsers();
             return;
@@ -106,10 +109,11 @@ public class ExploreActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void forwardResponse(DateDoNotLikeResponse dateDoNotLikeResponse) {
 
+                numberOfUser++;
+
                 if (dateDoNotLikeResponse.getSuccess() == 1) {
                     // Válasz rendben
                     setTheCurrentInfos(currentUserProfile, numberOfUser);
-                    numberOfUser++;
                 } else {
                     // Válasz visszautasítva
                     Log.w("dontLikeDate_Refused:",
@@ -127,7 +131,7 @@ public class ExploreActivity extends AppCompatActivity implements View.OnClickLi
 
     public void requestForDate() {
 
-        if (numberOfUser == 5) {
+        if (numberOfUser == 4) {
             numberOfUser = 0;
             exploreUsers();
             return;
@@ -149,10 +153,11 @@ public class ExploreActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void forwardResponse(DateAddResponse dateAddResponse) {
 
+                numberOfUser++;
+
                 if (dateAddResponse.getSuccess() == 1) {
                     // Válasz rendben
                     setTheCurrentInfos(currentUserProfile, numberOfUser);
-                    numberOfUser++;
                 } else {
                     // Válasz visszautasítva
                     Log.w("addDate_Refused:",
@@ -160,7 +165,6 @@ public class ExploreActivity extends AppCompatActivity implements View.OnClickLi
                     Toast.makeText(getApplicationContext(), dateAddResponse.getError().get(0), Toast.LENGTH_LONG).show();
 
                     setTheCurrentInfos(currentUserProfile, numberOfUser);
-                    numberOfUser++;
 
                 }
             }
@@ -182,18 +186,18 @@ public class ExploreActivity extends AppCompatActivity implements View.OnClickLi
         Calendar c = Calendar.getInstance();
         int currentYear = c.get(Calendar.YEAR);
 
+        currentUserAge.setText(String.valueOf(currentYear - userBornYear));
+        currentUserCountry.setText(profileData.get(listNumber).getUserCountryShort());
+        currentUserFullname.setText(profileData.get(listNumber).getFullName());
+        currentUserIntrest.setText(profileData.get(listNumber).getUserInterestText());
+        currentUserDescription.setText(profileData.get(listNumber).getUserDescription());
+
         if (profileData.get(listNumber).getImage() != "") {
             Glide.with(this)
                     .load(profileData.get(listNumber).getImage())
                     .asBitmap()
                     .into(currentUserImage);
         }
-
-        currentUserAge.setText(String.valueOf(currentYear - userBornYear));
-        currentUserCountry.setText(profileData.get(listNumber).getUserCountryShort());
-        currentUserFullname.setText(profileData.get(listNumber).getFullName());
-        currentUserIntrest.setText(profileData.get(listNumber).getUserInterestText());
-        currentUserDescription.setText(profileData.get(listNumber).getUserDescription());
     }
 
     @Override
@@ -257,13 +261,41 @@ public class ExploreActivity extends AppCompatActivity implements View.OnClickLi
                 break;
 
             case R.id.explore_dont_like:
-                dontLikeDate();
+                if (checkOutTheInternetConnection()) {
+                    dontLikeDate();
+                } else return;
                 break;
 
             case R.id.explore_like:
-                requestForDate();
+                if (checkOutTheInternetConnection()) {
+                    requestForDate();
+                } else return;
                 break;
         }
+    }
+
+    private boolean checkOutTheInternetConnection() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+
+        boolean hasWIFI = true;
+
+        if (activeNetwork != null) {
+            // connected to the internet
+            if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
+                // connected to wifi
+
+            } else if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
+                // connected to the mobile network
+            }
+        } else {
+            // not connected to the internet
+            hasWIFI = false;
+            InternetProblemDialog dialog = new InternetProblemDialog(this);
+            dialog.show();
+        }
+
+        return hasWIFI;
     }
 
 }

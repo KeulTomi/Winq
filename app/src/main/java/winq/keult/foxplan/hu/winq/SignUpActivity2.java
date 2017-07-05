@@ -2,6 +2,8 @@ package winq.keult.foxplan.hu.winq;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -107,11 +109,13 @@ public class SignUpActivity2 extends AppCompatActivity implements View.OnClickLi
 
                 userParams.put("description", signUpDescription.getText().toString());
                 userParams.put("activities", signUpAllActivities.getText().toString());
+                userParams.put("mobileid", "no");
 
-                sendSignUpData();
-
-
+                if (checkOutTheInternetConnection()) {
+                    sendSignUpData();
+                } else return;
                 break;
+
             case R.id.sign_up_add:
                 //Hozzá adjuk a begépelt hashtaget a többihez
                 String addedHashtag = signUpActivities.getText().toString();
@@ -174,12 +178,12 @@ public class SignUpActivity2 extends AppCompatActivity implements View.OnClickLi
         map.put("fiulany", userParams.get("sexType"));
         map.put("user_born", userParams.get("birthDay") + "." + userParams.get("birthMonth") + "." + userParams.get("birthYear"));
         map.put("user_country_short", userParams.get("country"));
-        map.put("user_interest", "1");
+        map.put("user_interest", userParams.get("intrest"));
         map.put("user_behavior", userParams.get("intrest"));
         map.put("user_activity", userParams.get("activities"));
         map.put("user_description", userParams.get("description"));
         map.put("user_looking", "Egyfejű lányt");
-        map.put("mobileid", "no");
+        map.put("mobileid", userParams.get("mobileid"));
         map.put("user_type", "{\"123\",\"532\"}");
 
         NetworkManager.getInstance().signup(map, new SignUpCallback() {
@@ -208,7 +212,29 @@ public class SignUpActivity2 extends AppCompatActivity implements View.OnClickLi
             }
         });
 
+    }
 
+    private boolean checkOutTheInternetConnection() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
 
+        boolean hasWIFI = true;
+
+        if (activeNetwork != null) {
+            // connected to the internet
+            if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
+                // connected to wifi
+
+            } else if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
+                // connected to the mobile network
+            }
+        } else {
+            // not connected to the internet
+            hasWIFI = false;
+            InternetProblemDialog dialog = new InternetProblemDialog(this);
+            dialog.show();
+        }
+
+        return hasWIFI;
     }
 }

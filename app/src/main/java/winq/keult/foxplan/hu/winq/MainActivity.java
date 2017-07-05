@@ -1,6 +1,9 @@
 package winq.keult.foxplan.hu.winq;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.keult.networking.NetworkManager;
 import com.example.keult.networking.callback.EventListCallback;
 import com.example.keult.networking.error.NetworkError;
@@ -32,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static TextView mainUpcEventSecondPlace;
     private static Handler mUiHandler = new Handler();
 
-    static void listEvents() {
+    public void listEvents() {
 
         Map<String, Object> map = new HashMap<>();
             map.put("apikey", "a");
@@ -68,12 +72,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-    public static void setTheEventInfos (List<EventData> eventData, int listNumber) {
-//        // Kép aszinkron betöltése
-//        ImageLoader imageLoader = new ImageLoader(getActivity());
-//        imageLoader.DisplayImage(profileData.get(listNumber).getImage(), currentUserImage, mUiHandler);
-
-        //currentUserAge.setText(profileData.get(listNumber));
+    public void setTheEventInfos(List<EventData> eventData, int listNumber) {
 
         switch (listNumber){
             case 0:
@@ -96,9 +95,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     mainUpcEventFirstPlace.setText(eventData.get(listNumber).getLocation());
                 }
 
-//                // Kép aszinkron betöltése
-//        ImageLoader imageLoader = new ImageLoader(getActivity());
-//        imageLoader.DisplayImage(eventData.get(0).getImage(), mainUpcEventFirstImg, mUiHandler);
+                if (eventData.get(listNumber).getImage() != "") {
+                    //Ha van képe a felhasználónak akkor betöltjük
+                    Glide.with(this)
+                            .load(eventData.get(listNumber).getImage())
+                            .asBitmap()
+                            .into((ImageView) findViewById(R.id.main_first_upcoming_event));
+                }
+
                 break;
 
             case 1:
@@ -120,9 +124,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     mainUpcEventSecondPlace.setText(eventData.get(listNumber).getTitle());
                 }
 
-//                // Kép aszinkron betöltése
-//                ImageLoader imageLoader = new ImageLoader(getActivity());
-//                imageLoader.DisplayImage(eventData.get(1).getImage(), mainUpcEventFirstImg, mUiHandler);
+                if (eventData.get(listNumber).getImage() != "") {
+                    //Ha van képe a felhasználónak akkor betöltjük
+                    Glide.with(this)
+                            .load(eventData.get(listNumber).getImage())
+                            .asBitmap()
+                            .into((ImageView) findViewById(R.id.main_first_upcoming_event));
+                }
+
                 break;
 
         }
@@ -167,46 +176,82 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (view.getId()) {
 
             case R.id.main_button_explore:
-                Intent openExplore = new Intent(this, ExploreActivity.class);
-                startActivity(openExplore);
-                overridePendingTransition(R.anim.activity_slide_up, R.anim.activity_stay);
+                if (checkOutTheInternetConnection()) {
+                    Intent openExplore = new Intent(this, ExploreActivity.class);
+                    startActivity(openExplore);
+                    overridePendingTransition(R.anim.activity_slide_up, R.anim.activity_stay);
+                } else return;
                 break;
 
             case R.id.main_button_events:
-                Intent openEvents = new Intent(this, EventsActivity.class);
-                startActivity(openEvents);
-                overridePendingTransition(R.anim.activity_slide_up, R.anim.activity_stay);
+                if (checkOutTheInternetConnection()) {
+                    Intent openEvents = new Intent(this, EventsActivity.class);
+                    startActivity(openEvents);
+                    overridePendingTransition(R.anim.activity_slide_up, R.anim.activity_stay);
+                } else return;
                 break;
 
             case R.id.main_button_connect:
-                Intent openConnect = new Intent(this, ConnectActivity.class);
-                startActivity(openConnect);
-                overridePendingTransition(R.anim.activity_slide_up, R.anim.activity_stay);
+                if (checkOutTheInternetConnection()) {
+                    Intent openConnect = new Intent(this, ConnectActivity.class);
+                    startActivity(openConnect);
+                    overridePendingTransition(R.anim.activity_slide_up, R.anim.activity_stay);
+                } else return;
                 break;
 
             case R.id.main_first_upcoming_event:
-                Intent openDetails1 = new Intent(this, EventDetailsActivity.class);
-                openDetails1.putExtra("eventNum", 0);
-                startActivity(openDetails1);
+                if (checkOutTheInternetConnection()) {
+                    Intent openDetails1 = new Intent(this, EventDetailsActivity.class);
+                    openDetails1.putExtra("eventNum", 0);
+                    startActivity(openDetails1);
+                } else return;
                 break;
 
             case R.id.main_second_upcoming_event:
-                if (Winq.homepageEventDatas.size() > 1) {
-                    Intent openDetails2 = new Intent(this, EventDetailsActivity.class);
-                    openDetails2.putExtra("eventNum", 1);
-                    startActivity(openDetails2);
-                }
+                if (checkOutTheInternetConnection()) {
+                    if (Winq.homepageEventDatas.size() > 1) {
+                        Intent openDetails2 = new Intent(this, EventDetailsActivity.class);
+                        openDetails2.putExtra("eventNum", 1);
+                        startActivity(openDetails2);
+                    }
+                } else return;
                 break;
 
             case R.id.main_button_profile:
-                Intent intentProfile = new Intent(this, ProfileActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable(getString(R.string.intent_key_profile_data), Winq.getCurrentUserProfileData());
-                intentProfile.putExtras(bundle);
-                startActivity(intentProfile);
-                overridePendingTransition(R.anim.activity_slide_up, R.anim.activity_stay);
+                if (checkOutTheInternetConnection()) {
+                    Intent intentProfile = new Intent(this, ProfileActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable(getString(R.string.intent_key_profile_data), Winq.getCurrentUserProfileData());
+                    intentProfile.putExtras(bundle);
+                    startActivity(intentProfile);
+                    overridePendingTransition(R.anim.activity_slide_up, R.anim.activity_stay);
+                } else return;
                 break;
         }
+    }
+
+    private boolean checkOutTheInternetConnection() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+
+        boolean hasWIFI = true;
+
+        if (activeNetwork != null) {
+            // connected to the internet
+            if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
+                // connected to wifi
+
+            } else if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
+                // connected to the mobile network
+            }
+        } else {
+            // not connected to the internet
+            hasWIFI = false;
+            InternetProblemDialog dialog = new InternetProblemDialog(this);
+            dialog.show();
+        }
+
+        return hasWIFI;
     }
 
 }

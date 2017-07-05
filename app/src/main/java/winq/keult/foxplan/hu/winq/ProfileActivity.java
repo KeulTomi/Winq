@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -190,23 +192,27 @@ public class ProfileActivity extends AppCompatActivity
         switch (v.getId()) {
 
             case R.id.connect_add_as_friend:
-                requestForAddAsFriend();
+                if (checkOutTheInternetConnection()) {
+                    requestForAddAsFriend();
+                } else return;
                 break;
 
             case R.id.profile_settings_button:
 
-                cancelSettings.setVisibility(View.VISIBLE);
+                if (checkOutTheInternetConnection()) {
+                    cancelSettings.setVisibility(View.VISIBLE);
 
 
-                country.setKeyListener((KeyListener) country.getTag());
+                    country.setKeyListener((KeyListener) country.getTag());
 
-                fullname.setKeyListener((KeyListener) fullname.getTag());
+                    fullname.setKeyListener((KeyListener) fullname.getTag());
 
-                description.setKeyListener((KeyListener) description.getTag());
+                    description.setKeyListener((KeyListener) description.getTag());
 
-                age.setKeyListener((KeyListener) age.getTag());
+                    age.setKeyListener((KeyListener) age.getTag());
 
-                Toast.makeText(this, "Now you can edit your profile", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Now you can edit your profile", Toast.LENGTH_LONG).show();
+                } else return;
                 break;
 
             case R.id.settings_cancel_btn:
@@ -306,7 +312,9 @@ public class ProfileActivity extends AppCompatActivity
                     @Override
                     public void onDismiss(DialogInterface dialog) {
                         if (writeMessage) {
-                            sendWroteMessage(connectWroteMessage);
+                            if (checkOutTheInternetConnection()) {
+                                sendWroteMessage(connectWroteMessage);
+                            } else return;
                         }
                     }
                 });
@@ -318,11 +326,15 @@ public class ProfileActivity extends AppCompatActivity
                 break;
 
             case R.id.profile_take_photo_button:
-                takePhotoWithCamera();
+                if (checkOutTheInternetConnection()) {
+                    takePhotoWithCamera();
+                } else return;
                 break;
 
             case R.id.profile_choose_from_gallery_button:
-                selectImageFromGalery();
+                if (checkOutTheInternetConnection()) {
+                    selectImageFromGalery();
+                } else return;
                 break;
 
             case R.id.profile_back_points:
@@ -911,6 +923,30 @@ public class ProfileActivity extends AppCompatActivity
 
     public void getMessage() {
         //TODO: Ide jön a kapott üzeneteknek a lekérdezése
+    }
+
+    private boolean checkOutTheInternetConnection() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+
+        boolean hasWIFI = true;
+
+        if (activeNetwork != null) {
+            // connected to the internet
+            if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
+                // connected to wifi
+
+            } else if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
+                // connected to the mobile network
+            }
+        } else {
+            // not connected to the internet
+            hasWIFI = false;
+            InternetProblemDialog dialog = new InternetProblemDialog(this);
+            dialog.show();
+        }
+
+        return hasWIFI;
     }
 
     private class MessageHandler extends Handler {

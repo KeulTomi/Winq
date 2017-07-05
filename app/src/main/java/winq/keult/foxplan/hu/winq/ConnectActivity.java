@@ -3,6 +3,8 @@ package winq.keult.foxplan.hu.winq;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -208,16 +210,18 @@ public class ConnectActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-        Bundle bundleDetails = new Bundle();
+        if (checkOutTheInternetConnection()) {
+            Bundle bundleDetails = new Bundle();
 
-        //Az Item adataiból ProfileData készítése, amit egy Bundle-ben kell átadni a ProfileActivity-nek
-        ProfileData profileData = (ProfileData) parent.getItemAtPosition(position);
+            //Az Item adataiból ProfileData készítése, amit egy Bundle-ben kell átadni a ProfileActivity-nek
+            ProfileData profileData = (ProfileData) parent.getItemAtPosition(position);
 
-        Intent intentProfile = new Intent(this, ProfileActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(getString(R.string.intent_key_profile_data), profileData);
-        intentProfile.putExtras(bundle);
-        startActivity(intentProfile);
+            Intent intentProfile = new Intent(this, ProfileActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(getString(R.string.intent_key_profile_data), profileData);
+            intentProfile.putExtras(bundle);
+            startActivity(intentProfile);
+        } else return;
 
     }
 
@@ -230,16 +234,24 @@ public class ConnectActivity extends AppCompatActivity implements View.OnClickLi
                 //A tabbaron színváltás történik
                 eventsTabBar("joined");
 
-                //Adatlekérdezés
-                currentFriendList.clear();
-                connectListProgress.setVisibility(View.VISIBLE);
-                myFriendsList();
-
+                if (checkOutTheInternetConnection()) {
+                    //Adatlekérdezés
+                    currentFriendList.clear();
+                    connectListProgress.setVisibility(View.VISIBLE);
+                    myFriendsList();
+                } else return;
                 break;
 
             case R.id.connect_upcoming:
                 //A tabbaron színváltás történik
                 eventsTabBar("upcoming");
+
+                if (checkOutTheInternetConnection()) {
+                    //Adatlekérdezés
+                    currentFriendList.clear();
+                    connectListProgress.setVisibility(View.VISIBLE);
+                    myFriendsList();
+                } else return;
 
                 //Adatlekérdezés
                 currentFriendList.clear();
@@ -251,6 +263,14 @@ public class ConnectActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.connect_search:
                 //A tabbaron színváltás történik
                 eventsTabBar("search");
+
+                if (checkOutTheInternetConnection()) {
+                    //Adatlekérdezés
+                    currentFriendList.clear();
+                    connectListProgress.setVisibility(View.VISIBLE);
+                    myFriendsList();
+                } else return;
+
                 //Adatok törlése és várakozás az Enter gombra, hogy kereshessen
                 currentFriendList.clear();
                 connectListProgress.setVisibility(View.VISIBLE);
@@ -264,6 +284,30 @@ public class ConnectActivity extends AppCompatActivity implements View.OnClickLi
                 break;
         }
 
+    }
+
+    private boolean checkOutTheInternetConnection() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+
+        boolean hasWIFI = true;
+
+        if (activeNetwork != null) {
+            // connected to the internet
+            if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
+                // connected to wifi
+
+            } else if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
+                // connected to the mobile network
+            }
+        } else {
+            // not connected to the internet
+            hasWIFI = false;
+            InternetProblemDialog dialog = new InternetProblemDialog(this);
+            dialog.show();
+        }
+
+        return hasWIFI;
     }
 
     private void searchFriendsList() {
