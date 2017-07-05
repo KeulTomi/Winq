@@ -19,6 +19,7 @@ import com.example.keult.networking.callback.LoginCallback;
 import com.example.keult.networking.error.NetworkError;
 import com.example.keult.networking.model.LoginResponse;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,6 +43,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         Winq.mobileid = FirebaseInstanceId.getInstance().getToken();
 
+        FirebaseMessaging.getInstance().subscribeToTopic("news");
 
         if (Winq.savedDataExist()) {
 
