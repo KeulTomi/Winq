@@ -399,10 +399,9 @@
         android:id="@+id/profile_kamera_buttons_layout"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_above="@+id/profile_settings_button"
+        android:layout_above="@+id/profile_premium_button"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="30dp"
         android:background="@color/colorPrimaryDark"
         android:orientation="horizontal">
 
@@ -439,7 +438,7 @@
     <Button
         android:id="@+id/profile_logout_button"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
         android:layout_alignParentBottom="true"
         android:background="@android:color/white"
         android:text="log out"
@@ -450,12 +449,23 @@
     <Button
         android:id="@+id/profile_settings_button"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="35dp"
         android:layout_above="@id/profile_logout_button"
         android:background="@color/colorPrimary"
         android:text="settings"
         android:textAllCaps="true"
         android:textColor="@android:color/white"
+        android:textSize="16sp" />
+
+    <Button
+        android:id="@+id/profile_premium_button"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_above="@id/profile_settings_button"
+        android:background="@android:color/white"
+        android:text="premium"
+        android:textAllCaps="true"
+        android:textColor="@android:color/black"
         android:textSize="16sp" />
 
     <TextView

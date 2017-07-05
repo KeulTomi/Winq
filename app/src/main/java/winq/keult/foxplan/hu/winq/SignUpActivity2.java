@@ -103,8 +103,9 @@ public class SignUpActivity2 extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.finish_sign_up:
 
-                if (findViewById(R.id.aszf_check_box).isActivated() == false) {
+                if (findViewById(R.id.aszf_check_box).isActivated()) {
                     Toast.makeText(this, "El kell fogadnod az ÁSZF-et!", Toast.LENGTH_LONG).show();
+                    return;
                 }
 
                 userParams.put("description", signUpDescription.getText().toString());

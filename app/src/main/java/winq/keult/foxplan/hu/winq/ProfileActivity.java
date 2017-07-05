@@ -127,12 +127,14 @@ public class ProfileActivity extends AppCompatActivity
             findViewById(R.id.profile_kamera_buttons_layout).setVisibility(View.VISIBLE);
             findViewById(R.id.profile_settings_button).setVisibility(View.VISIBLE);
             findViewById(R.id.profile_logout_button).setVisibility(View.VISIBLE);
+            findViewById(R.id.profile_premium_button).setVisibility(View.VISIBLE);
 
             // Gombok listenereinek beállítása
             findViewById(R.id.profile_take_photo_button).setOnClickListener(this);
             findViewById(R.id.profile_choose_from_gallery_button).setOnClickListener(this);
             findViewById(R.id.profile_settings_button).setOnClickListener(this);
             findViewById(R.id.profile_logout_button).setOnClickListener(this);
+            findViewById(R.id.profile_premium_button).setOnClickListener(this);
             findViewById(R.id.settings_cancel_btn).setOnClickListener(this);
             findViewById(R.id.profile_main_layout).setOnClickListener(this);
 
@@ -141,6 +143,7 @@ public class ProfileActivity extends AppCompatActivity
             findViewById(R.id.profile_kamera_buttons_layout).setVisibility(View.GONE);
             findViewById(R.id.profile_settings_button).setVisibility(View.GONE);
             findViewById(R.id.profile_logout_button).setVisibility(View.GONE);
+            findViewById(R.id.profile_premium_button).setVisibility(View.GONE);
 
             findViewById(R.id.connect_add_as_friend).setVisibility(View.VISIBLE);
             findViewById(R.id.connect_messages_layout).setVisibility(View.VISIBLE);
@@ -195,6 +198,12 @@ public class ProfileActivity extends AppCompatActivity
                 if (checkOutTheInternetConnection()) {
                     requestForAddAsFriend();
                 } else return;
+                break;
+
+            case R.id.profile_premium_button:
+                Intent openPremium = new Intent(this, PremiumActivity.class);
+                startActivity(openPremium);
+                overridePendingTransition(R.anim.activity_slide_up, R.anim.activity_stay);
                 break;
 
             case R.id.profile_settings_button:
