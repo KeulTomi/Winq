@@ -24,6 +24,7 @@ public class Winq extends Application {
     public static String username;
     public static String password;
     public static String facebookid;
+    public static String mobileid;
     public static List<EventData> homepageEventDatas;
     public static HashMap<String, EventData> eventsEventData = new HashMap<>();
     public static HashMap<String, DateData> connectData = new HashMap<>();

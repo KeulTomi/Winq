@@ -18,6 +18,7 @@ import com.example.keult.networking.NetworkManager;
 import com.example.keult.networking.callback.LoginCallback;
 import com.example.keult.networking.error.NetworkError;
 import com.example.keult.networking.model.LoginResponse;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,6 +39,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         // Applikáció inicializálása
         Winq.initApp(getApplicationContext());
+
+        Winq.mobileid = FirebaseInstanceId.getInstance().getToken();
 
 
         if (Winq.savedDataExist()) {
@@ -112,7 +115,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 userParams.put("password", loginPassword.getText().toString());
                 userParams.put("apikey", getResources().getString(R.string.apikey));
                 userParams.put("facebookid", "no");
-                //userParams.put("mobileid", FirebaseInstanceId.getInstance().getToken());
+                userParams.put("mobileid", Winq.mobileid);
 
                 login(userParams);
 

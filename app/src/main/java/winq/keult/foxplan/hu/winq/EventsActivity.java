@@ -15,6 +15,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -333,29 +334,51 @@ public class EventsActivity extends AppCompatActivity implements AdapterView.OnI
 
     public void setAdapters(String adapter) {
 
+        TextView noResultText = (TextView) findViewById(R.id.events_no_result_text);
+        ImageView noResultPicture = (ImageView) findViewById(R.id.events_no_result_sad_picture);
+
         switch (adapter) {
 
             case "joined":
-                joinedAdapter = new EventsJoinedAdapter(this, currentEventList);
-                View empty = getLayoutInflater().inflate(R.layout.no_result_layout, null, false);
-                addContentView(empty, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                eventsList.setEmptyView(empty);
-                eventsList.setAdapter(joinedAdapter);
-                eventsListProgress.setVisibility(View.GONE);
+                if (currentEventList.size() == 0) {
+                    noResultPicture.setVisibility(View.VISIBLE);
+                    noResultText.setVisibility(View.VISIBLE);
+                    eventsListProgress.setVisibility(View.GONE);
+                } else {
+                    noResultPicture.setVisibility(View.GONE);
+                    noResultText.setVisibility(View.GONE);
+                    joinedAdapter = new EventsJoinedAdapter(this, currentEventList);
+                    eventsList.setAdapter(joinedAdapter);
+                    eventsListProgress.setVisibility(View.GONE);
+                }
                 break;
 
             case "upcoming":
-                upcomingAdapter = new EventsUpcomingAdapter(this, currentEventList);
-                eventsList.setEmptyView(findViewById(R.id.no_result_text));
-                eventsList.setAdapter(upcomingAdapter);
-                eventsListProgress.setVisibility(View.GONE);
+                if (currentEventList.size() == 0) {
+                    noResultPicture.setVisibility(View.VISIBLE);
+                    noResultText.setVisibility(View.VISIBLE);
+                    eventsListProgress.setVisibility(View.GONE);
+                } else {
+                    noResultPicture.setVisibility(View.GONE);
+                    noResultText.setVisibility(View.GONE);
+                    upcomingAdapter = new EventsUpcomingAdapter(this, currentEventList);
+                    eventsList.setAdapter(upcomingAdapter);
+                    eventsListProgress.setVisibility(View.GONE);
+                }
                 break;
 
             case "search":
-                searchAdapter = new EventsSearchAdapter(this, currentEventList);
-                eventsList.setEmptyView(findViewById(R.id.no_result_text));
-                eventsList.setAdapter(searchAdapter);
-                eventsListProgress.setVisibility(View.GONE);
+                if (currentEventList.size() == 0) {
+                    noResultPicture.setVisibility(View.VISIBLE);
+                    noResultText.setVisibility(View.VISIBLE);
+                    eventsListProgress.setVisibility(View.GONE);
+                } else {
+                    noResultPicture.setVisibility(View.GONE);
+                    noResultText.setVisibility(View.GONE);
+                    searchAdapter = new EventsSearchAdapter(this, currentEventList);
+                    eventsList.setAdapter(searchAdapter);
+                    eventsListProgress.setVisibility(View.GONE);
+                }
                 break;
         }
 
@@ -364,11 +387,18 @@ public class EventsActivity extends AppCompatActivity implements AdapterView.OnI
     @Override
     public boolean onKey(View v, int keyCode, KeyEvent event) {
 
+        TextView noResultText = (TextView) findViewById(R.id.events_no_result_text);
+        ImageView noResultPicture = (ImageView) findViewById(R.id.events_no_result_sad_picture);
+
         if (event.getAction() != event.ACTION_DOWN) {
 
             if (keyCode == KeyEvent.KEYCODE_ENTER) {
                 //Akkor indítjuk a keresést amikot lenyomta az Entert
+                currentEventList.clear();
                 eventsListProgress.setVisibility(View.VISIBLE);
+                noResultPicture.setVisibility(View.GONE);
+                noResultText.setVisibility(View.GONE);
+
 
                 // Check if no view has focus:
                 View view = this.getCurrentFocus();

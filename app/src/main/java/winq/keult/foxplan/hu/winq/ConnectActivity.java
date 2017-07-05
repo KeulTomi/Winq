@@ -16,6 +16,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -349,25 +350,51 @@ public class ConnectActivity extends AppCompatActivity implements View.OnClickLi
 
     public void setAdapters(String adapter) {
 
+        TextView noResultText = (TextView) findViewById(R.id.connect_no_result_text);
+        ImageView noResultPicture = (ImageView) findViewById(R.id.connect_no_result_sad_picture);
+
         switch (adapter) {
 
             case "joined":
-                myFriendsAdapter = new ConnectMyFriendsAdapter(this, currentFriendList);
-                friendsList.setAdapter(myFriendsAdapter);
-                connectListProgress.setVisibility(View.GONE);
+                if (currentFriendList.size() == 0) {
+                    noResultPicture.setVisibility(View.VISIBLE);
+                    noResultText.setVisibility(View.VISIBLE);
+                    connectListProgress.setVisibility(View.GONE);
+                } else {
+                    noResultPicture.setVisibility(View.GONE);
+                    noResultText.setVisibility(View.GONE);
+                    myFriendsAdapter = new ConnectMyFriendsAdapter(this, currentFriendList);
+                    friendsList.setAdapter(myFriendsAdapter);
+                    connectListProgress.setVisibility(View.GONE);
+                }
                 break;
 
             case "upcoming":
-                winqsAdapter = new ConnectWinqsAdapter(this, dateList);
-                friendsList.setAdapter(winqsAdapter);
-                connectListProgress.setVisibility(View.GONE);
+                if (currentFriendList.size() == 0) {
+                    noResultPicture.setVisibility(View.VISIBLE);
+                    noResultText.setVisibility(View.VISIBLE);
+                    connectListProgress.setVisibility(View.GONE);
+                } else {
+                    noResultPicture.setVisibility(View.GONE);
+                    noResultText.setVisibility(View.GONE);
+                    winqsAdapter = new ConnectWinqsAdapter(this, dateList);
+                    friendsList.setAdapter(winqsAdapter);
+                    connectListProgress.setVisibility(View.GONE);
+                }
                 break;
 
             case "search":
-                searchAdapter = new ConnectSearchAdapter(this, currentFriendList);
-                friendsList.setEmptyView(findViewById(R.id.no_result_layout));
-                friendsList.setAdapter(searchAdapter);
-                connectListProgress.setVisibility(View.GONE);
+                if (currentFriendList.size() == 0) {
+                    noResultPicture.setVisibility(View.VISIBLE);
+                    noResultText.setVisibility(View.VISIBLE);
+                    connectListProgress.setVisibility(View.GONE);
+                } else {
+                    noResultPicture.setVisibility(View.GONE);
+                    noResultText.setVisibility(View.GONE);
+                    searchAdapter = new ConnectSearchAdapter(this, currentFriendList);
+                    friendsList.setAdapter(searchAdapter);
+                    connectListProgress.setVisibility(View.GONE);
+                }
                 break;
         }
 
