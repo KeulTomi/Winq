@@ -26,14 +26,14 @@ import android.widget.Toast;
 import com.example.keult.networking.NetworkManager;
 import com.example.keult.networking.callback.DateListCallback;
 import com.example.keult.networking.callback.FriendsListCallback;
-import com.example.keult.networking.callback.GeneralSearchCallback;
+import com.example.keult.networking.callback.UserSearchCallback;
 import com.example.keult.networking.error.NetworkError;
 import com.example.keult.networking.model.DateData;
 import com.example.keult.networking.model.DateListResponse;
 import com.example.keult.networking.model.FriendsData;
 import com.example.keult.networking.model.FriendsListResponse;
-import com.example.keult.networking.model.GeneralSearchResponse;
 import com.example.keult.networking.model.ProfileData;
+import com.example.keult.networking.model.UserSearchResponse;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -251,13 +251,8 @@ public class ConnectActivity extends AppCompatActivity implements View.OnClickLi
                     //Adatlekérdezés
                     currentFriendList.clear();
                     connectListProgress.setVisibility(View.VISIBLE);
-                    myFriendsList();
+                    winqsList();
                 } else return;
-
-                //Adatlekérdezés
-                currentFriendList.clear();
-                connectListProgress.setVisibility(View.VISIBLE);
-                winqsList();
 
                 break;
 
@@ -268,14 +263,9 @@ public class ConnectActivity extends AppCompatActivity implements View.OnClickLi
                 if (checkOutTheInternetConnection()) {
                     //Adatlekérdezés
                     currentFriendList.clear();
-                    connectListProgress.setVisibility(View.VISIBLE);
-                    myFriendsList();
+                    dateList.clear();
+                    friendsList.setAdapter(null);
                 } else return;
-
-                //Adatok törlése és várakozás az Enter gombra, hogy kereshessen
-                currentFriendList.clear();
-                connectListProgress.setVisibility(View.VISIBLE);
-                searchFriendsList();
 
                 break;
 
@@ -309,11 +299,6 @@ public class ConnectActivity extends AppCompatActivity implements View.OnClickLi
         }
 
         return hasWIFI;
-    }
-
-    private void searchFriendsList() {
-        //Amíg nem jó az api hívás addig csak ezt adjuk bele
-        setAdapters("search");
     }
 
     private void myFriendsList() {
@@ -370,7 +355,7 @@ public class ConnectActivity extends AppCompatActivity implements View.OnClickLi
                 break;
 
             case "upcoming":
-                if (currentFriendList.size() == 0) {
+                if (dateList.size() == 0) {
                     noResultPicture.setVisibility(View.VISIBLE);
                     noResultText.setVisibility(View.VISIBLE);
                     connectListProgress.setVisibility(View.GONE);
@@ -384,14 +369,15 @@ public class ConnectActivity extends AppCompatActivity implements View.OnClickLi
                 break;
 
             case "search":
-                if (currentFriendList.size() == 0) {
+                if (currentSearchResultList.size() == 0) {
                     noResultPicture.setVisibility(View.VISIBLE);
                     noResultText.setVisibility(View.VISIBLE);
                     connectListProgress.setVisibility(View.GONE);
+                    friendsList.setAdapter(null);
                 } else {
                     noResultPicture.setVisibility(View.GONE);
                     noResultText.setVisibility(View.GONE);
-                    searchAdapter = new ConnectSearchAdapter(this, currentFriendList);
+                    searchAdapter = new ConnectSearchAdapter(this, currentSearchResultList);
                     friendsList.setAdapter(searchAdapter);
                     connectListProgress.setVisibility(View.GONE);
                 }
@@ -441,19 +427,19 @@ public class ConnectActivity extends AppCompatActivity implements View.OnClickLi
         map.put("facebookid", "no");
         map.put("searchinput", searchEditText.getText().toString());
         map.put("page", "0");
-        map.put("homepage", "0");
 
-        NetworkManager.getInstance().searchGeneral(map, new GeneralSearchCallback() {
+
+        NetworkManager.getInstance().searchUsers(map, new UserSearchCallback() {
             @Override
-            public void forwardResponse(GeneralSearchResponse generalSearchResponse) {
-                if (generalSearchResponse.getSuccess() == 1) {
+            public void forwardResponse(UserSearchResponse userSearchResponse) {
+                if (userSearchResponse.getSuccess() == 1) {
                     // Válasz rendben
-                    currentSearchResultList = (ArrayList<ProfileData>) generalSearchResponse.getData().getUserList();
+                    currentSearchResultList = (ArrayList<ProfileData>) userSearchResponse.getData().getUsers();
                     setAdapters("search");
                 } else {
                     // Válasz visszautasítva
                     Log.w("search_Refused:",
-                            "FirstErrorText= " + generalSearchResponse.getError().get(0));
+                            "FirstErrorText= " + userSearchResponse.getError().get(0));
 
                 }
             }

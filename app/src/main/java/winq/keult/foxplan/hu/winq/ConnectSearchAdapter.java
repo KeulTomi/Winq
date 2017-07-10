@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
-import com.example.keult.networking.model.FriendsData;
+import com.example.keult.networking.model.ProfileData;
 
 import java.util.ArrayList;
 
@@ -15,10 +15,10 @@ import java.util.ArrayList;
  * Created by tomi on 2017.06.21..
  */
 
-public class ConnectSearchAdapter extends ArrayAdapter<FriendsData> {
+public class ConnectSearchAdapter extends ArrayAdapter<ProfileData> {
 
 
-    public ConnectSearchAdapter(@NonNull Context context, ArrayList<FriendsData> friendsDatas) {
+    public ConnectSearchAdapter(@NonNull Context context, ArrayList<ProfileData> friendsDatas) {
         super(context, 0, friendsDatas);
     }
 
@@ -36,7 +36,7 @@ public class ConnectSearchAdapter extends ArrayAdapter<FriendsData> {
 
         }
 
-        FriendsData currentItem = getItem(position);
+        ProfileData currentItem = getItem(position);
 
         /*if (currentItem.getImage() != "") {
             //Ha van képe a felhasználónak akkor betöltjük

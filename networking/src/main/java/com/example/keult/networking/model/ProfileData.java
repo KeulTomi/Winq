@@ -27,6 +27,14 @@ public class ProfileData implements Serializable {
     private String user_country_short;
     private String user_interest;
     private String user_description;
+    private String user_looking;
+    private String user_behavior;
+    private String user_activity;
+    private String user_type;
+    private String premium_active;
+    private String premium_end_date;
+    private String user_age;
+
     private String user_interest_text;
 
     public String getId() {
@@ -115,6 +123,30 @@ public class ProfileData implements Serializable {
 
     public String getUserDescription() {
         return user_description;
+    }
+
+    public String getUserLooking() {
+        return user_looking;
+    }
+
+    public String getUserBehavior() {
+        return user_behavior;
+    }
+
+    public String getUserActivity() {
+        return user_activity;
+    }
+
+    public String getUserType() {
+        return user_type;
+    }
+
+    public String getPremiumActive() {
+        return premium_active;
+    }
+
+    public String getPremiumEnddate() {
+        return premium_end_date;
     }
 
     public String getUserInterestText() {

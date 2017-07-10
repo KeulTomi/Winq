@@ -19,6 +19,7 @@ import com.example.keult.networking.model.LoginResponse;
 import com.example.keult.networking.model.NewMessageResponse;
 import com.example.keult.networking.model.ProfileImagesResponse;
 import com.example.keult.networking.model.SignUpResponse;
+import com.example.keult.networking.model.UserSearchResponse;
 
 import java.util.Map;
 
@@ -52,6 +53,7 @@ import static com.example.keult.networking.constant.ApiConstants.JOINED_EVENT_LI
 import static com.example.keult.networking.constant.ApiConstants.LOG_IN;
 import static com.example.keult.networking.constant.ApiConstants.MESSAGE_NEW;
 import static com.example.keult.networking.constant.ApiConstants.SIGN_UP;
+import static com.example.keult.networking.constant.ApiConstants.USER_SEARCH;
 
 /**
  *
@@ -94,6 +96,10 @@ public interface ApiService {
     @FormUrlEncoded
     @POST(EVENT_SEARCH)
     Observable<EventListResponse> searchEvents(@FieldMap Map<String, Object> body);
+
+    @FormUrlEncoded
+    @POST(USER_SEARCH)
+    Observable<UserSearchResponse> searchUsers(@FieldMap Map<String, Object> body);
 
     @FormUrlEncoded
     @POST(GENERAL_SEARCH)

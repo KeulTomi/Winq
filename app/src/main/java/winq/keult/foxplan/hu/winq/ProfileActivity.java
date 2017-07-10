@@ -909,11 +909,7 @@ public class ProfileActivity extends AppCompatActivity
 
                 if (imageUploadResponse.getSuccess() == 1) {
                     // Válasz rendben
-                    Log.v("Upload_OK:",
-                            "Type1= "
-                                    + imageUploadResponse.getData()[0]);
-                    mHandler.sendEmptyMessage(MSG_SET_LAYOUT_IMAGES);
-
+                    requestForImages(mProfileData, false);
                 } else {
                     // Válasz visszautasítva
                     Log.w("Upload_Refused:",

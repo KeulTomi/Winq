@@ -20,6 +20,7 @@ import com.example.keult.networking.callback.LoginCallback;
 import com.example.keult.networking.callback.NewMessageCallback;
 import com.example.keult.networking.callback.ProfileImagesCallback;
 import com.example.keult.networking.callback.SignUpCallback;
+import com.example.keult.networking.callback.UserSearchCallback;
 import com.example.keult.networking.di.component.DaggerNetworkComponent;
 import com.example.keult.networking.error.factory.ErrorFactory;
 import com.example.keult.networking.service.ApiService;
@@ -204,7 +205,14 @@ public class NetworkManager {
     }
 
     // Keresés - Users
-    // TODO: http://dev.balaz98.hu/winq/api/search_users meghívására 404 hibát (nem található) kapok
+    public void searchUsers(Map<String, Object> body, UserSearchCallback userSearchCallback) {
+        apiService.searchUsers(body)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        userSearchCallback::forwardResponse,
+                        throwable -> userSearchCallback.forwardError(ErrorFactory.createNetworkError(throwable))
+                );
+    }
 
 
     // Profil - képek
