@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements
                     mainUpcEventFirstPlace.setText(eventData.get(listNumber).getLocation());
                 }
 
-                if (eventData.get(listNumber).getImage() != "") {
+                if (eventData.get(0).getImage() != "") {
                     //Ha van képe a felhasználónak akkor betöltjük
                     Glide.with(this)
                             .load(eventData.get(listNumber).getImage())
@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements
 
             case 1:
                 //Ha hosszabb a title mint 12 betű akkor utána már csak ...-ot irunk
-                if (eventData.get(0).getTitle().length() > 15){
+                if (eventData.get(1).getTitle().length() > 15) {
                     String cuttedText = eventData.get(1).getTitle().substring(0, 15);
                     mainUpcEventSecondName.setText(cuttedText + "...");
                 }
@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements
                 }
 
                 //Ha hosszabb a location mint 12 betű akkor utána már csak ...-ot irunk
-                if (eventData.get(0).getTitle().length() > 12){
+                if (eventData.get(1).getLocation().length() > 12) {
                     String cuttedText = eventData.get(1).getLocation().substring(0, 12);
                     mainUpcEventSecondPlace.setText(cuttedText + "...");
                 }
@@ -131,12 +131,12 @@ public class MainActivity extends AppCompatActivity implements
                     mainUpcEventSecondPlace.setText(eventData.get(listNumber).getTitle());
                 }
 
-                if (eventData.get(listNumber).getImage() != "") {
+                if (eventData.get(1).getImage() != "") {
                     //Ha van képe a felhasználónak akkor betöltjük
                     Glide.with(this)
                             .load(eventData.get(listNumber).getImage())
                             .asBitmap()
-                            .into((ImageView) findViewById(R.id.main_first_upcoming_event));
+                            .into((ImageView) findViewById(R.id.main_second_upcoming_event));
                 }
 
                 break;
@@ -176,6 +176,7 @@ public class MainActivity extends AppCompatActivity implements
         mainUpcEventSecondImg.setOnClickListener(this);
         findViewById(R.id.main_button_profile).setOnClickListener(this);
         findViewById(R.id.main_button_connect).setOnClickListener(this);
+
 
         // Service-ből érkező üzeneteket kezelő Handler
         Winq.mUiHandler = new Handler() {
@@ -317,4 +318,5 @@ public class MainActivity extends AppCompatActivity implements
         }
 
     }
+
 }

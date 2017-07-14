@@ -11,6 +11,7 @@
     <string name="saved_password_key">password</string>
     <string name="saved_facebookid_key">facebookid</string>
     <string name="saved_userid_key">userid</string>
+    <string name="saved_mobileid_key">userid</string>
 
     <!-- Mentett képek könyvtára -->
     <string name="photo_album_name">Winq</string>

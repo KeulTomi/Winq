@@ -61,6 +61,13 @@ public class ConnectWinqsAdapter extends ArrayAdapter<DateData> {
         Calendar c = Calendar.getInstance();
         int currentYear = c.get(Calendar.YEAR);
 
+        if (currentItem.getMessages().isEmpty() == false) {
+
+            ImageView messagePicto = (ImageView) listItemView.findViewById(R.id.connect_item_message_picto);
+            messagePicto.setVisibility(View.VISIBLE);
+
+        }
+
         ageOfUser.setText(String.valueOf(currentYear - userBornYear));
 
 
