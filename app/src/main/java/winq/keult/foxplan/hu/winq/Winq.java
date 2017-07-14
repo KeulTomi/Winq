@@ -3,6 +3,7 @@ package winq.keult.foxplan.hu.winq;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Handler;
 import android.widget.TextView;
 
 import com.example.keult.networking.model.DateData;
@@ -21,6 +22,7 @@ import java.util.List;
 
 public class Winq extends Application {
 
+    public static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     public static String username;
     public static String password;
     public static String facebookid;
@@ -29,6 +31,7 @@ public class Winq extends Application {
     public static HashMap<String, EventData> eventsEventData = new HashMap<>();
     public static HashMap<String, DateData> connectData = new HashMap<>();
     public static HashMap<String, EventsJoinedData> connectEventData = new HashMap<>();
+    public static Handler mUiHandler;
     private static ProfileData mCurrentUserProfileData;
     private static Context mContext;
 

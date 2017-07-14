@@ -2,10 +2,14 @@ package winq.keult.foxplan.hu.winq;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -14,6 +18,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.keult.networking.NetworkManager;
@@ -26,7 +31,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+import winq.keult.foxplan.hu.winq.locationshare.LocationShareService;
+
+public class MainActivity extends AppCompatActivity implements
+        View.OnClickListener {
 
     private static ImageView mainUpcEventFirstImg;
     private static ImageView mainUpcEventSecondImg;
@@ -34,7 +42,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static TextView mainUpcEventSecondName;
     private static TextView mainUpcEventFirstPlace;
     private static TextView mainUpcEventSecondPlace;
-    private static Handler mUiHandler = new Handler();
 
     public void listEvents() {
 
@@ -169,6 +176,41 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mainUpcEventSecondImg.setOnClickListener(this);
         findViewById(R.id.main_button_profile).setOnClickListener(this);
         findViewById(R.id.main_button_connect).setOnClickListener(this);
+
+        // Service-ből érkező üzeneteket kezelő Handler
+        Winq.mUiHandler = new Handler() {
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case 0:
+                        // Service-ből érkező üzenetek
+                        if (msg.obj.equals("LooperStopped")) {
+                            Toast.makeText(MainActivity.this, "Pozíció megosztás leállítva", Toast.LENGTH_LONG).show();
+                        }
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+        };
+
+        checkGpsPermission();
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode != 1) {
+            return;
+        }
+
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            // Engedély rendben pozíció küldő service indítása
+            this.startService(
+                    new Intent(this.getBaseContext(),
+                            LocationShareService.class));
+        }
+
     }
 
     @Override
@@ -260,4 +302,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return hasWIFI;
     }
 
+    private void checkGpsPermission() {
+
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Engedélykérés szükséges a felhasználótól
+            PermissionUtils.requestPermission(this, Winq.LOCATION_PERMISSION_REQUEST_CODE,
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION);
+        } else {
+            // Engedély rendben pozíció küldő service indítása
+            this.startService(
+                    new Intent(this.getBaseContext(),
+                            LocationShareService.class));
+        }
+
+    }
 }

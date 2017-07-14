@@ -62,16 +62,17 @@ import java.util.Map;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import winq.keult.foxplan.hu.winq.locationshare.LocationShareService;
 
 
 public class ProfileActivity extends AppCompatActivity
         implements View.OnClickListener, UploadSelectorDialog.UploadSelectorListener {
 
+    public static final int CHECK_LOCATION_SETTINGS = 1003;
     private static final int MSG_SET_LAYOUT_IMAGES = 1;
     private static final int MSG_GET_STORY_IMAGES = 2;
     private static final int MSG_PRELOAD_FIRST_STORY_IMAGE = 3;
     private static final int MSG_SET_LAYOUT_EVENTS = 4;
-
     private static final int CAMERA_REQUEST = 1001;
     private static final int GALERY_REQUEST = 1002;
     public static boolean writeMessage = false;
@@ -138,6 +139,8 @@ public class ProfileActivity extends AppCompatActivity
             findViewById(R.id.settings_cancel_btn).setOnClickListener(this);
             findViewById(R.id.profile_main_layout).setOnClickListener(this);
 
+            checkGpsState();
+
         } else {
             // Idegen profil layout elemeinek engedélyezése
             findViewById(R.id.profile_kamera_buttons_layout).setVisibility(View.GONE);
@@ -179,7 +182,6 @@ public class ProfileActivity extends AppCompatActivity
         // Wissza gomb onClickListenerek beállítása
         findViewById(R.id.profile_back_points).setOnClickListener(this);
     }
-
 
     @Override
     public void onClick(View v) {
@@ -782,6 +784,12 @@ public class ProfileActivity extends AppCompatActivity
             DialogFragment uploadSelectorDialog = new UploadSelectorDialog();
             uploadSelectorDialog.show(getFragmentManager(), "UploadFilePicker");
         }
+
+        if (requestCode == CHECK_LOCATION_SETTINGS && resultCode == RESULT_OK) {
+            this.startService(
+                    new Intent(this.getBaseContext(),
+                            LocationShareService.class));
+        }
     }
 
     /**
@@ -952,6 +960,15 @@ public class ProfileActivity extends AppCompatActivity
         }
 
         return hasWIFI;
+    }
+
+    private void checkGpsState() {
+
+        Message msg = new Message();
+
+        msg.what = 0;
+        msg.obj = this;
+        LocationShareService.mLooperHandler.sendMessage(msg);
     }
 
     private class MessageHandler extends Handler {
