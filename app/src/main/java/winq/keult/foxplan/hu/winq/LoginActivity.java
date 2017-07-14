@@ -41,7 +41,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         // Applikáció inicializálása
         Winq.initApp(getApplicationContext());
 
-        Winq.mobileid = FirebaseInstanceId.getInstance().getToken();
 
         FirebaseMessaging.getInstance().subscribeToTopic("news");
 
@@ -52,6 +51,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             userParams.put("password", Winq.getCurrentUserProfileData().getPassword());
             userParams.put("apikey", getResources().getString(R.string.apikey));
             userParams.put("facebookid", Winq.getCurrentUserProfileData().getFacebookid());
+            userParams.put("mobileid", Winq.mobileid);
 
             login(userParams);
 
@@ -112,21 +112,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 goButton.setText("");
                 goButtonProgress.setVisibility(View.VISIBLE);
 
+                Winq.mobileid = FirebaseInstanceId.getInstance().getToken();
+
                 Map<String, Object> userParams = new HashMap<>();
                 userParams.put("username", loginEmail.getText().toString());
                 userParams.put("password", loginPassword.getText().toString());
                 userParams.put("apikey", getResources().getString(R.string.apikey));
                 userParams.put("facebookid", "no");
-                userParams.put("mobileid", Winq.mobileid);
+                userParams.put("mobileid", "no");
 
                 login(userParams);
 
                 break;
-
-            case R.id.aszf_check_text:
-                Intent openAszf = new Intent(this, AszfActivity.class);
-                startActivity(openAszf);
-                overridePendingTransition(R.anim.activity_slide_up, R.anim.activity_stay);
         }
     }
 

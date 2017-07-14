@@ -54,6 +54,8 @@ public class ConnectActivity extends AppCompatActivity implements View.OnClickLi
     private static ConnectWinqsAdapter winqsAdapter;
     private static ConnectSearchAdapter searchAdapter;
 
+    private static String currentTabName = "joined";
+
     private static RelativeLayout connectHeader;
     private static LinearLayout backPoints;
     private static LinearLayout searchBar;
@@ -63,7 +65,7 @@ public class ConnectActivity extends AppCompatActivity implements View.OnClickLi
     private ProgressBar connectListProgress;
     private ProgressBar searchListProgress;
 
-    public void eventsTabBar(String tabName) {
+    public void eventsTabBar() {
 
         // Check if no view has focus:
         View v = this.getCurrentFocus();
@@ -72,7 +74,7 @@ public class ConnectActivity extends AppCompatActivity implements View.OnClickLi
             imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
         }
 
-        switch (tabName) {
+        switch (currentTabName) {
 
             case "joined":
 
@@ -221,6 +223,23 @@ public class ConnectActivity extends AppCompatActivity implements View.OnClickLi
             Bundle bundle = new Bundle();
             bundle.putSerializable(getString(R.string.intent_key_profile_data), profileData);
             intentProfile.putExtras(bundle);
+
+            switch (currentTabName) {
+
+                case "joined":
+                    FriendsData friendsData = (FriendsData) parent.getItemAtPosition(position);
+                    intentProfile.putExtra("message", friendsData.getMessages());
+                    break;
+
+                case "upcoming":
+                    DateData dateData = (DateData) parent.getItemAtPosition(position);
+                    intentProfile.putExtra("message", dateData.getMessages());
+                    break;
+
+                case "search":
+                    break;
+            }
+
             startActivity(intentProfile);
         } else return;
 
@@ -233,7 +252,8 @@ public class ConnectActivity extends AppCompatActivity implements View.OnClickLi
 
             case R.id.connect_joined:
                 //A tabbaron színváltás történik
-                eventsTabBar("joined");
+                currentTabName = "joined";
+                eventsTabBar();
 
                 if (checkOutTheInternetConnection()) {
                     //Adatlekérdezés
@@ -245,7 +265,8 @@ public class ConnectActivity extends AppCompatActivity implements View.OnClickLi
 
             case R.id.connect_upcoming:
                 //A tabbaron színváltás történik
-                eventsTabBar("upcoming");
+                currentTabName = "upcoming";
+                eventsTabBar();
 
                 if (checkOutTheInternetConnection()) {
                     //Adatlekérdezés
@@ -258,7 +279,8 @@ public class ConnectActivity extends AppCompatActivity implements View.OnClickLi
 
             case R.id.connect_search:
                 //A tabbaron színváltás történik
-                eventsTabBar("search");
+                currentTabName = "search";
+                eventsTabBar();
 
                 if (checkOutTheInternetConnection()) {
                     //Adatlekérdezés

@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -38,7 +39,7 @@ public class SignUpActivity2 extends AppCompatActivity implements View.OnClickLi
     private ArrayList hashtagList;
     private Bundle bundleThirdPart;
     private HashMap<String, Object> userParams;
-    private TextView aszfText;
+    private TextView aszfCheckBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,9 +63,8 @@ public class SignUpActivity2 extends AppCompatActivity implements View.OnClickLi
         bundleThirdPart = getIntent().getBundleExtra("signUpBundle");
         userParams = (HashMap<String, Object>) bundleThirdPart.get("messageBody");
 
-        aszfText = (TextView) findViewById(R.id.aszf_check_text);
-
-        aszfText.setOnClickListener(this);
+        aszfCheckBox = (CheckBox) findViewById(R.id.aszf_check_box);
+        aszfCheckBox.setOnClickListener(this);
 
         //Aláhúzás az ászf text alá
 
@@ -82,7 +82,7 @@ public class SignUpActivity2 extends AppCompatActivity implements View.OnClickLi
 
         switch (view.getId()) {
 
-            case R.id.aszf_check_text:
+            case R.id.aszf_check_box:
                 Intent openAszf = new Intent(this, AszfActivity.class);
                 startActivity(openAszf);
                 overridePendingTransition(R.anim.activity_slide_up, R.anim.activity_stay);
@@ -103,10 +103,10 @@ public class SignUpActivity2 extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.finish_sign_up:
 
-                if (findViewById(R.id.aszf_check_box).isActivated()) {
-                    Toast.makeText(this, "El kell fogadnod az ÁSZF-et!", Toast.LENGTH_LONG).show();
-                    return;
-                }
+                //if (findViewById(R.id.aszf_check_box).isActivated()) {
+                //  Toast.makeText(this, "El kell fogadnod az ÁSZF-et!", Toast.LENGTH_LONG).show();
+                //return;
+                //}
 
                 userParams.put("description", signUpDescription.getText().toString());
                 userParams.put("activities", signUpAllActivities.getText().toString());

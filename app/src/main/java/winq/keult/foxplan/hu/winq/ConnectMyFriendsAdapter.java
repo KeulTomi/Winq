@@ -62,7 +62,7 @@ public class ConnectMyFriendsAdapter extends ArrayAdapter<FriendsData> {
         Calendar c = Calendar.getInstance();
         int currentYear = c.get(Calendar.YEAR);
 
-        if (currentItem.getMessagesReceive().isEmpty() == false) {
+        if (currentItem.getMessages().isEmpty() == false) {
 
             ImageView messagePicto = (ImageView) listItemView.findViewById(R.id.connect_item_message_picto);
             messagePicto.setVisibility(View.VISIBLE);

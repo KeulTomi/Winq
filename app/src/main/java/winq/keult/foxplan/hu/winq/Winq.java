@@ -41,12 +41,14 @@ public class Winq extends Application {
             String usr = getAppPref(R.string.user_prefs_key).getString(getStringResource(R.string.saved_username_key), null);
             String pass = getAppPref(R.string.user_prefs_key).getString(getStringResource(R.string.saved_password_key), null);
             String fbid = getAppPref(R.string.user_prefs_key).getString(getStringResource(R.string.saved_facebookid_key), null);
+            String mbid = getAppPref(R.string.user_prefs_key).getString(getStringResource(R.string.saved_mobileid_key), null);
 
             mCurrentUserProfileData = new ProfileData();
 
             mCurrentUserProfileData.setUserName(usr);
             mCurrentUserProfileData.setPassword(pass);
             mCurrentUserProfileData.setFacebookId(fbid);
+            Winq.mobileid = mbid;
         }
     }
 
@@ -61,12 +63,12 @@ public class Winq extends Application {
 
         if (month + 1 <= 10) {
         montAndDayText.setText(String.valueOf("0" + (month+1) + "." + day));
-        if (day <= 10) {
+            if (day < 10) {
             montAndDayText.setText(String.valueOf("0" + (month + 1) + "." + "0" + day));
         }
         } else {
             montAndDayText.setText(String.valueOf((month + 1) + "." + day));
-            if (day <= 10) {
+            if (day < 10) {
                 montAndDayText.setText(String.valueOf((month + 1) + "." + "0" + day));
             }
         }
@@ -83,6 +85,7 @@ public class Winq extends Application {
         editor.putString(getStringResource(R.string.saved_password_key), currentUserProfileData.getPassword());
         editor.putString(getStringResource(R.string.saved_facebookid_key), currentUserProfileData.getFacebookid());
         editor.putString(getStringResource(R.string.saved_userid_key), currentUserProfileData.getId());
+        editor.putString(getStringResource(R.string.saved_userid_key), Winq.mobileid);
         editor.apply();
         mCurrentUserProfileData = currentUserProfileData;
     }

@@ -17,7 +17,6 @@ import android.provider.MediaStore;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
-import android.text.method.KeyListener;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -135,7 +134,6 @@ public class ProfileActivity extends AppCompatActivity
             findViewById(R.id.profile_settings_button).setOnClickListener(this);
             findViewById(R.id.profile_logout_button).setOnClickListener(this);
             findViewById(R.id.profile_premium_button).setOnClickListener(this);
-            findViewById(R.id.settings_cancel_btn).setOnClickListener(this);
             findViewById(R.id.profile_main_layout).setOnClickListener(this);
 
         } else {
@@ -159,6 +157,11 @@ public class ProfileActivity extends AppCompatActivity
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) findViewById(R.id.profile_description).getLayoutParams();
             layoutParams.addRule(RelativeLayout.BELOW, R.id.profile_image_layout_header_3);
             findViewById(R.id.profile_description).setLayoutParams(layoutParams);
+
+            //Ha van üzenet akkor azt beletesszük a gotMessage-be (Ettől még lehet, hogy a message üres, lesz ezt később vizsgáljuk!!!)
+            if (getIntent().getStringExtra("message") != null) {
+                gotMessage = getIntent().getStringExtra("message");
+            }
         }
 
         // Szövegmezők inicializálása
@@ -184,13 +187,6 @@ public class ProfileActivity extends AppCompatActivity
     @Override
     public void onClick(View v) {
 
-        //Editelhető textek innitje
-        EditText country = (EditText) findViewById(R.id.profile_country_of_current_user);
-        EditText fullname = (EditText) findViewById(R.id.profile_fullname_of_current_user);
-        EditText description = (EditText) findViewById(R.id.profile_description);
-        EditText age = (EditText) findViewById(R.id.profile_age_of_current_user);
-        ImageView cancelSettings = (ImageView) findViewById(R.id.settings_cancel_btn);
-
         View view = this.getCurrentFocus();
         switch (v.getId()) {
 
@@ -207,46 +203,9 @@ public class ProfileActivity extends AppCompatActivity
                 break;
 
             case R.id.profile_settings_button:
-
-                if (checkOutTheInternetConnection()) {
-                    cancelSettings.setVisibility(View.VISIBLE);
-
-
-                    country.setKeyListener((KeyListener) country.getTag());
-
-                    fullname.setKeyListener((KeyListener) fullname.getTag());
-
-                    description.setKeyListener((KeyListener) description.getTag());
-
-                    age.setKeyListener((KeyListener) age.getTag());
-
-                    Toast.makeText(this, "Now you can edit your profile", Toast.LENGTH_LONG).show();
-                } else return;
-                break;
-
-            case R.id.settings_cancel_btn:
-
-                cancelSettings.setVisibility(View.GONE);
-
-                country.setTag(country.getKeyListener());
-                country.setKeyListener(null);
-
-
-                fullname.setTag(fullname.getKeyListener());
-                fullname.setKeyListener(null);
-
-
-                description.setTag(description.getKeyListener());
-                description.setKeyListener(null);
-
-                age.setTag(age.getKeyListener());
-                age.setKeyListener(null);
-
-
-                if (view != null) {
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                }
+                Intent openSettins = new Intent(this, ProfileSettingsActivity.class);
+                startActivity(openSettins);
+                overridePendingTransition(R.anim.activity_slide_up, R.anim.activity_stay);
                 break;
 
             case R.id.profile_main_layout:
@@ -330,8 +289,12 @@ public class ProfileActivity extends AppCompatActivity
                 break;
 
             case R.id.connect_get_message:
-                GetMessageDialog getMessageDialog = new GetMessageDialog(this, gotMessage);
-                getMessageDialog.show();
+                if (gotMessage != "") {
+                    GetMessageDialog getMessageDialog = new GetMessageDialog(this, gotMessage);
+                    getMessageDialog.show();
+                } else {
+                    Toast.makeText(this, "You don't have any message", Toast.LENGTH_LONG).show();
+                }
                 break;
 
             case R.id.profile_take_photo_button:
@@ -910,16 +873,19 @@ public class ProfileActivity extends AppCompatActivity
                 if (imageUploadResponse.getSuccess() == 1) {
                     // Válasz rendben
                     requestForImages(mProfileData, false);
+                    Toast.makeText(getApplicationContext(), "Succesful upload", Toast.LENGTH_LONG).show();
                 } else {
                     // Válasz visszautasítva
                     Log.w("Upload_Refused:",
                             "FirstErrorText= " + imageUploadResponse.getData()[0]);
+
+                    Toast.makeText(getApplicationContext(), imageUploadResponse.getError().get(0), Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void forwardError(NetworkError networkError) {
-
+                Toast.makeText(getApplicationContext(), networkError.getThrowable().getMessage(), Toast.LENGTH_LONG).show();
             }
         });
 
