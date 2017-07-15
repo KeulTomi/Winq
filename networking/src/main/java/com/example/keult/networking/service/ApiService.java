@@ -17,6 +17,7 @@ import com.example.keult.networking.model.ImageUploadResponse;
 import com.example.keult.networking.model.InterestTypesResponse;
 import com.example.keult.networking.model.LoginResponse;
 import com.example.keult.networking.model.NewMessageResponse;
+import com.example.keult.networking.model.PositionSendResponse;
 import com.example.keult.networking.model.ProfileImagesResponse;
 import com.example.keult.networking.model.SignUpResponse;
 import com.example.keult.networking.model.UserSearchResponse;
@@ -52,6 +53,7 @@ import static com.example.keult.networking.constant.ApiConstants.INTEREST_TYPE_L
 import static com.example.keult.networking.constant.ApiConstants.JOINED_EVENT_LIST_BY_ID;
 import static com.example.keult.networking.constant.ApiConstants.LOG_IN;
 import static com.example.keult.networking.constant.ApiConstants.MESSAGE_NEW;
+import static com.example.keult.networking.constant.ApiConstants.POSITION_SEND;
 import static com.example.keult.networking.constant.ApiConstants.SIGN_UP;
 import static com.example.keult.networking.constant.ApiConstants.USER_SEARCH;
 
@@ -144,4 +146,8 @@ public interface ApiService {
     @Multipart
     @POST(IMAGE_UPLOAD)
     Observable<ImageUploadResponse> uploadImage(@PartMap Map<String, RequestBody> body, @Part MultipartBody.Part filePart);
+
+    @FormUrlEncoded
+    @POST(POSITION_SEND)
+    Observable<PositionSendResponse> sendPosition(@FieldMap Map<String, Object> body);
 }

@@ -18,6 +18,7 @@ import com.example.keult.networking.callback.ImageUploadCallback;
 import com.example.keult.networking.callback.InterestTypesCallback;
 import com.example.keult.networking.callback.LoginCallback;
 import com.example.keult.networking.callback.NewMessageCallback;
+import com.example.keult.networking.callback.PositionSendCallback;
 import com.example.keult.networking.callback.ProfileImagesCallback;
 import com.example.keult.networking.callback.SignUpCallback;
 import com.example.keult.networking.callback.UserSearchCallback;
@@ -262,6 +263,17 @@ public class NetworkManager {
                 .subscribe(
                         newMessageCallback::forwardResponse,
                         throwable -> newMessageCallback.forwardError(ErrorFactory.createNetworkError(throwable))
+                );
+    }
+
+    // Pozíció küldése
+    // message - új üzenet
+    public void sendPosition(Map<String, Object> body, PositionSendCallback positionSendCallback) {
+        apiService.sendPosition(body)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        positionSendCallback::forwardResponse,
+                        throwable -> positionSendCallback.forwardError(ErrorFactory.createNetworkError(throwable))
                 );
     }
 }

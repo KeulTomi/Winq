@@ -137,8 +137,11 @@ public class ProfileActivity extends AppCompatActivity
             findViewById(R.id.profile_premium_button).setOnClickListener(this);
             findViewById(R.id.profile_main_layout).setOnClickListener(this);
 
-            checkGpsState();
-
+            if (!LocationShareService.isServiceRunning) {
+                this.startService(
+                        new Intent(this.getBaseContext(),
+                                LocationShareService.class));
+            }
         } else {
             // Idegen profil layout elemeinek engedélyezése
             findViewById(R.id.profile_kamera_buttons_layout).setVisibility(View.GONE);
@@ -926,15 +929,6 @@ public class ProfileActivity extends AppCompatActivity
         }
 
         return hasWIFI;
-    }
-
-    private void checkGpsState() {
-
-        Message msg = new Message();
-
-        msg.what = 0;
-        msg.obj = this;
-        LocationShareService.mLooperHandler.sendMessage(msg);
     }
 
     private class MessageHandler extends Handler {

@@ -15,7 +15,6 @@
         android:hint="Write some message..."
         android:inputType="textMultiLine"
         android:padding="10dp"
-        android:textColor="@android:color/black"
         android:textSize="16sp"
         tools:ignore="RtlCompat" />
 

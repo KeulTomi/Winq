@@ -30,6 +30,7 @@ public class ApiConstants {
     public static final String GET_IMAGES = "profile/getimages"; // Profil és story képek letöltése
     public static final String INTEREST_TYPE_LIST = "profile/profile_interest"; // Érdeklődési típusok listája
     public static final String IMAGE_UPLOAD = "profile/imageupload"; // Kép feltöltése
+    public static final String POSITION_SEND = "profile/set_position"; // Pozíció küldése
 
     // ../dates
         public static final String DATE_ADD = "profile/dates/add"; // Randi hozzáadása
