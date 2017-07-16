@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -142,6 +143,21 @@ public class ProfileActivity extends AppCompatActivity
                         new Intent(this.getBaseContext(),
                                 LocationShareService.class));
             }
+
+            final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+            if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+
+                Winq.showGpsPopUp++;
+
+                if (Winq.showGpsPopUp == 5) {
+                    NoGpsConnectionDialog noGpsConnectionDialog = new NoGpsConnectionDialog(this);
+                    noGpsConnectionDialog.show();
+
+                    Winq.showGpsPopUp = 0;
+                }
+            }
+
         } else {
             // Idegen profil layout elemeinek engedélyezése
             findViewById(R.id.profile_kamera_buttons_layout).setVisibility(View.GONE);
@@ -294,7 +310,7 @@ public class ProfileActivity extends AppCompatActivity
                 break;
 
             case R.id.connect_get_message:
-                if (gotMessage != "") {
+                if (gotMessage.isEmpty() == false) {
                     GetMessageDialog getMessageDialog = new GetMessageDialog(this, gotMessage);
                     getMessageDialog.show();
                 } else {

@@ -98,10 +98,15 @@ public class LocationShareService extends Service implements
     public void onLocationChanged(Location location) {
         Log.v("LocationShareService:", "Pozíció frissítés érkezett");
 
-        if (mLastLocation.distanceTo(location) >= 50.0) {
-            // Ha 50 méternél többet mozdult el akkor érdemes frissíteni a pozíciót
-            mLastLocation = location;
-            sendMyLocation(getBaseContext(), mLastLocation);
+        if (mLastLocation != null) {
+
+            if (mLastLocation.distanceTo(location) >= 50.0) {
+                // Ha 50 méternél többet mozdult el akkor érdemes frissíteni a pozíciót
+                mLastLocation = location;
+                sendMyLocation(getBaseContext(), mLastLocation);
+            }
+        } else {
+            sendMyLocation(getBaseContext(), location);
         }
     }
 

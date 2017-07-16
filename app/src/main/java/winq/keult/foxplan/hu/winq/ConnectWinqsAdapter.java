@@ -54,7 +54,7 @@ public class ConnectWinqsAdapter extends ArrayAdapter<DateData> {
         userName.setText(currentItem.getFullName());
 
         TextView countryShortName = (TextView) listItemView.findViewById(R.id.connect_item_country);
-        countryShortName.setText("HUN");
+        countryShortName.setText(currentItem.getUserCountryShort());
 
         TextView ageOfUser = (TextView) listItemView.findViewById(R.id.connect_item_age_of_current_user);
         int userBornYear = Integer.parseInt(currentItem.getUserborn().substring(0, 4));

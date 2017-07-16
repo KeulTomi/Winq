@@ -386,6 +386,7 @@
         android:layout_above="@+id/profile_kamera_buttons_layout"
         android:layout_below="@id/profile_image_layout_header_2"
         android:background="@null"
+        android:gravity="start"
         android:paddingBottom="30dp"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"

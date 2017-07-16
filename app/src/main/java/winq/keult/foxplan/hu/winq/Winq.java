@@ -32,6 +32,7 @@ public class Winq extends Application {
     public static HashMap<String, DateData> connectData = new HashMap<>();
     public static HashMap<String, EventsJoinedData> connectEventData = new HashMap<>();
     public static Handler mUiHandler;
+    public static int showGpsPopUp;
     private static ProfileData mCurrentUserProfileData;
     private static Context mContext;
 
@@ -45,6 +46,8 @@ public class Winq extends Application {
             String pass = getAppPref(R.string.user_prefs_key).getString(getStringResource(R.string.saved_password_key), null);
             String fbid = getAppPref(R.string.user_prefs_key).getString(getStringResource(R.string.saved_facebookid_key), null);
             String mbid = getAppPref(R.string.user_prefs_key).getString(getStringResource(R.string.saved_mobileid_key), null);
+
+            showGpsPopUp = getAppPref(R.string.user_prefs_key).getInt(getStringResource(R.string.saved_gps_popup_num), 0);
 
             mCurrentUserProfileData = new ProfileData();
 
@@ -88,7 +91,8 @@ public class Winq extends Application {
         editor.putString(getStringResource(R.string.saved_password_key), currentUserProfileData.getPassword());
         editor.putString(getStringResource(R.string.saved_facebookid_key), currentUserProfileData.getFacebookid());
         editor.putString(getStringResource(R.string.saved_userid_key), currentUserProfileData.getId());
-        editor.putString(getStringResource(R.string.saved_userid_key), Winq.mobileid);
+        editor.putString(getStringResource(R.string.saved_mobileid_key), Winq.mobileid);
+        editor.putInt(getStringResource(R.string.saved_gps_popup_num), showGpsPopUp);
         editor.apply();
         mCurrentUserProfileData = currentUserProfileData;
     }
