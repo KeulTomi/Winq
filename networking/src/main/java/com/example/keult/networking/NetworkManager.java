@@ -20,6 +20,7 @@ import com.example.keult.networking.callback.LoginCallback;
 import com.example.keult.networking.callback.NewMessageCallback;
 import com.example.keult.networking.callback.PositionSendCallback;
 import com.example.keult.networking.callback.ProfileImagesCallback;
+import com.example.keult.networking.callback.ProfileModifyCallback;
 import com.example.keult.networking.callback.SignUpCallback;
 import com.example.keult.networking.callback.UserSearchCallback;
 import com.example.keult.networking.di.component.DaggerNetworkComponent;
@@ -274,6 +275,16 @@ public class NetworkManager {
                 .subscribe(
                         positionSendCallback::forwardResponse,
                         throwable -> positionSendCallback.forwardError(ErrorFactory.createNetworkError(throwable))
+                );
+    }
+
+    // Profil módosítása
+    public void modifyProfile(Map<String, Object> body, ProfileModifyCallback profileModifyCallback) {
+        apiService.modifyProfile(body)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        profileModifyCallback::forwardResponse,
+                        throwable -> profileModifyCallback.forwardError(ErrorFactory.createNetworkError(throwable))
                 );
     }
 }

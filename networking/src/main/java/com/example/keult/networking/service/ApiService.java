@@ -19,6 +19,7 @@ import com.example.keult.networking.model.LoginResponse;
 import com.example.keult.networking.model.NewMessageResponse;
 import com.example.keult.networking.model.PositionSendResponse;
 import com.example.keult.networking.model.ProfileImagesResponse;
+import com.example.keult.networking.model.ProfileModifyResponse;
 import com.example.keult.networking.model.SignUpResponse;
 import com.example.keult.networking.model.UserSearchResponse;
 
@@ -54,6 +55,7 @@ import static com.example.keult.networking.constant.ApiConstants.JOINED_EVENT_LI
 import static com.example.keult.networking.constant.ApiConstants.LOG_IN;
 import static com.example.keult.networking.constant.ApiConstants.MESSAGE_NEW;
 import static com.example.keult.networking.constant.ApiConstants.POSITION_SEND;
+import static com.example.keult.networking.constant.ApiConstants.PROFILE_MODIFY;
 import static com.example.keult.networking.constant.ApiConstants.SIGN_UP;
 import static com.example.keult.networking.constant.ApiConstants.USER_SEARCH;
 
@@ -150,4 +152,8 @@ public interface ApiService {
     @FormUrlEncoded
     @POST(POSITION_SEND)
     Observable<PositionSendResponse> sendPosition(@FieldMap Map<String, Object> body);
+
+    @FormUrlEncoded
+    @POST(PROFILE_MODIFY)
+    Observable<ProfileModifyResponse> modifyProfile(@FieldMap Map<String, Object> body);
 }

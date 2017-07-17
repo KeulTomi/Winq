@@ -146,6 +146,12 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -197,6 +203,7 @@ public class MainActivity extends AppCompatActivity implements
 
         checkGpsPermission();
 
+        ScaleHelper.scaleViewAndChildren(findViewById(R.id.main_root), Winq.getScaleX(), Winq.getScaleY());
     }
 
     @Override
@@ -244,9 +251,11 @@ public class MainActivity extends AppCompatActivity implements
 
             case R.id.main_first_upcoming_event:
                 if (checkOutTheInternetConnection()) {
-                    Intent openDetails1 = new Intent(this, EventDetailsActivity.class);
-                    openDetails1.putExtra("eventNum", 0);
-                    startActivity(openDetails1);
+                    if (Winq.homepageEventDatas.size() > 0) {
+                        Intent openDetails1 = new Intent(this, EventDetailsActivity.class);
+                        openDetails1.putExtra("eventNum", 0);
+                        startActivity(openDetails1);
+                    }
                 } else return;
                 break;
 

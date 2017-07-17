@@ -36,8 +36,6 @@ public class LocationShareService extends Service implements
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
-        Toast.makeText(this, "Pozíció megosztás aktiválva", Toast.LENGTH_LONG).show();
         Log.v("LocationShareService", "Szolgáltatás elindult, startId:" + startId + ": " + intent);
 
         // GoogleAPIClient létrehozása
@@ -97,6 +95,8 @@ public class LocationShareService extends Service implements
     @Override
     public void onLocationChanged(Location location) {
         Log.v("LocationShareService:", "Pozíció frissítés érkezett");
+
+        Toast.makeText(this, "Pozíció megosztás aktiválva", Toast.LENGTH_LONG).show();
 
         if (mLastLocation != null) {
 

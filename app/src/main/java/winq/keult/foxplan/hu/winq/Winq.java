@@ -23,6 +23,8 @@ import java.util.List;
 public class Winq extends Application {
 
     public static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+    private static final int ORIG_DISPLAY_HEIGHT = 1920;
+    private static final int ORIG_DISPLAY_WIDTH = 1080;
     public static String username;
     public static String password;
     public static String facebookid;
@@ -35,6 +37,8 @@ public class Winq extends Application {
     public static int showGpsPopUp;
     private static ProfileData mCurrentUserProfileData;
     private static Context mContext;
+    private static float mScaleX;
+    private static float mScaleY;
 
     public static void initApp(Context context) {
         mContext = context;
@@ -56,6 +60,22 @@ public class Winq extends Application {
             mCurrentUserProfileData.setFacebookId(fbid);
             Winq.mobileid = mbid;
         }
+
+        setDisplayScale(context);
+
+    }
+
+    private static void setDisplayScale(Context context) {
+        mScaleX = context.getResources().getDisplayMetrics().widthPixels / (float) ORIG_DISPLAY_WIDTH;
+        mScaleY = context.getResources().getDisplayMetrics().heightPixels / (float) ORIG_DISPLAY_HEIGHT;
+    }
+
+    public static float getScaleX() {
+        return mScaleX;
+    }
+
+    public static float getScaleY() {
+        return mScaleY;
     }
 
     public static void setTheRealTime (TextView yearText, TextView montAndDayText){
@@ -81,6 +101,10 @@ public class Winq extends Application {
     }
 
     public static ProfileData getCurrentUserProfileData() {
+        return mCurrentUserProfileData;
+    }
+
+    public static ProfileData getCurrentUserProfileData(ProfileData profileData) {
         return mCurrentUserProfileData;
     }
 

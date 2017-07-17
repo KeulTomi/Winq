@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="winq.keult.foxplan.hu.winq.MainActivity">
@@ -16,7 +17,8 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp">
+            android:layout_height="match_parent"
+            android:layout_weight="1">
 
             <ImageView
                 android:id="@+id/main_first_upcoming_event"
@@ -31,18 +33,18 @@
                  android:layout_height="wrap_content"
                  android:layout_alignParentBottom="true"
                  android:background="#b9149399"
-                 android:paddingBottom="6dp"
-                 android:paddingTop="6dp">
+                 android:paddingBottom="18px"
+                 android:paddingTop="18px">
 
                  <TextView
                      android:id="@+id/main_first_upc_event_name"
                      android:layout_width="wrap_content"
                      android:layout_height="wrap_content"
-                     android:layout_marginLeft="20dp"
+                     android:layout_marginLeft="60px"
                      android:text="sziget fesztivál"
                      android:textAllCaps="true"
                      android:textColor="@android:color/white"
-                     android:textSize="16sp"
+                     android:textSize="43px"
                      android:textStyle="bold" />
 
                  <TextView
@@ -50,10 +52,10 @@
                      android:layout_width="wrap_content"
                      android:layout_height="wrap_content"
                      android:layout_alignParentRight="true"
-                     android:layout_marginRight="50dp"
+                     android:layout_marginRight="150px"
                      android:text="Budapest"
                      android:textColor="@android:color/white"
-                     android:textSize="16sp" />
+                     android:textSize="43px" />
 
                  <TextView
                      android:id="@+id/main_first_upc_event_country"
@@ -61,11 +63,11 @@
                      android:layout_height="wrap_content"
                      android:layout_alignParentRight="true"
                      android:layout_centerVertical="true"
-                     android:layout_marginRight="10dp"
-                     android:layout_marginTop="2dp"
+                     android:layout_marginRight="30px"
+                     android:layout_marginTop="6px"
                      android:text="/HUN/"
                      android:textColor="@android:color/white"
-                     android:textSize="8sp" />
+                     android:textSize="21px" />
 
              </RelativeLayout>
 
@@ -73,7 +75,8 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp">
+            android:layout_height="match_parent"
+            android:layout_weight="1">
 
             <ImageView
                 android:id="@+id/main_second_upcoming_event"
@@ -89,18 +92,18 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:background="#b9149399"
-                android:paddingBottom="6dp"
-                android:paddingTop="6dp">
+                android:paddingBottom="18px"
+                android:paddingTop="18px">
 
                 <TextView
                     android:id="@+id/main_second_upc_event_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
+                    android:layout_marginLeft="60px"
                     android:text="sziget fesztivál"
                     android:textAllCaps="true"
                     android:textColor="@android:color/white"
-                    android:textSize="16sp"
+                    android:textSize="43px"
                     android:textStyle="bold" />
 
                 <TextView
@@ -108,10 +111,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:layout_marginRight="50dp"
+                    android:layout_marginRight="150px"
                     android:text="Budapest"
                     android:textColor="@android:color/white"
-                    android:textSize="16sp" />
+                    android:textSize="43px" />
 
                 <TextView
                     android:id="@+id/main_second_upc_event_country"
@@ -119,11 +122,11 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginTop="2dp"
+                    android:layout_marginRight="30px"
+                    android:layout_marginTop="6px"
                     android:text="/HUN/"
                     android:textColor="@android:color/white"
-                    android:textSize="8sp" />
+                    android:textSize="21px" />
 
             </RelativeLayout>
 
@@ -131,8 +134,181 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="0.5dp"
+            android:layout_height="1px"
             android:background="@android:color/black"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/main_upcoming_events_layout"
+            android:layout_weight="0.95"
+            android:orientation="vertical">
+
+
+            <RelativeLayout
+                android:id="@+id/main_menu_upper"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <LinearLayout
+                    android:id="@+id/menu_upper_root"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <RelativeLayout
+                        android:id="@+id/main_button_explore"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="#00b3c2"
+                        android:paddingBottom="30px"
+                        android:paddingTop="30px">
+
+                        <ImageView
+                            android:layout_width="150px"
+                            android:layout_height="150px"
+                            android:layout_centerHorizontal="true"
+                            android:src="@drawable/ic_favorite_border_black_24dp"
+                            android:tint="@android:color/white" />
+
+                        <TextView
+                            android:id="@+id/main_button_explore_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentBottom="true"
+                            android:layout_centerHorizontal="true"
+                            android:text="explore"
+                            android:textAlignment="center"
+                            android:textAllCaps="true"
+                            android:textColor="@android:color/white"
+                            android:textSize="60px" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/main_button_connect"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="#2dbbc7"
+                        android:paddingBottom="30px"
+                        android:paddingTop="30px">
+
+                        <ImageView
+                            android:layout_width="150px"
+                            android:layout_height="150px"
+                            android:layout_centerHorizontal="true"
+                            android:src="@drawable/ic_connect"
+                            android:tint="@android:color/white" />
+
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentBottom="true"
+                            android:layout_centerHorizontal="true"
+                            android:text="connect"
+                            android:textAllCaps="true"
+                            android:textColor="@android:color/white"
+                            android:textSize="60px" />
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="1px"
+                    android:layout_height="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="37.5px"
+                    android:layout_marginTop="37.5px"
+                    android:background="@android:color/black" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@android:color/black" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <RelativeLayout
+                        android:id="@+id/main_button_events"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="#58c2cf"
+                        android:paddingBottom="30px"
+                        android:paddingTop="30px">
+
+                        <ImageView
+                            android:layout_width="150px"
+                            android:layout_height="150px"
+                            android:layout_centerHorizontal="true"
+                            android:src="@drawable/ic_events"
+                            android:tint="@android:color/white" />
+
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentBottom="true"
+                            android:layout_centerHorizontal="true"
+                            android:text="events"
+                            android:textAllCaps="true"
+                            android:textColor="@android:color/white"
+                            android:textSize="60px" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/main_button_profile"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="#85c9d4"
+                        android:paddingBottom="30px"
+                        android:paddingTop="30px">
+
+                        <ImageView
+                            android:layout_width="150px"
+                            android:layout_height="150px"
+                            android:layout_centerHorizontal="true"
+                            android:src="@drawable/ic_profile"
+                            android:tint="@android:color/white" />
+
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentBottom="true"
+                            android:layout_centerHorizontal="true"
+                            android:text="profile"
+                            android:textAllCaps="true"
+                            android:textColor="@android:color/white"
+                            android:textSize="60px" />
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="1px"
+                    android:layout_height="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="37.5px"
+                    android:layout_marginTop="37.5px"
+                    android:background="@android:color/black" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
 
     </LinearLayout>
 
@@ -145,184 +321,19 @@
         android:background="#adffffff"
         android:orientation="vertical">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="5dp"
-                android:src="@drawable/edrr" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="90px"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="15px"
+            android:layout_marginTop="15px"
+            android:src="@drawable/edrr" />
 
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@android:color/black"/>
+            android:layout_height="4px"
+            android:background="@android:color/black" />
 
     </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/main_upcoming_events_layout"
-        android:orientation="vertical">
-
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <RelativeLayout
-                    android:id="@+id/main_button_explore"
-                    android:layout_width="182dp"
-                    android:layout_height="wrap_content"
-                    android:background="#00b3c2"
-                    android:paddingBottom="10dp"
-                    android:paddingTop="10dp">
-
-                    <ImageView
-                        android:layout_width="55dp"
-                        android:layout_height="55dp"
-                        android:layout_centerHorizontal="true"
-                        android:src="@drawable/ic_favorite_border_black_24dp"
-                        android:tint="@android:color/white" />
-
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:layout_centerHorizontal="true"
-                        android:text="explore"
-                        android:textAllCaps="true"
-                        android:textColor="@android:color/white"
-                        android:textSize="22sp" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/main_button_connect"
-                    android:layout_width="182dp"
-                    android:layout_height="wrap_content"
-                    android:background="#2dbbc7"
-                    android:paddingBottom="10dp"
-                    android:paddingTop="10dp">
-
-                    <ImageView
-                        android:layout_width="55dp"
-                        android:layout_height="55dp"
-                        android:layout_centerHorizontal="true"
-                        android:src="@drawable/ic_connect"
-                        android:tint="@android:color/white" />
-
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:layout_centerHorizontal="true"
-                        android:text="connect"
-                        android:textAllCaps="true"
-                        android:textColor="@android:color/white"
-                        android:textSize="22sp" />
-                </RelativeLayout>
-
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="0.5dp"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="12.5dp"
-                android:layout_marginLeft="182dp"
-                android:layout_marginTop="12.5dp"
-                android:background="@android:color/black"/>
-
-        </RelativeLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@android:color/black"/>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <RelativeLayout
-                    android:id="@+id/main_button_events"
-                    android:layout_width="182dp"
-                    android:layout_height="wrap_content"
-                    android:background="#58c2cf"
-                    android:paddingBottom="10dp"
-                    android:paddingTop="10dp">
-
-                    <ImageView
-                        android:layout_width="55dp"
-                        android:layout_height="55dp"
-                        android:layout_centerHorizontal="true"
-                        android:src="@drawable/ic_events"
-                        android:tint="@android:color/white" />
-
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:layout_centerHorizontal="true"
-                        android:text="events"
-                        android:textAllCaps="true"
-                        android:textColor="@android:color/white"
-                        android:textSize="22sp" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/main_button_profile"
-                    android:layout_width="182dp"
-                    android:layout_height="wrap_content"
-                    android:background="#85c9d4"
-                    android:paddingBottom="10dp"
-                    android:paddingTop="10dp">
-
-                    <ImageView
-                        android:layout_width="55dp"
-                        android:layout_height="55dp"
-                        android:layout_centerHorizontal="true"
-                        android:src="@drawable/ic_profile"
-                        android:tint="@android:color/white" />
-
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:layout_centerHorizontal="true"
-                        android:text="profile"
-                        android:textAllCaps="true"
-                        android:textColor="@android:color/white"
-                        android:textSize="22sp" />
-                </RelativeLayout>
-
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="0.5dp"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="12.5dp"
-                android:layout_marginLeft="182dp"
-                android:layout_marginTop="12.5dp"
-                android:background="@android:color/black"/>
-
-        </RelativeLayout>
-
-    </LinearLayout>
-
 </RelativeLayout>

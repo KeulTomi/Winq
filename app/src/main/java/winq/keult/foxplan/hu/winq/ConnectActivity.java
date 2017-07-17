@@ -258,6 +258,8 @@ public class ConnectActivity extends AppCompatActivity implements View.OnClickLi
                 if (checkOutTheInternetConnection()) {
                     //Adatlekérdezés
                     currentFriendList.clear();
+                    dateList.clear();
+                    friendsList.setAdapter(null);
                     connectListProgress.setVisibility(View.VISIBLE);
                     myFriendsList();
                 } else return;
@@ -271,6 +273,8 @@ public class ConnectActivity extends AppCompatActivity implements View.OnClickLi
                 if (checkOutTheInternetConnection()) {
                     //Adatlekérdezés
                     currentFriendList.clear();
+                    dateList.clear();
+                    friendsList.setAdapter(null);
                     connectListProgress.setVisibility(View.VISIBLE);
                     winqsList();
                 } else return;
