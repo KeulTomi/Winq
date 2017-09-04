@@ -245,11 +245,12 @@ public class ProfileActivity extends AppCompatActivity
                 if (mFirstStoryImage != null) {
                     // Ha vannak story képek és van első kép a akkor StoryActivity indítása
 
-                    // TODO: Csak tesztelési célra: Story image lista feltöltése
+                    /* TODO: Csak tesztelési célra: Story image lista feltöltése
                     for (int i = 0; i < 2; i++) {
                         ImageData imageData = new ImageData(i);
                         mStoryImages.add(imageData);
                     }
+                    */
 
                     Intent openStory = new Intent(this, StoryActivity.class);
                     openStory.putExtra(getString(R.string.intent_key_story_bitmap), mFirstStoryImage);
