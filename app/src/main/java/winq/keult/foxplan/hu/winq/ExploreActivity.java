@@ -235,6 +235,8 @@ public class ExploreActivity extends AppCompatActivity implements View.OnClickLi
         like.setOnClickListener(this);
         backToMainMenu.setOnClickListener(this);
 
+        ScaleHelper.scaleViewAndChildren(findViewById(R.id.explore_root), Winq.getScaleX(), Winq.getScaleY());
+
 //        // Üzeneteket kezelő Handler
 //        mUiHandler = new Handler() {
 //            public void handleMessage(Message msg) {

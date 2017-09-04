@@ -63,6 +63,8 @@ public class SignUpActivity1 extends AppCompatActivity implements View.OnClickLi
         sexTypeMan.setOnClickListener(this);
         backToFirstPartBtn.setOnClickListener(this);
         nextTo3PartBtn.setOnClickListener(this);
+
+        ScaleHelper.scaleViewAndChildren(findViewById(R.id.sign_up_1_root), Winq.getScaleX(), Winq.getScaleY());
     }
 
     @Override

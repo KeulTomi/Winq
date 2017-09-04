@@ -34,6 +34,8 @@ public class NoGpsConnectionDialog extends Dialog implements
 
         cancel.setOnClickListener(this);
 
+        ScaleHelper.scaleViewAndChildren(findViewById(R.id.no_gps_root), Winq.getScaleX(), Winq.getScaleY());
+
     }
 
     @Override

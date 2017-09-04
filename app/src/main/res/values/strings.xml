@@ -32,5 +32,5 @@
     <string name="intent_key_story_bitmap">intent_story_1st_bitmap</string>
     <string name="intent_key_story_images">intent_key_story_images</string>
     <string name="usr_msg_upload_success">Upload success</string>
-    <string name="permission_rationale_location">In order to get more accurate results by searching events or nearby friends, please turn on your GPS to share your position.</string>
+    <string name="permission_rationale_location">Annak érdekében, hogy a pozíciód alapján, pontosabb eredményeket tudjunk adni, kérjük kapcsold be a helymeghatározásod az eszközödön!</string>
 </resources>

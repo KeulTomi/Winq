@@ -41,6 +41,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
         backToLoginBtn.setOnClickListener(this);
         nextTo2PartBtn.setOnClickListener(this);
+
+        ScaleHelper.scaleViewAndChildren(findViewById(R.id.sign_up_root), Winq.getScaleX(), Winq.getScaleY());
     }
 
     @Override

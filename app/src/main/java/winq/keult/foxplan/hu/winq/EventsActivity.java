@@ -135,6 +135,8 @@ public class EventsActivity extends AppCompatActivity implements AdapterView.OnI
         eventsListProgress = (ProgressBar) findViewById(R.id.events_list_progress);
 
         eventsListProgress.setVisibility(View.VISIBLE);
+        eventsList.setAdapter(null);
+        currentEventList.clear();
         joinedEvents();
 
         //Inicializálások
@@ -158,10 +160,13 @@ public class EventsActivity extends AppCompatActivity implements AdapterView.OnI
 
         //Feltöltjük az első adatokkal
         joinedAdapter = new EventsJoinedAdapter(this, currentEventList);
+        eventsList.setAdapter(null);
         eventsList.setAdapter(joinedAdapter);
 
         //A headerre kiírjuk a valós dátumot
         Winq.setTheRealTime(headerDateYear, headerDateMonthAndDay);
+
+        ScaleHelper.scaleViewAndChildren(findViewById(R.id.events_root), Winq.getScaleX(), Winq.getScaleY());
     }
 
     @Override

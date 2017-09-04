@@ -1,29 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/internet_problem_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="300px"
         android:background="@drawable/message_popup_border">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="20dp"
-            android:paddingTop="20dp"
-            android:text="You have no internet connection"
+            android:paddingBottom="55px"
+            android:paddingTop="55px"
+            android:text="Nincs internetkapcsolat"
             android:textAlignment="center"
             android:textSize="18sp" />
 
         <LinearLayout
             android:id="@+id/send_messages_popup_button_layout"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="100px"
             android:layout_alignParentBottom="true"
-            android:layout_margin="3dp"
+            android:layout_margin="9px"
             android:background="@color/colorPrimaryDark">
 
             <TextView
@@ -36,7 +37,7 @@
                 android:textAlignment="center"
                 android:textAllCaps="true"
                 android:textColor="@android:color/white"
-                android:textSize="18sp" />
+                android:textSize="45px" />
 
             <TextView
                 android:id="@+id/internet_problem_again"
@@ -48,7 +49,7 @@
                 android:textAlignment="center"
                 android:textAllCaps="true"
                 android:textColor="@android:color/white"
-                android:textSize="18sp" />
+                android:textSize="45px" />
 
         </LinearLayout>
 

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/login_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/trans_back"
@@ -8,55 +9,52 @@
 
 
     <ImageView
-        android:layout_width="150dp"
+        android:layout_width="410px"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerInParent="true"
-        android:layout_marginBottom="60dp"
-        android:layout_marginTop="25dp"
+        android:layout_marginBottom="160px"
+        android:layout_marginTop="70px"
         android:adjustViewBounds="true"
-        android:maxHeight="270dp"
-        android:maxWidth="270dp"
-        android:scaleType="fitCenter"
         android:src="@drawable/wink_face"/>
 
     <LinearLayout
         android:id="@+id/login_texts_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="175dp"
+        android:layout_marginTop="490px"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/email_textview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="10dp"
-            android:paddingLeft="15dp"
-            android:paddingTop="5dp"
+            android:paddingBottom="30px"
+            android:paddingLeft="40px"
+            android:paddingTop="15px"
             android:text="e-mail:"
             android:textAllCaps="true"
             android:textColor="@android:color/white"
-            android:textSize="13sp" />
+            android:textSize="39px" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_marginBottom="15dp"
+            android:layout_height="80px"
+            android:layout_marginBottom="40px"
             android:background="@android:color/white">
 
             <EditText
                 android:id="@+id/email_edittext"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
+                android:layout_height="80px"
                 android:background="@null"
                 android:hint="e-mail"
                 android:imeOptions="actionNext"
                 android:inputType="textEmailAddress"
                 android:maxLines="1"
-                android:paddingLeft="10dp"
+                android:paddingLeft="30px"
                 android:textAlignment="center"
-                android:textSize="16sp" />
+                android:textSize="45px" />
 
         </LinearLayout>
 
@@ -64,18 +62,18 @@
             android:id="@+id/password_textview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="10dp"
-            android:paddingLeft="15dp"
-            android:paddingTop="3dp"
+            android:paddingBottom="30px"
+            android:paddingLeft="40px"
+            android:paddingTop="9px"
             android:text="password:"
             android:textAllCaps="true"
             android:textColor="@android:color/white"
-            android:textSize="13sp" />
+            android:textSize="39px" />
 
         <RelativeLayout
             android:id="@+id/password_layout"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
+            android:layout_height="80px"
             android:background="@android:color/white"
             android:orientation="horizontal">
 
@@ -88,13 +86,13 @@
                 android:imeOptions="actionDone"
                 android:inputType="textPassword"
                 android:maxLines="1"
-                android:paddingLeft="10dp"
+                android:paddingLeft="30px"
                 android:textAlignment="center"
-                android:textSize="16sp" />
+                android:textSize="45px" />
 
             <TextView
                 android:id="@+id/GO_button"
-                android:layout_width="40dp"
+                android:layout_width="110px"
                 android:layout_height="match_parent"
                 android:layout_alignParentRight="true"
                 android:background="@color/colorPrimary"
@@ -102,11 +100,11 @@
                 android:text="go"
                 android:textAllCaps="true"
                 android:textColor="@android:color/white"
-                android:textSize="18sp" />
+                android:textSize="50px" />
 
             <ProgressBar
                 android:id="@+id/GO_button_progress"
-                android:layout_width="40dp"
+                android:layout_width="110px"
                 android:layout_height="match_parent"
                 android:layout_alignParentRight="true"
                 android:gravity="center"
@@ -122,13 +120,13 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/login_texts_layout"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="40px"
         android:background="#00eaeaea"
-        android:padding="10dp"
+        android:padding="30px"
         android:text="Sign up"
         android:textAllCaps="true"
         android:textColor="@android:color/white"
-        android:textSize="18sp" />
+        android:textSize="50px" />
 
 
 </RelativeLayout>

@@ -21,7 +21,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.keult.networking.NetworkManager;
 import com.example.keult.networking.callback.DateListCallback;
@@ -174,6 +173,8 @@ public class ConnectActivity extends AppCompatActivity implements View.OnClickLi
 
         //A headerre kiírjuk a valós dátumot
         Winq.setTheRealTime(headerDateYear, headerDateMonthAndDay);
+
+        ScaleHelper.scaleViewAndChildren(findViewById(R.id.connect_root), Winq.getScaleX(), Winq.getScaleY());
     }
 
     private void winqsList() {
@@ -354,7 +355,6 @@ public class ConnectActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void forwardError(NetworkError networkError) {
                 connectListProgress.setVisibility(View.GONE);
-                Toast.makeText(getApplicationContext(), "No internet connection", Toast.LENGTH_LONG).show();
             }
         });
     }

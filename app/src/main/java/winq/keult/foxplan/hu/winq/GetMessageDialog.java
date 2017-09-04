@@ -41,6 +41,8 @@ public class GetMessageDialog extends Dialog implements
 
         cancel.setOnClickListener(this);
 
+        ScaleHelper.scaleViewAndChildren(findViewById(R.id.get_message_root), Winq.getScaleX(), Winq.getScaleY());
+
     }
 
     @Override

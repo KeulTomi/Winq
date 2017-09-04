@@ -27,6 +27,8 @@ public class AszfActivity extends AppCompatActivity implements View.OnClickListe
 
         TextView backText = (TextView) findViewById(R.id.aszf_back_btn);
         backText.setOnClickListener(this);
+
+        ScaleHelper.scaleViewAndChildren(findViewById(R.id.aszf_root), Winq.getScaleX(), Winq.getScaleY());
     }
 
     @Override

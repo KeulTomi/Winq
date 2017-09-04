@@ -10,9 +10,9 @@
         android:id="@+id/sign_up_root_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"
-        android:layout_marginTop="35dp"
+        android:layout_marginLeft="70px"
+        android:layout_marginRight="70px"
+        android:layout_marginTop="105px"
         android:orientation="vertical">
 
         <TextView
@@ -21,33 +21,33 @@
             android:text="description:"
             android:textAllCaps="true"
             android:textColor="@android:color/black"
-            android:textSize="15sp" />
+            android:textSize="40px" />
 
         <EditText
             android:id="@+id/sign_up_description"
             android:layout_width="match_parent"
-            android:layout_height="140dp"
-            android:layout_marginBottom="55dp"
-            android:layout_marginTop="15dp"
+            android:layout_height="400px"
+            android:layout_marginBottom="155px"
+            android:layout_marginTop="40px"
             android:background="#c9c9c9"
             android:gravity="top"
             android:inputType="textMultiLine"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingTop="5dp"
+            android:paddingLeft="30px"
+            android:paddingRight="30px"
+            android:paddingTop="15px"
             android:textAlignment="viewStart"
-            android:textSize="15sp"
+            android:textSize="40px"
             tools:ignore="RtlCompat" />
 
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="25dp"
+            android:layout_marginBottom="70px"
             android:text="activities:"
             android:textAllCaps="true"
             android:textColor="@android:color/black"
-            android:textSize="15sp" />
+            android:textSize="40px" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -58,37 +58,37 @@
                 android:id="@+id/sign_up_activities"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="25dp"
+                android:layout_marginRight="70px"
                 android:layout_weight="1"
                 android:background="@drawable/sign_up_fields_border"
                 android:imeOptions="actionDone"
                 android:maxLines="1"
-                android:paddingBottom="8dp"
-                android:paddingLeft="10dp"
-                android:paddingTop="8dp"
-                android:textSize="16sp" />
+                android:paddingBottom="24px"
+                android:paddingLeft="30px"
+                android:paddingTop="24px"
+                android:textSize="45px" />
 
             <TextView
                 android:id="@+id/sign_up_add"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp"
+                android:layout_marginBottom="40px"
                 android:background="@color/colorAccent"
-                android:paddingBottom="8dp"
-                android:paddingLeft="35dp"
-                android:paddingRight="35dp"
-                android:paddingTop="8dp"
+                android:paddingBottom="24px"
+                android:paddingLeft="100px"
+                android:paddingRight="100px"
+                android:paddingTop="24px"
                 android:text="add"
                 android:textAllCaps="true"
                 android:textColor="@android:color/white"
-                android:textSize="18sp" />
+                android:textSize="45px" />
 
         </LinearLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_marginTop="15dp">
+            android:layout_height="300px"
+            android:layout_marginTop="40px">
 
             <TextView
                 android:id="@+id/sign_up_all_activities"
@@ -97,10 +97,10 @@
                 android:background="#c9c9c9"
                 android:gravity="top"
                 android:inputType="textMultiLine"
-                android:paddingLeft="10dp"
-                android:paddingTop="5dp"
+                android:paddingLeft="30px"
+                android:paddingTop="15px"
                 android:textColor="@android:color/black"
-                android:textSize="15sp"
+                android:textSize="40px"
                 android:textStyle="bold"/>
 
             <TextView
@@ -110,15 +110,15 @@
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
                 android:background="#898989"
-                android:paddingBottom="10dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:paddingTop="10dp"
+                android:paddingBottom="30px"
+                android:paddingLeft="15px"
+                android:paddingRight="15px"
+                android:paddingTop="30px"
                 android:text="undo"
                 android:textAlignment="center"
                 android:textAllCaps="true"
                 android:textColor="@android:color/white"
-                android:textSize="10sp" />
+                android:textSize="30px" />
 
         </RelativeLayout>
 
@@ -132,13 +132,13 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:background="@color/colorPrimaryDark"
-        android:paddingBottom="10dp"
-        android:paddingTop="10dp"
+        android:paddingBottom="30px"
+        android:paddingTop="30px"
         android:text="Sign up"
         android:textAlignment="center"
         android:textAllCaps="true"
         android:textColor="@android:color/white"
-        android:textSize="20sp" />
+        android:textSize="55px" />
 
     <ProgressBar
         android:id="@+id/signup_progress"
@@ -151,10 +151,10 @@
 
     <ImageView
         android:id="@+id/back_to_signup_second_part"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
+        android:layout_width="120px"
+        android:layout_height="120px"
         android:layout_alignParentBottom="true"
-        android:paddingLeft="10dp"
+        android:paddingLeft="30px"
         android:src="@drawable/ic_navigate_back"
         android:tint="@android:color/white" />
 
@@ -168,18 +168,10 @@
             android:id="@+id/aszf_check_box"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="15dp" />
-
-        <TextView
-            android:id="@+id/aszf_check_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="3dp"
-            android:layout_marginTop="15dp"
-            android:text="ászf"
-            android:textAllCaps="true"
-            android:textColor="@android:color/black" />
+            android:layout_marginLeft="15px"
+            android:layout_marginTop="40px"
+            android:text="ÁSZF"
+            android:textSize="40px" />
 
     </LinearLayout>
 

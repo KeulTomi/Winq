@@ -107,6 +107,8 @@ public class EventDetailsActivity extends AppCompatActivity implements View.OnCl
                 setEventInfos();
         }
 
+        ScaleHelper.scaleViewAndChildren(findViewById(R.id.events_details_root), Winq.getScaleX(), Winq.getScaleY());
+
     }
 
     private void setEventInfos() {

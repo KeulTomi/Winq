@@ -46,6 +46,8 @@ public class ProfilePhotosDialog extends Dialog implements
                 .asBitmap()
                 .into(image);
 
+        ScaleHelper.scaleViewAndChildren(findViewById(R.id.profile_photos_root), Winq.getScaleX(), Winq.getScaleY());
+
     }
 
     @Override

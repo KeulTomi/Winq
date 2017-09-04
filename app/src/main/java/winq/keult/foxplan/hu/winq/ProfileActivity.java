@@ -203,6 +203,8 @@ public class ProfileActivity extends AppCompatActivity
 
         // Wissza gomb onClickListenerek beállítása
         findViewById(R.id.profile_back_points).setOnClickListener(this);
+
+        ScaleHelper.scaleViewAndChildren(findViewById(R.id.profile_main_layout), Winq.getScaleX(), Winq.getScaleY());
     }
 
     @Override
@@ -314,7 +316,7 @@ public class ProfileActivity extends AppCompatActivity
                     GetMessageDialog getMessageDialog = new GetMessageDialog(this, gotMessage);
                     getMessageDialog.show();
                 } else {
-                    Toast.makeText(this, "You don't have any message", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Sajnos nem kaptál üzenetet tőle", Toast.LENGTH_LONG).show();
                 }
                 break;
 

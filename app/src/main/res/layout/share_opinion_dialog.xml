@@ -1,52 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/share_opinion_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingBottom="30dp"
-    android:paddingLeft="30dp"
-    android:paddingRight="30dp"
-    android:paddingTop="10dp">
+    android:paddingBottom="80px"
+    android:paddingLeft="80px"
+    android:paddingRight="80px"
+    android:paddingTop="30px">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="30px"
         android:text="Share your opinion:"
         android:textColor="@android:color/black"
-        android:textSize="20dp" />
+        android:textSize="55px" />
 
     <LinearLayout
         android:id="@+id/opinion_one"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="30px"
         android:gravity="center_horizontal">
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="80px"
+            android:layout_height="80px"
             android:src="@drawable/ic_opinion_full" />
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="80px"
+            android:layout_height="80px"
             android:src="@drawable/ic_opinion" />
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="80px"
+            android:layout_height="80px"
             android:src="@drawable/ic_opinion" />
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="80px"
+            android:layout_height="80px"
             android:src="@drawable/ic_opinion" />
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="80px"
+            android:layout_height="80px"
             android:src="@drawable/ic_opinion" />
 
     </LinearLayout>
@@ -55,32 +56,32 @@
         android:id="@+id/opinion_two"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="30px"
         android:gravity="center_horizontal">
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="80px"
+            android:layout_height="80px"
             android:src="@drawable/ic_opinion_full" />
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="80px"
+            android:layout_height="80px"
             android:src="@drawable/ic_opinion_full" />
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="80px"
+            android:layout_height="80px"
             android:src="@drawable/ic_opinion" />
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="80px"
+            android:layout_height="80px"
             android:src="@drawable/ic_opinion" />
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="80px"
+            android:layout_height="80px"
             android:src="@drawable/ic_opinion" />
 
 
@@ -90,32 +91,32 @@
         android:id="@+id/opinion_three"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="30px"
         android:gravity="center_horizontal">
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="80px"
+            android:layout_height="80px"
             android:src="@drawable/ic_opinion_full" />
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="80px"
+            android:layout_height="80px"
             android:src="@drawable/ic_opinion_full" />
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="80px"
+            android:layout_height="80px"
             android:src="@drawable/ic_opinion_full" />
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="80px"
+            android:layout_height="80px"
             android:src="@drawable/ic_opinion" />
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="80px"
+            android:layout_height="80px"
             android:src="@drawable/ic_opinion" />
 
     </LinearLayout>
@@ -124,32 +125,32 @@
         android:id="@+id/opinion_four"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="30px"
         android:gravity="center_horizontal">
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="80px"
+            android:layout_height="80px"
             android:src="@drawable/ic_opinion_full" />
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="80px"
+            android:layout_height="80px"
             android:src="@drawable/ic_opinion_full" />
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="80px"
+            android:layout_height="80px"
             android:src="@drawable/ic_opinion_full" />
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="80px"
+            android:layout_height="80px"
             android:src="@drawable/ic_opinion_full" />
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="80px"
+            android:layout_height="80px"
             android:src="@drawable/ic_opinion" />
 
     </LinearLayout>
@@ -161,28 +162,28 @@
         android:gravity="center_horizontal">
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="80px"
+            android:layout_height="80px"
             android:src="@drawable/ic_opinion_full" />
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="80px"
+            android:layout_height="80px"
             android:src="@drawable/ic_opinion_full" />
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="80px"
+            android:layout_height="80px"
             android:src="@drawable/ic_opinion_full" />
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="80px"
+            android:layout_height="80px"
             android:src="@drawable/ic_opinion_full" />
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="80px"
+            android:layout_height="80px"
             android:src="@drawable/ic_opinion_full" />
 
     </LinearLayout>

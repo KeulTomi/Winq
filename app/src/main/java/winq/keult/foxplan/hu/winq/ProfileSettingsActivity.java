@@ -45,6 +45,8 @@ public class ProfileSettingsActivity extends AppCompatActivity implements View.O
 
         backToProfileBtn.setOnClickListener(this);
         nextTo2PartBtn.setOnClickListener(this);
+
+        ScaleHelper.scaleViewAndChildren(findViewById(R.id.sign_up_root), Winq.getScaleX(), Winq.getScaleY());
     }
 
     @Override

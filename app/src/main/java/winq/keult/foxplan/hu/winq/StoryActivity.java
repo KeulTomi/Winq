@@ -97,6 +97,8 @@ public class StoryActivity extends AppCompatActivity implements View.OnClickList
         mImageView02.setOnClickListener(this);
         mImageView02.setVisibility(View.GONE);
         mHandler.sendEmptyMessage(MSG_PRELOAD_IMAGE);
+
+        ScaleHelper.scaleViewAndChildren(findViewById(R.id.image_viewer_root), Winq.getScaleX(), Winq.getScaleY());
     }
 
     @Override

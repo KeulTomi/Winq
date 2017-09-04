@@ -75,6 +75,8 @@ public class SignUpActivity2 extends AppCompatActivity implements View.OnClickLi
         backToSecondPartBtn.setOnClickListener(this);
         finishSignUp.setOnClickListener(this);
         findViewById(R.id.main_layout).setOnClickListener(this);
+
+        ScaleHelper.scaleViewAndChildren(findViewById(R.id.main_layout), Winq.getScaleX(), Winq.getScaleY());
     }
 
     @Override
@@ -195,7 +197,7 @@ public class SignUpActivity2 extends AppCompatActivity implements View.OnClickLi
 
                     Intent finishSignUp = new Intent(getApplicationContext(), LoginActivity.class);
 
-                    Toast.makeText(getApplicationContext(), "Succesful sign up", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Sikeres regisztráció", Toast.LENGTH_LONG).show();
 
                     finishSignUp.putExtra("freshSignUpPassword", userParams.get("password").toString());
                     finishSignUp.putExtra("freshSignUpEmail", userParams.get("email").toString());

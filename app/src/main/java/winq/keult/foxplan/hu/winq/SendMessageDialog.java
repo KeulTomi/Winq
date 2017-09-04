@@ -41,6 +41,8 @@ public class SendMessageDialog extends Dialog implements
         cancel.setOnClickListener(this);
         send.setOnClickListener(this);
 
+        ScaleHelper.scaleViewAndChildren(findViewById(R.id.send_meassage_root), Winq.getScaleX(), Winq.getScaleY());
+
     }
 
     @Override

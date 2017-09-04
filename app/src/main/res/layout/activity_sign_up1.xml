@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/sign_up_1_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="winq.keult.foxplan.hu.winq.SignUpActivity1">
@@ -9,9 +10,9 @@
         android:id="@+id/root_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"
-        android:layout_marginTop="35dp"
+        android:layout_marginLeft="70px"
+        android:layout_marginRight="70px"
+        android:layout_marginTop="105px"
         android:orientation="vertical">
 
         <TextView
@@ -19,12 +20,12 @@
             android:layout_height="wrap_content"
             android:text="SEX:"
             android:textColor="@android:color/black"
-            android:textSize="15sp" />
+            android:textSize="40px" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="10dp"
+            android:layout_height="100px"
+            android:layout_marginTop="30px"
             android:background="@drawable/sex_type_border"
             android:orientation="horizontal">
 
@@ -40,6 +41,7 @@
                 android:textAlignment="center"
                 android:textAllCaps="true"
                 android:textColor="@android:color/white"
+                android:textSize="36px"
                 />
             <TextView
                 android:id="@+id/sex_type_man"
@@ -51,6 +53,7 @@
                 android:textAlignment="center"
                 android:textAllCaps="true"
                 android:textColor="@color/colorPrimaryDark"
+                android:textSize="36px"
                 />
 
         </LinearLayout>
@@ -58,17 +61,17 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="100px"
             android:text="BORN:"
             android:textColor="@android:color/black"
-            android:textSize="15sp" />
+            android:textSize="40px" />
 
         <DatePicker
             android:id="@+id/birth_date"
             android:layout_width="wrap_content"
-            android:layout_height="150dp"
+            android:layout_height="440px"
             android:layout_gravity="center"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="30px"
             android:calendarViewShown="false"
             android:datePickerMode="spinner"
             android:maxDate="2000"
@@ -78,31 +81,31 @@
             android:id="@+id/sign_up_interest_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="100px"
             android:text="INTERESTS:"
             android:textColor="@android:color/black"
-            android:textSize="15sp" />
+            android:textSize="40px" />
 
     </LinearLayout>
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="25dp"
+        android:layout_height="70px"
         android:layout_below="@+id/root_layout"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"
-        android:layout_marginTop="17dp"
+        android:layout_marginLeft="70px"
+        android:layout_marginRight="70px"
+        android:layout_marginTop="45px"
         android:background="@color/colorPrimaryDark" />
 
     <Spinner
         android:id="@+id/interests_spinner"
         android:layout_width="match_parent"
-        android:layout_height="25dp"
+        android:layout_height="70px"
         android:layout_below="@+id/root_layout"
         android:layout_gravity="center"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginLeft="70px"
+        android:layout_marginRight="70px"
+        android:layout_marginTop="40px"
         android:overScrollMode="always"
         android:spinnerMode="dialog"
         android:textAlignment="center"
@@ -116,20 +119,20 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:background="@color/colorPrimaryDark"
-        android:paddingBottom="10dp"
-        android:paddingTop="10dp"
+        android:paddingBottom="30px"
+        android:paddingTop="30px"
         android:text="Next"
         android:textAlignment="center"
         android:textAllCaps="true"
         android:textColor="@android:color/white"
-        android:textSize="20sp" />
+        android:textSize="55px" />
 
     <ImageView
         android:id="@+id/back_to_signup_first_part"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
+        android:layout_width="120px"
+        android:layout_height="120px"
         android:layout_alignParentBottom="true"
-        android:paddingLeft="10dp"
+        android:paddingLeft="30px"
         android:src="@drawable/ic_navigate_back"
         android:tint="@android:color/white" />
 

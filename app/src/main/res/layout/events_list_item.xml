@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/events_list_item_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <RelativeLayout
-        android:layout_width="330dp"
-        android:layout_height="170dp"
+        android:layout_width="890px"
+        android:layout_height="455px"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="55px"
         android:background="@drawable/list_tem_border">
 
 
@@ -15,15 +16,14 @@
             android:id="@+id/events_item_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="1dp"
+            android:layout_margin="3px"
             android:scaleType="centerCrop"
             android:src="@drawable/upcoming_event" />
 
         <LinearLayout
-            android:layout_width="48dp"
+            android:layout_width="135px"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="0dp"
             android:background="#d0505050"
             android:orientation="vertical">
 
@@ -31,12 +31,10 @@
                 android:id="@+id/events_eventstime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="0dp"
-                android:layout_marginLeft="12dp"
-                android:layout_marginRight="0dp"
+                android:layout_marginLeft="36px"
                 android:text="2017 05.29"
                 android:textColor="@android:color/white"
-                android:textSize="13sp" />
+                android:textSize="39px" />
 
 
         </LinearLayout>
@@ -45,22 +43,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="1dp"
-            android:layout_marginLeft="1dp"
-            android:layout_marginRight="1dp"
+            android:layout_marginBottom="3px"
+            android:layout_marginLeft="3px"
+            android:layout_marginRight="3px"
             android:background="#b9149399"
-            android:paddingBottom="6dp"
-            android:paddingTop="6dp">
+            android:paddingBottom="18px"
+            android:paddingTop="18px">
 
             <TextView
                 android:id="@+id/events_item_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="55px"
                 android:text="sziget fesztivál"
                 android:textAllCaps="true"
                 android:textColor="@android:color/white"
-                android:textSize="16sp"
+                android:textSize="46px"
                 android:textStyle="bold" />
 
             <TextView
@@ -68,10 +66,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="50dp"
+                android:layout_marginRight="140px"
                 android:text="Budapest"
                 android:textColor="@android:color/white"
-                android:textSize="16sp" />
+                android:textSize="46px" />
 
             <TextView
                 android:id="@+id/events_item_country"
@@ -79,11 +77,11 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="2dp"
+                android:layout_marginRight="30px"
+                android:layout_marginTop="6px"
                 android:text="/HUN/"
                 android:textColor="@android:color/white"
-                android:textSize="8sp" />
+                android:textSize="24px" />
 
         </RelativeLayout>
 

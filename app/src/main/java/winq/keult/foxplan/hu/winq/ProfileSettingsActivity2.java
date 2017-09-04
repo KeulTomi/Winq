@@ -80,6 +80,8 @@ public class ProfileSettingsActivity2 extends AppCompatActivity implements View.
         backToSecondPartBtn.setOnClickListener(this);
         finishSignUp.setOnClickListener(this);
         findViewById(R.id.main_layout).setOnClickListener(this);
+
+        ScaleHelper.scaleViewAndChildren(findViewById(R.id.main_layout), Winq.getScaleX(), Winq.getScaleY());
     }
 
     @Override
@@ -172,7 +174,7 @@ public class ProfileSettingsActivity2 extends AppCompatActivity implements View.
             @Override
             public void forwardResponse(ProfileModifyResponse profileModifyResponse) {
                 if (profileModifyResponse.getSuccess() == 1) {
-                    Log.v("Registration:", "User successfully signed up");
+                    Log.v("Registration:", "User successfully modified his profile");
 
                     relogin();
                 } else {

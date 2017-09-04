@@ -41,6 +41,8 @@ public class InternetProblemDialog extends Dialog implements
         cancel.setOnClickListener(this);
         again.setOnClickListener(this);
 
+        ScaleHelper.scaleViewAndChildren(findViewById(R.id.internet_problem_root), Winq.getScaleX(), Winq.getScaleY());
+
     }
 
     @Override

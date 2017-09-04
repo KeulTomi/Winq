@@ -1,29 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="300dp"
-    android:layout_height="240dp"
+    android:id="@+id/get_message_root"
+    android:layout_width="800px"
+    android:layout_height="650px"
     android:background="@drawable/message_popup_border"
     android:orientation="vertical">
 
     <TextView
         android:id="@+id/get_messages_popup_textView"
-        android:layout_width="300dp"
-        android:layout_height="200dp"
+        android:layout_width="800px"
+        android:layout_height="520px"
         android:background="@null"
         android:gravity="top"
         android:inputType="textMultiLine"
-        android:padding="10dp"
+        android:padding="30px"
         android:textColor="@android:color/black"
-        android:textSize="16sp"
+        android:textSize="45px"
         tools:ignore="RtlCompat" />
 
     <LinearLayout
         android:id="@+id/get_messages_popup_button_layout"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="100px"
         android:layout_alignParentBottom="true"
-        android:layout_margin="3dp"
+        android:layout_margin="9px"
         android:background="@color/colorPrimaryDark">
 
         <TextView
@@ -36,7 +37,7 @@
             android:textAlignment="center"
             android:textAllCaps="true"
             android:textColor="@android:color/white"
-            android:textSize="18sp" />
+            android:textSize="45px" />
 
     </LinearLayout>
 

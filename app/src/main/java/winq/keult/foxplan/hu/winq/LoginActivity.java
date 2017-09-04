@@ -81,6 +81,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             loginEmail.setText(getIntent().getStringExtra("freshSignUpEmail"));
             loginPassword.setText(getIntent().getStringExtra("freshSignUpPassword"));
         }
+
+        ScaleHelper.scaleViewAndChildren(findViewById(R.id.login_root), Winq.getScaleX(), Winq.getScaleY());
     }
 
     @Override
@@ -167,7 +169,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             public void forwardError(NetworkError networkError) {
                 Log.e("Login_Error:", networkError.getThrowable().getLocalizedMessage());
 
-                Toast.makeText(getApplicationContext(), "No internet connection", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Nincs internethozzáférés", Toast.LENGTH_LONG).show();
                 goButton.setText("GO");
                 goButtonProgress.setVisibility(View.INVISIBLE);
             }

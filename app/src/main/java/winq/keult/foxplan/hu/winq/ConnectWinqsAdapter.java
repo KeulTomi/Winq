@@ -34,6 +34,7 @@ public class ConnectWinqsAdapter extends ArrayAdapter<DateData> {
 
         if (listItemView == null) {
             listItemView = LayoutInflater.from(getContext()).inflate(R.layout.connect_list_item, parent, false);
+            ScaleHelper.scaleViewAndChildren(listItemView.findViewById(R.id.connect_list_item_root), Winq.getScaleX(), Winq.getScaleY());
 
             itemView = listItemView;
 

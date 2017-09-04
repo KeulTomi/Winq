@@ -48,6 +48,8 @@ public class ShareOpinionDialog extends Dialog implements
         greatPlus.setOnClickListener(this);
         greatPlusPlus.setOnClickListener(this);
 
+        ScaleHelper.scaleViewAndChildren(findViewById(R.id.share_opinion_root), Winq.getScaleX(), Winq.getScaleY());
+
     }
 
     @Override
