@@ -979,8 +979,8 @@ public class ProfileActivity extends AppCompatActivity
                     break;
 
                 case MSG_PRELOAD_FIRST_STORY_IMAGE:
-                    //if ( mStoryImages.size() > 0 )
-                    preloadFirstStoryImage();
+                    if ( mStoryImages.size() > 0 )
+                        preloadFirstStoryImage();
                     break;
                 case MSG_SET_LAYOUT_EVENTS:
                     //Toast.makeText(activity, getString(R.string.usr_msg_upload_success), Toast.LENGTH_LONG).show();

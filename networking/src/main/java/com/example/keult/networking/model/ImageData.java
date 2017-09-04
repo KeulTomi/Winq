@@ -16,6 +16,7 @@ public class ImageData implements Serializable {
     private String order;
 
 
+    /* Csak teszteléshez
     public ImageData(int pos) {
 
         if (pos % 2 == 0) {
@@ -27,7 +28,8 @@ public class ImageData implements Serializable {
             url = "https://www.gstatic.com/webp/gallery3/3.png";
             userid = "17";
         }
-    }
+    }*/
+
     public String getId() {
         return id;
     }
